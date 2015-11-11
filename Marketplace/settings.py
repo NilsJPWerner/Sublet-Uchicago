@@ -52,6 +52,7 @@ PROJECT_APPS = (
     'widget_tweaks',
     'haystack',
     'whoosh',
+    'accounts',
 )
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -111,13 +112,6 @@ DATABASES = {
 # Parse database configuration from $DATABASE_URL
 # DATABASES['default'] =  dj_database_url.config()
 
-# Haystack search settings
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
-    },
-}
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
