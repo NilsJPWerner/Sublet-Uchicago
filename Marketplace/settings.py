@@ -88,6 +88,16 @@ TEMPLATES = [
     },
 ]
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
+
+STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
@@ -141,18 +151,15 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 5
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Marketplace "
-ACCOUNT_EMAIL_VERIFICATION = "none" # make this "mandatory" later and implement an smtp client
+ACCOUNT_EMAIL_VERIFICATION = "mandatory" # make this "mandatory" later and implement an smtp client
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SESSION_REMEMBER = True # set to True to always remember and remove "remember me"
 ACCOUNT_USERNAME_REQUIRED = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
-STATIC_ROOT = 'staticfiles'
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'nils.jp.werner@gmail.com'
+EMAIL_HOST_PASSWORD = 'dhdghysoceydvgpz'
+DEFAULT_FROM_EMAIL = 'nils.jp.werner@gmail.com'
