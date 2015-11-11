@@ -1,0 +1,14 @@
+{% csrf_token %}
+{% load tz %}
+<h1> {{ listingObject.description }} </h1>
+<p> Price: {{ listingObject.price }} </p>
+<p> Location: {{ listingObject.location }} </p>
+<p> Created At: {% timezone "America/Chicago" %}
+	{{ listingObject.created_at }} 
+	{% endtimezone %}
+</p>
+<p> Last Updated At: 
+	{% timezone "America/Chicago" %}
+	{{ listingObject.updated_at }}
+	{% endtimezone %} </p>
+<p> {{listingObject.details}} </p>
