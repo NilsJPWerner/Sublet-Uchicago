@@ -1,0 +1,48 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:900);
+
+body {
+    background-color: #F3F3F3;
+}
+
+
+#account_page p {
+    font-size: 1.14285714rem;
+}
+
+#account_page h1.ui.header {
+    font-family: 'Lato', sans-serif;  
+    font-weight: 900;  
+    text-shadow: none;
+    color: #555459;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#account_page h1.ui.image.header {
+    margin-bottom: 0px;
+}
+
+
+#center_segment {
+   max-width: 500px; 
+   margin-top: 80px; 
+   margin-bottom: 50px;
+}
+
+#center_segment .ui.segment {
+    padding: 10px 50px 25px 50px;
+}
+
+#account_page .ui.divider {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#account_page .customblue {
+    color: white;
+    background-color: #439fe0;
+}
+
+#account_page .customblue:hover {
+    background-color: #3e90c9;
+}

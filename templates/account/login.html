@@ -1,0 +1,97 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<div id="account_page" class="ui middle aligned center aligned grid">
+  <div id="center_segment" class="column">
+    <form class="login ui large form" method="POST" action="">
+    {% csrf_token %}
+      <div class="ui segment">
+        <h1 class="ui image header">
+          <!-- <img class="small image" src=""> -->
+          <div class="content">Log-in to Marketplace</div>
+        </h1>
+        <div class="ui divider"></div>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="mail icon"></i>
+            {{ form.login }}
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            {{ form.password }}
+          </div>
+        </div>
+
+        <div class="ui fluid large customblue submit button">Login</div>
+        <a href="{% url 'account_reset_password' %}"><br>Forgot Password?</a>
+      </div>
+      <div class="ui error message"></div>
+    </form>
+
+
+    {% if form.errors %}
+      <div class="ui error message">
+        Sorry, that's not a valid username or password
+      </div>
+    {% endif %}
+
+    {% if invalid %}
+      <div class="ui error message">
+        Your email/password combo doesn't exist. 
+      </div>
+    {% endif %}
+
+    <div class="ui message" style="background-color: white;">
+      <p>New to us? <a href="{{ signup_url }}">Sign Up</a></p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document)
+.ready(function() {
+  $('.ui.form')
+    .form({
+      fields: {
+        username: {
+          identifier  : 'login',
+          rules: [
+            {
+              type   : 'empty',
+              prompt : 'Please enter your e-mail address'
+            },
+            {
+              type   : 'email',
+              prompt : 'Please enter a valid e-mail'
+            }
+          ]
+        },
+        password: {
+          identifier  : 'password',
+          rules: [
+            {
+              type   : 'empty',
+              prompt : 'Please enter your password'
+            }
+          ]
+        }
+      }
+    })
+  ;
+})
+;
+</script>
+{% endblock %}

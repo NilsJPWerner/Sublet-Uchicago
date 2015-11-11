@@ -1,0 +1,114 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+
+<div id="account_page" class="ui middle aligned center aligned grid">
+  <div id="center_segment" class="column">
+    <form class="login ui large form" method="POST" action="">
+    {% csrf_token %}
+      <div class="ui segment">
+        <h1 class="ui image header">
+          <!-- <img class="small image" src=""> -->
+          <div class="content">Sign up to Canaree</div>
+        </h1>
+        <div class="ui divider"></div>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="mail icon"></i>
+            {{ form.email }}
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            {{ form.password1 }}
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            {{ form.password2 }}
+          </div>
+        </div>
+
+        <div class="ui fluid large customblue submit button">Sign up</div>
+      </div>
+      <div class="ui error message"></div>
+    </form>
+
+
+    {% if form.errors %}
+      <div class="ui error message">
+        Sorry, A user is already registered with this e-mail address
+      </div>
+    {% endif %}
+
+    <div class="ui message" style="background-color: white;">
+      <p>Already have an account? <a href="{{ login_url }}">Sign in</a></p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document)
+.ready(function() {
+  $('.ui.form')
+    .form({
+      fields: {
+        username: {
+          identifier  : 'email',
+          rules: [
+            {
+              type   : 'empty',
+              prompt : 'Please enter an e-mail address'
+            },
+            {
+              type   : 'email',
+              prompt : 'Please enter a valid e-mail'
+            }
+          ]
+        },
+        password1: {
+          identifier  : 'password1',
+          rules: [
+            {
+              type   : 'minLength[6]',
+              prompt : 'Your password must be at least {ruleValue} characters'
+            },
+            {
+              type   : 'empty',
+              prompt : 'Please enter a password'
+            },
+          ]
+        },
+        password2: {
+          identifier  : 'password2',
+          rules: [
+            {
+              type   : 'match[password1]',
+              prompt : 'Entered passwords must match'
+            },
+            {
+              type   : 'empty',
+              prompt : 'Please enter matching passwords'
+            },
+          ]
+        }
+      }
+    })
+  ;
+})
+;
+</script>
+{% endblock %}
