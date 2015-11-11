@@ -145,7 +145,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none" # make this "mandatory" later and implement 
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SESSION_REMEMBER = True # set to True to always remember and remove "remember me"
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = True
 
 # Static files (CSS, JavaScript, Images)
