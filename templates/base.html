@@ -27,56 +27,73 @@
 
   <body>
 
-    <div class="ui  large top attached menu">
-      <a class="browse item">
+    <div id="top-menu" class="ui large menu">
+      <a class="header item">
+        <img class="logo" src="{% static "img/logo_200x200.png" %}">
+        Marketplace
+      </a>
+      <a id="categories" class="browse item">
         Categories
         <i class="dropdown icon"></i>
       </a>
+      <div class="ui flowing basic admission popup">
+        <div class="ui three column relaxed divided grid">
+          <div class="column">
+            <h4 class="ui header">Business</h4>
+            <div class="ui link list">
+              <a class="item">Design &amp; Urban Ecologies</a>
+              <a class="item">Fashion Design</a>
+              <a class="item">Fine Art</a>
+              <a class="item">Strategic Design</a>
+            </div>
+          </div>
+          <div class="column">
+            <h4 class="ui header">Liberal Arts</h4>
+            <div class="ui link list">
+              <a class="item">Anthropology</a>
+              <a class="item">Economics</a>
+              <a class="item">Media Studies</a>
+              <a class="item">Philosophy</a>
+            </div>
+          </div>
+          <div class="column">
+            <h4 class="ui header">Social Sciences</h4>
+            <div class="ui link list">
+              <a class="item">Food Studies</a>
+              <a class="item">Journalism</a>
+              <a class="item">Non Profit Management</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui category search item">
+        <div class="ui transparent left icon input">
+          <i class="search link icon"></i>
+          <input class="prompt" type="text" placeholder="Search listings...">
+        </div>
+        <div class="results"></div>
+      </div>
       <div class="right menu">
-        <div class="ui dropdown item">
-          Poop
-        </div>
+        <a id="post_listing" class="ui right dropdown browse item">
+          <i class="plus icon"></i>
+          Post a listing
+          <div class="menu">
+            <div class="item">Selling</div>
+            <div class="item">Wanted</div>
+          </div>
+        </a>
+        <a id="user" class="ui right dropdown browse item">
+          User
+          <i class="circular user icon"></i>
+          <div class="menu">
+            <div class="item">View your listings</div>
+            <div class="item">Edit profile</div>
+            <div class="item">Logout</div>
+          </div>
+        </a>
       </div>
     </div>
-    <div class="ui fluid popup bottom left transition hidden">
-      <div class="ui four column relaxed equal height divided grid">
-        <div class="column">
-          <h4 class="ui header">Fabrics</h4>
-          <div class="ui link list">
-            <a class="item">Cashmere</a>
-            <a class="item">Linen</a>
-            <a class="item">Cotton</a>
-            <a class="item">Viscose</a>
-          </div>
-        </div>
-        <div class="column">
-          <h4 class="ui header">Size</h4>
-          <div class="ui link list">
-            <a class="item">Small</a>
-            <a class="item">Medium</a>
-            <a class="item">Large</a>
-            <a class="item">Plus Sizes</a>
-          </div>
-        </div>
-        <div class="column">
-          <h4 class="ui header">Colored</h4>
-          <div class="ui link list">
-            <a class="item">Neutrals</a>
-            <a class="item">Brights</a>
-            <a class="item">Pastels</a>
-          </div>
-        </div>
-        <div class="column">
-          <h4 class="ui header">Types</h4>
-          <div class="ui link list">
-            <a class="item">Knitwear</a>
-            <a class="item">Outerwear</a>
-            <a class="item">Pants</a>
-            <a class="item">Shoes</a>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     {% block content %}
     {% endblock %}

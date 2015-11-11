@@ -5,6 +5,28 @@ body {
 }
 
 
+/*    Menu    */
+
+#top-menu {
+    border-radius: 0;
+}
+
+#top-menu img.logo {
+    margin-right: 1.1em;
+}
+
+.ui.menu .search.item:before {
+    width: 0px;
+}
+
+#top-menu i.circular.icon {
+    margin-left: 10px;
+}
+
+
+/*-------------*/
+
+
 #account_page p {
     font-size: 1.14285714rem;
 }

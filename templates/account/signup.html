@@ -1,6 +1,7 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
@@ -16,6 +17,15 @@
           <div class="content">Sign up to Canaree</div>
         </h1>
         <div class="ui divider"></div>
+        
+		<p>Sign up is restricted to individuals with uchicago.edu email addresses</p>
+
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            {% render_field form.username placeholder="Name" %}
+          </div>
+        </div>
 
         <div class="field">
           <div class="ui left icon input">
