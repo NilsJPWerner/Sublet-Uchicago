@@ -49,6 +49,9 @@ PROJECT_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'widget_tweaks',
+    'haystack',
+    'whoosh',
     'accounts',
 )
 
@@ -85,6 +88,13 @@ TEMPLATES = [
     },
 ]
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+
 WSGI_APPLICATION = 'Marketplace.wsgi.application'
 
 
@@ -101,6 +111,7 @@ DATABASES = {
 #Production Database
 # Parse database configuration from $DATABASE_URL
 # DATABASES['default'] =  dj_database_url.config()
+
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
@@ -135,7 +146,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SESSION_REMEMBER = True # set to True to always remember and remove "remember me"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
