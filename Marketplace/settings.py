@@ -147,6 +147,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+LOGIN_REDIRECT_URL = "/accounts/home"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 5
 ACCOUNT_EMAIL_REQUIRED = True

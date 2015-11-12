@@ -19,10 +19,10 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('accounts.urls', namespace="accounts")),
     # Static pages
     url(r'^$', TemplateView.as_view(template_name="Marketplace/home.html")),
 
     # Profile tools
-    #url(r'^accounts/', include('accounts.urls', namespace="accounts")),
     url(r'^accounts/', include('allauth.urls')),
 ]
