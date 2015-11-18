@@ -1,0 +1,23 @@
+<form method="POST" action="">
+    {% csrf_token %}
+    <h1> Add a Listing Below! </h1>
+{% if messages %}
+    <br>
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <div class="alert alert-danger" role="alert" id="message">
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success" role="alert" id="message">
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+{% endif %}
+    {{ listingform.as_p }}
+
+    <input type="submit">
+</form>
