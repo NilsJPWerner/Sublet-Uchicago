@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="Marketplace/home.html")),
 
     # Profile tools
-    url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts/', include('allauth.urls'), name='accounts'),
 ]
