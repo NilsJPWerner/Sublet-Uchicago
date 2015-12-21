@@ -1,0 +1,115 @@
+{% extends 'account/account_base.html' %}
+{% load staticfiles %}
+{% block account_head_title %}Settings{% endblock %}
+{% block account_content %}
+  <div class="sixteen wide column grid">
+    <form class="ui form" method="POST" action="">
+      
+      <div class="ui secondary top attached segment">
+        <h4 class="">Manage Your E-mail Addresses</h4>
+      </div>
+      <div class="ui attached padded segment">
+      </div>
+
+      <div class="ui secondary top attached segment">
+        <h4 class="">Change Your Password</h4>
+      </div>
+      <div class="ui attached padded segment">
+        {% csrf_token %}
+        <div class="ui two column grid">
+          <div class="no-vertical-margin row" style="margin-top: 1em;">
+            <div class="six wide right aligned column">
+              <label class="inline-label">Old Password</label>
+            </div>
+            <div class="six wide column">
+              <div class="field">
+                {{ form.old_password }}
+              </div>
+            </div>
+          </div>
+          <div class="no-vertical-margin row">
+            <div class="six wide right aligned column">
+              <label class="inline-label">New Password</label>
+            </div>
+            <div class="six wide column">
+              <div class="field">
+                {{ form.new_password1 }}
+              </div>
+            </div>
+          </div>
+          <div class="no-vertical-margin row" style="margin-bottom: 0.5em;">
+            <div class="six wide right aligned column">
+              <label class="inline-label">Confirm Password</label>
+            </div>
+            <div class="six wide column">
+              <div class="field">
+                {{ form.new_password2 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui attached segment">
+        <div class="ui one column right aligned grid">
+          <div class="ui sixteen wide column">
+            <button class="ui customblue button" type="submit" style="width:90px;">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached error message"></div>
+    </form>
+
+    {% if form.errors %}
+      <div class="ui bottom attached error message">
+        Your old password was entered incorrectly. Please enter it again. If you have forgotten your password <a href="{% url 'account_reset_password' %}">click here</a> to reset it.
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block account_scripts %}
+  <script type="text/javascript">
+    $(document)
+    .ready(function() {
+      $('.ui.form')
+        .form({
+          fields: {
+            old: {
+              identifier  : 'old_password',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your old password'
+                },
+              ]
+            },
+            password1: {
+              identifier  : 'new_password1',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter a new password'
+                },
+              ]
+            },
+            password2: {
+              identifier  : 'new_password2',
+              rules: [
+                {
+                  type   : 'match[new_password1]',
+                  prompt : 'Entered passwords must match'
+                },
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter the new password again'
+                },
+              ]
+            }
+          }
+        })
+      ;
+    })
+    ;
+  </script>
+{% endblock %}

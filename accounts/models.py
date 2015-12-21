@@ -30,9 +30,24 @@ class listing(models.Model):
 #   photo_content_type = models.CharField(max_length=20)
 #   photo_file_size = models.IntegerField(null=False)
 
+UNI_DIV = (('NA', 'Not Affiliated'),
+    ('first', 'First Year'),
+    ('second', 'Second Year'),
+    ('third', 'Third Year'),
+    ('fourth', 'Fourth Year'),
+    ('grad', 'Graduate Student'),
+    ('faculty', 'Faculty Member'),
+    ('other', 'Other division'))
+
 
 class ExtendedUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default="0", null=True)
+    user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, default="0", null=True)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures', default="/static/img/accounts/empty-photo.png", blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+    uni_division = models.CharField(choices=UNI_DIV, max_length=50, blank=True)
+    description = models.TextField(blank=True)
 
 
 def user_post_save(sender, instance, created, **kwargs):

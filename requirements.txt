@@ -1,0 +1,11 @@
+Django==1.8.6
+django-allauth==0.24.1
+django-haystack==2.4.1
+django-widget-tweaks==1.4.1
+oauthlib==1.0.3
+python-openid==2.2.5
+requests==2.8.1
+requests-oauthlib==0.5.0
+wheel==0.24.0
+whitenoise==2.0.4
+Whoosh==2.7.0

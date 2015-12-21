@@ -1,0 +1,69 @@
+{% extends 'account/account_base.html' %}
+{% load staticfiles %}
+{% block account_head_title %}Verifications{% endblock %}
+{% block account_content %}
+  <div class="sixteen wide column grid">
+    <div class="ui secondary top attached segment">
+      <h4 class="">What are verifications?</h4>
+    </div>
+    <div class="ui bottom attached padded segment">
+      <p>Verifications can be added to an account to build initial trust between potential subletters and subletees. By for example displaying the number of mutual friends on facebook or having a uchicago email address on your public profile more users will trust you. /placeholder</p>
+    </div>
+    <div class="ui secondary top attached segment">
+      <h4 class="">Your current verifications</h4>
+    </div>
+    <div class="ui bottom attached padded segment">
+      <h3 class="margin-below">Email Address</h3>
+      You have confirmed your email address as: <strong>{{ user.email }}</strong>
+    </div>
+    <div class="ui secondary top attached segment">
+      <h4 class="">Add more verifications</h4>
+    </div>
+    <div class="ui bottom attached padded segment">
+      <div class="ui vertically divided stackable grid">
+        <div class="one column row no-vertical-margin">
+          <div class="sixteen wide column">
+            <h3 class="margin-below">UChicago account</h3>
+            You have confirmed your email address as: <strong>{{ user.email }}</strong>
+          </div>
+        </div>
+        <div class="one column row no-vertical-margin">
+          <div class="twelve wide column">
+            <h3 class="margin-below">Verified Phone Number</h3>
+            Verify your phone number with a text message /placeholder
+          </div>
+          <div class="four wide right aligned column">
+            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
+          </div>
+        </div>
+        <div class="one column row no-vertical-margin">
+          <div class="twelve wide column">
+            <h3 class="margin-below">Facebook</h3>
+            Sign in with Facebook and discover your trusted connections to hosts and guests all over the world. /placeholder
+          </div>
+          <div class="four wide right aligned column">
+            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
+          </div>
+        </div>
+        <div class="one column row no-vertical-margin">
+          <div class="twelve wide column">
+            <h3 class="margin-below">Google</h3>
+            Connect your Airbnb account to your Google account for simplicity and ease /placeholder</strong>
+          </div>
+          <div class="four wide right aligned column">
+            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
+          </div>
+        </div>
+        <div class="one column row no-vertical-margin">
+          <div class="twelve wide column">
+            <h3 class="margin-below">Linkedin</h3>
+            Create a link to your professional life by connecting your Airbnb and LinkedIn accounts. /placeholder</strong>
+          </div>
+          <div class="four wide right aligned column">
+            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

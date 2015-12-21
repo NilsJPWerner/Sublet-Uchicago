@@ -1,9 +1,27 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:900);
+@import url(https://fonts.googleapis.com/css?family=Lato:900&subset=latin);
 
+/*    Main    */
 body {
-    background-color: #F3F3F3;
+    background-color: #F8F8F8;
 }
 
+p {
+    line-height: 1.45;
+}
+
+p.larger {
+    font-size: 15px;
+}
+
+.customblue {
+    color: white!important;
+    background-color: #439fe0!important;
+    box-shadow: 0px -2px 0px 0px rgba(34, 36, 38, 0.1) inset!important;
+}
+
+.customblue:hover {
+    background-color: #3e90c9!important;
+}
 
 /*    Menu    */
 
@@ -19,13 +37,18 @@ body {
     width: 0px;
 }
 
+
 #top-menu i.circular.icon {
     margin-left: 10px;
 }
 
 
 /*-------------*/
+/*    Account Login    */
 
+#account .ui.icon.center.aligned.header {
+    color: #999;
+}
 
 #account_page p {
     font-size: 1.14285714rem;
@@ -60,11 +83,50 @@ body {
     margin-bottom: 30px;
 }
 
-#account_page .customblue {
-    color: white;
-    background-color: #439fe0;
+
+/*    Account items    */
+
+#account .ui.icon.center.aligned.header {
+    color: #999;
 }
 
-#account_page .customblue:hover {
-    background-color: #3e90c9;
+#account .ui.secondary.top.attached.segment {
+    padding-left: 1.5em;
 }
+
+#account .ui.bottom.attached.segment {
+    margin-bottom: 2em;
+}
+
+#account .margin-below {
+    margin-bottom: 0.5em;
+}
+
+#account .margin-above {
+    margin-top: 1.2em;
+}
+
+#account .no-vertical-margin {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+#account .inline-label {
+    display: -webkit-inline-flex; /* Safari */
+    display: inline-flex;
+    font-weight: 700;
+    margin-top: 8px;
+    align-items: center;
+}
+
+span.help-text {
+    color: #999;
+    line-height: 1.45;
+}
+
+div .ui.form .inline.fields{
+    margin-bottom: 0;
+}
+

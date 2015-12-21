@@ -10,14 +10,18 @@ $('#categories')
   })
 ;
 
-$('#post_listing')
-  .dropdown({
-    on: 'hover'
-  })
+// $('#post_listing')
+//   .dropdown({
+//     on: 'hover'
+//   })
+// ;
+
+$('.ui.dropdown')
+  .dropdown()
 ;
 
 $('#user')
   .dropdown({
-  	on: 'hover'
+    on: 'hover'
   })
 ;

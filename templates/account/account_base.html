@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block head_title %}{% block account_head_title %}{% endblock %}{% endblock %}
+{% block head %}
+  {% block account_head %}
+  {% endblock %}
+{% endblock %}
+{% block content %}
+  <div id="account" class="ui centered two column grid stackable container" style="margin-top: 20px;">
+    <div class="four wide column">
+      <div class="one column tablet computer only row">
+        <div class="column">
+          <div class="ui fluid card">
+            <div class="image">
+              <img src="{% static "/static/img/accounts/empty-photo.png" %}">
+            </div>
+            <div class="content">
+              <p class="header">{{ user.extendeduser.first_name }} {{ user.extendeduser.last_name }}</p>
+              <div class="description ">
+                <strong>Location:</strong>
+              </div>
+            </div>
+            <div class="extra content">
+              <a href=""><i class="eye icon"></i>
+              View public profile</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui large fluid vertical menu">
+        <a href="{% url 'accounts:account_home' %}" class="{% if request.resolver_match.url_name == "account_home" %}active{% endif %} item">
+          <i class="dashboard icon"></i>
+          Dashboard
+        </a>
+        <a class="ui left icon item">
+          <i class="home icon"></i>
+          Your listings
+        </a>
+        <a class="item">
+          <i class="star icon"></i>
+          Starred listings
+        </a>
+        <a href="{% url 'accounts:account_verification' %}" class="{% if request.resolver_match.url_name == "account_verification" %}active{% endif %} item">
+          <i class="checkmark icon"></i>
+          Verifications
+        </a>
+        <a href="{% url 'accounts:account_edit_profile' %}" class="{% if request.resolver_match.url_name == "account_edit_profile" %}active{% endif %} item">
+          <i class="user icon"></i>
+          Edit Profile
+        </a>
+        <a href="{% url 'accounts:account_settings' %}" class="{% if request.resolver_match.url_name == "account_settings" %}active{% endif %} item">
+          <i class="setting icon"></i>
+          Settings
+        </a>
+      </div>
+    </div>
+    <div class="ten wide column">
+    {% block account_content %}
+    {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {% block account_scripts %}
+  {% endblock %}
+{% endblock %}

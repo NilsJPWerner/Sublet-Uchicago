@@ -80,22 +80,18 @@ $(document)
           identifier  : 'email',
           rules: [
             {
+              type   : 'email',
+              prompt : 'Please enter a valid e-mail'
+            },
+            {
               type   : 'empty',
               prompt : 'Please enter an e-mail address'
             },
-            {
-              type   : 'email',
-              prompt : 'Please enter a valid e-mail'
-            }
           ]
         },
         password1: {
           identifier  : 'password1',
           rules: [
-            {
-              type   : 'minLength[6]',
-              prompt : 'Your password must be at least {ruleValue} characters'
-            },
             {
               type   : 'empty',
               prompt : 'Please enter a password'

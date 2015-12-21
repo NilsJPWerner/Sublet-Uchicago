@@ -1,0 +1,66 @@
+{% extends 'account/account_base.html' %}
+{% load staticfiles %}
+{% block account_head_title %}Edit Profile{% endblock %}
+{% block account_content %}
+  <div class="ui secondary top attached segment">
+    <h4>Edit Profile</h4>
+  </div>
+  <div class="ui bottom attached padded segment">
+    <form class="ui form" method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="ui two column grid">
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">First Name</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.first_name }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">Last Name</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.last_name }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">Email Address</label>
+          </div>
+          <div class="twelve wide column">
+            <input class="margin-below" type="email" name="email">
+            <span class="help-text">Use a UChicago email address in order to be verified as an affiliate of the university</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">Phone Number</label>
+          </div>
+          <div class="four wide column">
+            {{ form.phone_number }}
+          </div>
+          
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">University Division</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.uni_division }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">Personal Description</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.description }}
+            <span class="help-text">Describe yourself blah blah /placeholder</span>
+          </div>
+        </div>
+        <button class="ui button" type="submit">Save</button>
+      </form>
+    </div>
+  {% endblock %}
