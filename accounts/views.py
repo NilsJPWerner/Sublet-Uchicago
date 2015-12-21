@@ -1,20 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-<<<<<<< HEAD
 from django.template import RequestContext
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.forms import PasswordChangeForm
-=======
-from django.contrib import auth, messages
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from django.template import RequestContext
 from django.template.defaultfilters import slugify
->>>>>>> fca714ed09e57e79db5cc9efa765884f96a7b37b
 
 from .forms import ListingForm, ExtendedUserForm
 from .models import listing, ExtendedUser
@@ -130,7 +123,7 @@ def account_edit_profile(request):
     else:
         try:
             u = ExtendedUser.objects.get(user=request.user)
-            form = ExtendedUserForm(instance=u)  #No request.POST
+            form = ExtendedUserForm(instance=u)  # No request.POST
         except ObjectDoesNotExist:
             form = ExtendedUserForm(request.FILES)
 
