@@ -11,6 +11,7 @@ from django.template.defaultfilters import slugify
 
 from .forms import ListingForm, ExtendedUserForm
 from .models import listing, ExtendedUser
+from allauth.account.views import EmailView, _ajax_response
 
 
 def add(request):
@@ -101,6 +102,18 @@ def account_home(request):
     context = {'user': user}
     return render(request, 'account/home.html', context)
 
+class verification(object):
+    """docstring for verification"""
+    def __init__(self, name, link, description, type):
+        self.name = name
+        self.description = description
+        if type == 'allauth':
+            self.link = '{% provider_login_url "' + link + '" process="connect" %}'
+        elif type == 'other':
+            self.link = '{% url ' + link + ' %}'
+        else:
+            self.link = ''
+
 
 @login_required
 def account_verification(request):
@@ -144,4 +157,64 @@ def account_settings(request):
     context = {'form': form, 'user': request.user}
     return render(request, 'account/settings.html', context)
 
+
+
+
+
+
+
+
+
+class test(EmailView):
+    template_name = 'account/email.html'
+    password_change_form = PasswordChangeForm
+    print "just chillin"
+
+    def post(self, request, *args, **kwargs):
+        print "posting"
+        res = None
+        if "action_add" in request.POST:
+            res = super(EmailView, self).post(request, *args, **kwargs)
+        # Added form condition for password change
+        elif request.POST.get("email"):
+            if "action_send" in request.POST:
+                res = self._action_send(request)
+            elif "action_remove" in request.POST:
+                res = self._action_remove(request)
+            elif "action_primary" in request.POST:
+                res = self._action_primary(request)
+            res = res or HttpResponseRedirect(reverse('account_email'))
+            # Given that we bypassed AjaxCapableProcessFormViewMixin,
+            # we'll have to call invoke it manually...
+            res = _ajax_response(request, res)
+        else:
+            # No email address selected
+            res = HttpResponseRedirect(reverse('account_email'))
+            res = _ajax_response(request, res)
+        return res
+
+    def password_change(self, request, *args, **kwargs):
+        print "got to the function"
+        self.password_change_form = self.password_change_form(user=request.user, data=request.POST)
+        if self.password_change_form.is_valid():
+            self.password_change_form.save()
+            return HttpResponseRedirect(reverse('accounts:password_change_successful'))
+
+    def get_context_data(self, **kwargs):
+        print 'poop'
+        ret = super(EmailView, self).get_context_data(**kwargs)
+        # NOTE: For backwards compatibility
+        ret['add_email_form'] = ret.get('form')
+        ret['passwordform'] = self.password_change_form(user=self.request.user)
+        # (end NOTE)
+        return ret
+
+@login_required
+def password_change_post(request):
+    password_change_form = PasswordChangeForm
+    if request.method == "POST":
+        form = password_change_form(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accounts:password_change_successful'))
 

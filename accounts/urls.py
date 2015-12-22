@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^accounts/password_change_successful/$', 
       TemplateView.as_view(template_name='account/password_change_successful.html'),
       name='password_change_successful'),
+    url(r'^accounts/test/$', views.test.as_view(), name='test'),
 ]
