@@ -1,5 +1,6 @@
 {% extends 'account/account_base.html' %}
 {% load staticfiles %}
+{% load socialaccount %}
 {% block account_head_title %}Verifications{% endblock %}
 {% block account_content %}
   <div class="sixteen wide column grid">
@@ -13,21 +14,29 @@
       <h4 class="">Your current verifications</h4>
     </div>
     <div class="ui bottom attached padded segment">
-      <h3 class="margin-below">Email Address</h3>
-      You have confirmed your email address as: <strong>{{ user.email }}</strong>
+      <div class="ui vertically divided stackable grid">
+        <div class="one column row no-vertical-margin">
+          <div class="sixteen wide column">
+            <h3 class="margin-below">Email Address</h3>
+            You have confirmed your email address as: <strong>{{ user.email }}</strong>
+          </div>
+        </div>
+        {% for item in verified %}
+          <div class="one column row no-vertical-margin">
+            <div class="sixteen wide column">
+              <h3 class="margin-below">{{ item.name }}</h3>
+              {{ item.description }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
     </div>
     <div class="ui secondary top attached segment">
       <h4 class="">Add more verifications</h4>
     </div>
     <div class="ui bottom attached padded segment">
       <div class="ui vertically divided stackable grid">
-        <div class="one column row no-vertical-margin">
-          <div class="sixteen wide column">
-            <h3 class="margin-below">UChicago account</h3>
-            You have confirmed your email address as: <strong>{{ user.email }}</strong>
-          </div>
-        </div>
-        <div class="one column row no-vertical-margin">
+        <!-- <div class="one column row no-vertical-margin">
           <div class="twelve wide column">
             <h3 class="margin-below">Verified Phone Number</h3>
             Verify your phone number with a text message /placeholder
@@ -35,34 +44,18 @@
           <div class="four wide right aligned column">
             <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
           </div>
-        </div>
-        <div class="one column row no-vertical-margin">
-          <div class="twelve wide column">
-            <h3 class="margin-below">Facebook</h3>
-            Sign in with Facebook and discover your trusted connections to hosts and guests all over the world. /placeholder
+        </div> -->
+        {% for item in unverified %}
+          <div class="one column row no-vertical-margin">
+            <div class="twelve wide column">
+              <h3 class="margin-below">{{ item.name }}</h3>
+              {{ item.description }}
+            </div>
+            <div class="four wide right aligned column">
+              <a href="{{ item.link }}"><button class="ui fluid customblue button margin-above"><strong>Connect</strong></button></a>
+            </div>
           </div>
-          <div class="four wide right aligned column">
-            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
-          </div>
-        </div>
-        <div class="one column row no-vertical-margin">
-          <div class="twelve wide column">
-            <h3 class="margin-below">Google</h3>
-            Connect your Airbnb account to your Google account for simplicity and ease /placeholder</strong>
-          </div>
-          <div class="four wide right aligned column">
-            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
-          </div>
-        </div>
-        <div class="one column row no-vertical-margin">
-          <div class="twelve wide column">
-            <h3 class="margin-below">Linkedin</h3>
-            Create a link to your professional life by connecting your Airbnb and LinkedIn accounts. /placeholder</strong>
-          </div>
-          <div class="four wide right aligned column">
-            <button class="ui fluid customblue button margin-above"><strong>Connect</strong></button>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
   </div>

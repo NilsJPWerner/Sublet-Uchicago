@@ -25,3 +25,7 @@ $('#user')
     on: 'hover'
   })
 ;
+
+// $('.ui.radio.checkbox')
+//   .checkbox()
+// ;

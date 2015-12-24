@@ -49,7 +49,9 @@ PROJECT_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'widget_tweaks',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.linkedin_oauth2',
     'haystack',
     'whoosh',
     'accounts',
@@ -79,9 +81,9 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },

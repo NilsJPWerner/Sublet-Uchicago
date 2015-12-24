@@ -2,11 +2,11 @@
 {% load staticfiles %}
 {% block account_head_title %}Edit Profile{% endblock %}
 {% block account_content %}
-  <div class="ui secondary top attached segment">
-    <h4>Edit Profile</h4>
-  </div>
-  <div class="ui bottom attached padded segment">
-    <form class="ui form" method="POST" action="" enctype="multipart/form-data">
+  <form class="ui form" method="POST" action="" enctype="multipart/form-data">
+    <div class="ui secondary top attached segment">
+      <h4>Edit Profile</h4>
+    </div>
+    <div class="ui attached padded segment">
       {% csrf_token %}
       <div class="ui two column grid">
         <div class="row">
@@ -60,7 +60,15 @@
             <span class="help-text">Describe yourself blah blah /placeholder</span>
           </div>
         </div>
-        <button class="ui button" type="submit">Save</button>
-      </form>
+      </div>
     </div>
+
+    <div class="ui bottom attached segment">
+      <div class="ui one column right aligned grid">
+        <div class="ui sixteen wide column">
+          <button class="ui customblue button" type="submit" style="width:90px;">Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
   {% endblock %}

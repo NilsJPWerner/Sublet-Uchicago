@@ -3,15 +3,17 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import messages
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.forms import PasswordChangeForm
 from django.template.defaultfilters import slugify
 
-from .forms import ListingForm, ExtendedUserForm
+from .forms import ListingForm, ExtendedUserForm, ChangePasswordFormModified, AddEmailFormCombined
 from .models import listing, ExtendedUser
-from allauth.account.views import EmailView, _ajax_response
+from allauth.account.views import PasswordChangeView, EmailView, _ajax_response
+from allauth.account.adapter import get_adapter
+from allauth.account import signals
+from allauth.account.models import EmailAddress
 
 
 def add(request):
@@ -102,23 +104,47 @@ def account_home(request):
     context = {'user': user}
     return render(request, 'account/home.html', context)
 
+
 class verification(object):
     """docstring for verification"""
-    def __init__(self, name, link, description, type):
+    def __init__(self, name, link, description):
         self.name = name
+        self.link = link
         self.description = description
-        if type == 'allauth':
-            self.link = '{% provider_login_url "' + link + '" process="connect" %}'
-        elif type == 'other':
-            self.link = '{% url ' + link + ' %}'
-        else:
-            self.link = ''
 
 
 @login_required
 def account_verification(request):
-    user = request.user
-    context = {'user': user}
+    uchicago = verification('Uchicago E-mail', '{% url "account:settings" %}', 'poop')
+    # Djanfo limitations forced me to hardcode the connect urls. 
+    # Not very DRY so might eventually fix
+    facebook = verification('Facebook',
+                            '/accounts/facebook/login/?process=connect',
+                            'Insert text about facebook here')
+    google = verification('Google',
+                            '/accounts/google/login/?process=connect&method=oauth2',
+                            'Insert text about google here')
+    linkedin = verification('Linkedin',
+                            '/accounts/linkedin_oauth2/login/?process=connect',
+                            'Insert text about linkedin here')
+
+    verified_list = []
+    unverified_list = []
+    unverified_list.append(uchicago)
+    unverified_list.append(facebook)
+    unverified_list.append(google)
+    unverified_list.append(linkedin)
+
+    email_list = EmailAddress.objects.filter(user=request.user, verified=True)
+    for email in email_list:
+        if '@uchicago.edu' in email.email:
+            verified_list.append(uchicago)
+            unverified_list.remove(uchicago)
+    if False:
+        verified_list.append(facebook)
+        unverified_list.remove(facebook)
+
+    context = {'user': request.user, 'verified': verified_list, 'unverified': unverified_list}
     return render(request, 'account/verification.html', context)
 
 
@@ -144,38 +170,41 @@ def account_edit_profile(request):
     return render(request, 'account/edit_profile.html', context)
 
 
-@login_required
-def account_settings(request):
-    password_change_form = PasswordChangeForm
-    if request.method == "POST":
-        form = password_change_form(user=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('accounts:password_change_successful'))
-    else:
-        form = password_change_form(user=request.user)
-    context = {'form': form, 'user': request.user}
-    return render(request, 'account/settings.html', context)
+class account_settings(PasswordChangeView):
+    template_name = "account/settings.html"
+    form_class = ChangePasswordFormModified
+    success_url = reverse_lazy('accounts:account_settings')
+
+    def get_context_data(self, **kwargs):
+        ret = super(PasswordChangeView, self).get_context_data(**kwargs)
+        # NOTE: For backwards compatibility
+        ret['password_change_form'] = ret.get('form')
+        ret['email_form'] = AddEmailFormCombined()
+        # (end NOTE)
+        return ret
 
 
+class email_add_successful(EmailView):
+    success_url = reverse_lazy('accounts:account_settings')
+    form_class = AddEmailFormCombined
 
-
-
-
-
-
-
-class test(EmailView):
-    template_name = 'account/email.html'
-    password_change_form = PasswordChangeForm
-    print "just chillin"
+    def form_valid(self, form):
+        email_address = form.save(self.request)
+        get_adapter().add_message(self.request,
+                                  messages.INFO,
+                                  'account/messages/'
+                                  'email_confirmation_sent.txt',
+                                  {'add_email': form.cleaned_data["add_email"]})
+        signals.email_added.send(sender=self.request.user.__class__,
+                                 request=self.request,
+                                 user=self.request.user,
+                                 email_address=email_address)
+        return super(EmailView, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
-        print "posting"
         res = None
         if "action_add" in request.POST:
             res = super(EmailView, self).post(request, *args, **kwargs)
-        # Added form condition for password change
         elif request.POST.get("email"):
             if "action_send" in request.POST:
                 res = self._action_send(request)
@@ -183,38 +212,12 @@ class test(EmailView):
                 res = self._action_remove(request)
             elif "action_primary" in request.POST:
                 res = self._action_primary(request)
-            res = res or HttpResponseRedirect(reverse('account_email'))
+            res = res or HttpResponseRedirect(reverse('accounts:account_settings'))
             # Given that we bypassed AjaxCapableProcessFormViewMixin,
             # we'll have to call invoke it manually...
             res = _ajax_response(request, res)
         else:
             # No email address selected
-            res = HttpResponseRedirect(reverse('account_email'))
+            res = HttpResponseRedirect(reverse('accounts:account_settings'))
             res = _ajax_response(request, res)
         return res
-
-    def password_change(self, request, *args, **kwargs):
-        print "got to the function"
-        self.password_change_form = self.password_change_form(user=request.user, data=request.POST)
-        if self.password_change_form.is_valid():
-            self.password_change_form.save()
-            return HttpResponseRedirect(reverse('accounts:password_change_successful'))
-
-    def get_context_data(self, **kwargs):
-        print 'poop'
-        ret = super(EmailView, self).get_context_data(**kwargs)
-        # NOTE: For backwards compatibility
-        ret['add_email_form'] = ret.get('form')
-        ret['passwordform'] = self.password_change_form(user=self.request.user)
-        # (end NOTE)
-        return ret
-
-@login_required
-def password_change_post(request):
-    password_change_form = PasswordChangeForm
-    if request.method == "POST":
-        form = password_change_form(user=request.user, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('accounts:password_change_successful'))
-
