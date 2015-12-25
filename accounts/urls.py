@@ -14,6 +14,7 @@ urlpatterns = [
     
     url(r'^accounts/home/$', views.account_home, name='account_home'),
     url(r'^accounts/verification/$', views.account_verification, name='account_verification'),
+    url(r'^accounts/disconnect/(?P<service>[0-9A-Za-z]+)', views.account_disconnect_service, name='account_disconnect_service'),
     url(r'^accounts/edit_profile/$', views.account_edit_profile, name='account_edit_profile'),
     url(r'^accounts/settings/$', login_required(views.account_settings.as_view()), name='account_settings'),
     url(r'^accounts/password_change_successful/$',

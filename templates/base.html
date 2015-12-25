@@ -86,7 +86,7 @@
           {{ request.user.extendeduser.first_name }}
           <i class="circular user icon"></i>
           <div class="menu">
-            <a class="item">Account home</a>
+            <a href="{% url 'accounts:account_home' %}" class="item">Dashboard</a>
             <a class="item">View your listings</a>
             <a class="item">Edit profile</a>
             <a class="item" href="{% url 'account_logout' %}">Logout</a>

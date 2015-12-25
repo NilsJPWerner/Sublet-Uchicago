@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import messages
@@ -8,12 +8,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 
-from .forms import ListingForm, ExtendedUserForm, ChangePasswordFormModified, AddEmailFormCombined
+from .forms import (ListingForm, ExtendedUserForm,
+                    ChangePasswordFormModified, AddEmailFormCombined)
 from .models import listing, ExtendedUser
-from allauth.account.views import PasswordChangeView, EmailView, _ajax_response
+from allauth.account.views import (PasswordChangeView, EmailView,
+                                    _ajax_response)
 from allauth.account.adapter import get_adapter
 from allauth.account import signals
 from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialAccount
 
 
 def add(request):
@@ -107,26 +110,33 @@ def account_home(request):
 
 class verification(object):
     """docstring for verification"""
-    def __init__(self, name, link, description):
+    def __init__(self, name, link, disconnect_link, description):
         self.name = name
         self.link = link
+        self.disconnect_link = disconnect_link
         self.description = description
 
 
 @login_required
 def account_verification(request):
-    uchicago = verification('Uchicago E-mail', '{% url "account:settings" %}', 'poop')
-    # Djanfo limitations forced me to hardcode the connect urls. 
+    uchicago = verification('Uchicago E-mail',
+        reverse('accounts:account_settings'),
+        reverse('accounts:account_settings'),
+        'poop')
+    # Djanfo limitations forced me to hardcode the connect urls.
     # Not very DRY so might eventually fix
     facebook = verification('Facebook',
-                            '/accounts/facebook/login/?process=connect',
-                            'Insert text about facebook here')
+        '/accounts/facebook/login/?process=connect',
+        reverse('accounts:account_disconnect_service', args=('facebook',)),
+        'Insert text about facebook here')
     google = verification('Google',
-                            '/accounts/google/login/?process=connect&method=oauth2',
-                            'Insert text about google here')
+        '/accounts/google/login/?process=connect&next=%2Faccounts%2Fverification%2F',
+        reverse('accounts:account_disconnect_service', args=('google',)),
+        'Insert text about google here')
     linkedin = verification('Linkedin',
-                            '/accounts/linkedin_oauth2/login/?process=connect',
-                            'Insert text about linkedin here')
+        '/accounts/linkedin_oauth2/login/?process=connect&next=%2Faccounts%2Fverification%2F',
+        reverse('accounts:account_disconnect_service', args=('linkedin',)),
+        'Insert text about linkedin here')
 
     verified_list = []
     unverified_list = []
@@ -143,9 +153,33 @@ def account_verification(request):
     if False:
         verified_list.append(facebook)
         unverified_list.remove(facebook)
-
+    account_list = SocialAccount.objects.filter(user=request.user)
+    for account in account_list:
+        if account.provider == 'facebook':
+            verified_list.append(facebook)
+            unverified_list.remove(facebook)
+        elif account.provider == 'google':
+            verified_list.append(google)
+            unverified_list.remove(google)
+        elif account.provider == 'linkedin':
+            verified_list.append(linkedin)
+            unverified_list.remove(linkedin)
     context = {'user': request.user, 'verified': verified_list, 'unverified': unverified_list}
     return render(request, 'account/verification.html', context)
+
+
+@login_required
+def account_disconnect_service(request, service):
+    # Should really use a POST request to disconnect rather than a get
+    if service in ('facebook', 'google', 'linkedin_oauth2'):
+        try:
+            account = SocialAccount.objects.get(user=request.user, provider='google')
+            account.delete()
+            return HttpResponseRedirect(reverse('accounts:account_verification'))
+        except:
+            raise Http404("There has been error with disconnecting your account")
+    else:
+        raise Http404("The urls are messed up")
 
 
 @login_required

@@ -8,7 +8,8 @@
       <h4 class="">What are verifications?</h4>
     </div>
     <div class="ui bottom attached padded segment">
-      <p>Verifications can be added to an account to build initial trust between potential subletters and subletees. By for example displaying the number of mutual friends on facebook or having a uchicago email address on your public profile more users will trust you. /placeholder</p>
+      <p>Verifications can be added to an account to build initial trust between potential subletters and subletees. By for example displaying the number of mutual friends on facebook or having a uchicago email address on your public profile more users will trust you. /placeholder
+      </p>
     </div>
     <div class="ui secondary top attached segment">
       <h4 class="">Your current verifications</h4>
@@ -23,9 +24,12 @@
         </div>
         {% for item in verified %}
           <div class="one column row no-vertical-margin">
-            <div class="sixteen wide column">
+            <div class="twelve wide column">
               <h3 class="margin-below">{{ item.name }}</h3>
               {{ item.description }}
+            </div>
+            <div class="four wide right aligned column">
+              <a href="{{ item.disconnect_link }}"><button class="ui fluid customblue button margin-above"><strong>Disconnect</strong></button></a>
             </div>
           </div>
         {% endfor %}
