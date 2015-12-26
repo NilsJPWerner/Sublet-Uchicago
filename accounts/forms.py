@@ -1,5 +1,5 @@
 from django import forms
-from .models import listing, ExtendedUser
+from .models import Listing, ExtendedUser
 
 from allauth.account.forms import UserForm, PasswordField, SetPasswordField
 from allauth.account import app_settings
@@ -10,8 +10,21 @@ from allauth.account.utils import filter_users_by_email
 
 class ListingForm(forms.ModelForm):
     class Meta:
-        model = listing
-        fields = ['description', 'price', 'location', 'details']
+        model = Listing
+        fields = []
+
+
+class EditDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ('listing_name', 'summary', 'address')
+
+
+class EditDetailsForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ('bed_size', 'roomate_count', 'bathroom', 'ac', 'in_unit_washer_dryer', 'tv', 
+            'cable_tv', 'internet', 'wheel_chair_accessible', 'pets_live_here', 'pets_allowed')
 
 
 class ExtendedUserForm(forms.ModelForm):
@@ -24,6 +37,7 @@ class ExtendedUserForm(forms.ModelForm):
         }
 
 
+# Subclassed to get rid of placeholder data
 class ChangePasswordFormModified(UserForm):
 
     oldpassword = PasswordField(label=(""))

@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -9,8 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 
 from .forms import (ListingForm, ExtendedUserForm,
-                    ChangePasswordFormModified, AddEmailFormCombined)
-from .models import listing, ExtendedUser
+                    ChangePasswordFormModified, AddEmailFormCombined,
+                    EditDescriptionForm, )
+from .models import Listing, ExtendedUser
 from allauth.account.views import (PasswordChangeView, EmailView,
                                     _ajax_response)
 from allauth.account.adapter import get_adapter
@@ -19,86 +20,84 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 
 
-def add(request):
-    # Check if User is logged in
-    # if not request.user.is_authenticated():
-    #     messages.warning(request, 'Please login to add a listing!')
-    #     return HttpResponseRedirect('/accounts/home')
+# def add(request):
+#     # Check if User is logged in
+#     # if not request.user.is_authenticated():
+#     #     messages.warning(request, 'Please login to add a listing!')
+#     #     return HttpResponseRedirect('/accounts/home')
 
-    listingform = ListingForm(prefix='listingform')
-    if request.method == 'GET':
-        return render_to_response('add_listing.html', 
-            locals(), context_instance=RequestContext(request))
-
-
+#     listingform = ListingForm(prefix='listingform')
+#     if request.method == 'GET':
+#         return render_to_response('add_listing.html', 
+#             locals(), context_instance=RequestContext(request))
 
 
 
-    if request.method == 'POST':
-        form = ListingForm(request.POST, prefix='listingform')
-        if form.is_valid(): 
-            cd = form.cleaned_data
-            inputSlug = slugify(cd['description'])
-            new = listing(
-                description=cd['description'],
-                details=cd['details'],
-                price=cd['price'],
-                seller_id=request.user,
-                slug=inputSlug,
-                location=cd['location'])
-            new.save()
-            return HttpResponseRedirect('/listing/' + inputSlug)
-        else: 
-            #display more specific error message
-            messages.warning(request, 'Your listing is invalid, please try again!')
-            return HttpResponseRedirect('')
+#     if request.method == 'POST':
+#         form = ListingForm(request.POST, prefix='listingform')
+#         if form.is_valid(): 
+#             cd = form.cleaned_data
+#             inputSlug = slugify(cd['description'])
+#             new = listing(
+#                 description=cd['description'],
+#                 details=cd['details'],
+#                 price=cd['price'],
+#                 seller_id=request.user,
+#                 slug=inputSlug,
+#                 location=cd['location'])
+#             new.save()
+#             return HttpResponseRedirect('/listing/' + inputSlug)
+#         else: 
+#             #display more specific error message
+#             messages.warning(request, 'Your listing is invalid, please try again!')
+#             return HttpResponseRedirect('')
 
 
-def get_listing(request, slug):
-    listingObject = listing.objects.get(slug=slug)
-    listing_id = listingObject.id
-    print listingObject.get_absolute_edit_url()
-    if request.user.id == listing_id:
-      same_user_as_post = True
-    else:
-      same_user_as_post = False
-    return render_to_response('display_listing.html', 
-        locals(), context_instance=RequestContext(request))
+# def get_listing(request, slug):
+#     listingObject = listing.objects.get(slug=slug)
+#     listing_id = listingObject.id
+#     print listingObject.get_absolute_edit_url()
+#     if request.user.id == listing_id:
+#       same_user_as_post = True
+#     else:
+#       same_user_as_post = False
+#     return render_to_response('display_listing.html', 
+#         locals(), context_instance=RequestContext(request))
 
 
-# Implement a method in the listing display page to only allow edit if you
-# posted it to begin with
-def edit_listing(request, slug):
-    listingObject = listing.objects.get(slug=slug)
-    listing_id = listingObject.id
+# # Implement a method in the listing display page to only allow edit if you
+# # posted it to begin with
+# def edit_listing(request, slug):
+#     listingObject = listing.objects.get(slug=slug)
+#     listing_id = listingObject.id
 
-    if request.user.id == listing_id:
-      same_user_as_post = True
-    else:
-      same_user_as_post = False
-      messages.warning(request, 'You can only edit your own posts!')
-      return HttpResponseRedirect('')
-
-
-    if request.method == 'GET':
-        listingform = ListingForm(instance=listingObject, prefix='listingform')
-        return render_to_response('edit_listing.html',
-            locals(), context_instance=RequestContext(request))
+#     if request.user.id == listing_id:
+#       same_user_as_post = True
+#     else:
+#       same_user_as_post = False
+#       messages.warning(request, 'You can only edit your own posts!')
+#       return HttpResponseRedirect('')
 
 
+#     if request.method == 'GET':
+#         listingform = ListingForm(instance=listingObject, prefix='listingform')
+#         return render_to_response('edit_listing.html',
+#             locals(), context_instance=RequestContext(request))
 
-    if request.method == 'POST':
-        listingform = ListingForm(request.POST, prefix='listingform')
-        #Check if data is valid & then modify it
-        if listingform.is_valid():
-            cd = listingform.cleaned_data
-            listingObject.description = cd['description']
-            listingObject.details= cd['details']
-            listingObject.price = cd['price']
-            listingObject.location=cd['location']
-            listingObject.renewals += 1
-        listingObject.save()
-        return HttpResponseRedirect('/listing/' + listingObject.slug)
+
+
+#     if request.method == 'POST':
+#         listingform = ListingForm(request.POST, prefix='listingform')
+#         #Check if data is valid & then modify it
+#         if listingform.is_valid():
+#             cd = listingform.cleaned_data
+#             listingObject.description = cd['description']
+#             listingObject.details= cd['details']
+#             listingObject.price = cd['price']
+#             listingObject.location=cd['location']
+#             listingObject.renewals += 1
+#         listingObject.save()
+#         return HttpResponseRedirect('/listing/' + listingObject.slug)
 
 
 @login_required
@@ -106,6 +105,38 @@ def account_home(request):
     user = request.user
     context = {'user': user}
     return render(request, 'account/home.html', context)
+
+
+@login_required
+def add_listing(request):
+    new_listing = Listing(seller_id=request.user)
+    new_listing.save()
+    return HttpResponseRedirect(reverse('accounts:edit_listing_description', args=(new_listing.id,)))
+
+
+@login_required
+def edit_listing_description(request, listing_id):
+    if request.method == "POST":
+        listing = get_object_or_404(Listing, id=listing_id)
+        form = EditDescriptionForm(request.POST, instance=listing)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accounts:edit_listing_details'))
+    else:
+        listing = get_object_or_404(Listing, id=listing_id)
+        if listing.seller_id != request.user:
+            # Make this a little better
+            return HttpResponse("This is not yours")
+        else:
+            form = EditDescriptionForm(instance=listing)
+
+    context = {'form': form, 'user': request.user}
+    return render(request, 'listing/edit_listing_description.html', context)
+
+
+@login_required
+def edit_listing_details(request, listing_id):
+    return HttpResponse("Thhings are coming")
 
 
 class verification(object):
@@ -122,8 +153,8 @@ def account_verification(request):
     uchicago = verification('Uchicago E-mail',
         reverse('accounts:account_settings'),
         reverse('accounts:account_settings'),
-        'poop')
-    # Djanfo limitations forced me to hardcode the connect urls.
+        'Insert text about Uchicago E-mail account')
+    # Django limitations forced me to hardcode the connect urls.
     # Not very DRY so might eventually fix
     facebook = verification('Facebook',
         '/accounts/facebook/login/?process=connect',
@@ -134,25 +165,19 @@ def account_verification(request):
         reverse('accounts:account_disconnect_service', args=('google',)),
         'Insert text about google here')
     linkedin = verification('Linkedin',
-        '/accounts/linkedin_oauth2/login/?process=connect&next=%2Faccounts%2Fverification%2F',
+        '/accounts/linkedin/login/?process=connect&next=%2Faccounts%2Fverification%2F',
         reverse('accounts:account_disconnect_service', args=('linkedin',)),
         'Insert text about linkedin here')
 
     verified_list = []
-    unverified_list = []
-    unverified_list.append(uchicago)
-    unverified_list.append(facebook)
-    unverified_list.append(google)
-    unverified_list.append(linkedin)
+    unverified_list = [uchicago, facebook, google, linkedin]
 
     email_list = EmailAddress.objects.filter(user=request.user, verified=True)
     for email in email_list:
         if '@uchicago.edu' in email.email:
-            verified_list.append(uchicago)
             unverified_list.remove(uchicago)
-    if False:
-        verified_list.append(facebook)
-        unverified_list.remove(facebook)
+            verified_list.append(uchicago)
+            break
     account_list = SocialAccount.objects.filter(user=request.user)
     for account in account_list:
         if account.provider == 'facebook':
@@ -164,16 +189,17 @@ def account_verification(request):
         elif account.provider == 'linkedin':
             verified_list.append(linkedin)
             unverified_list.remove(linkedin)
-    context = {'user': request.user, 'verified': verified_list, 'unverified': unverified_list}
+    context = {'user': request.user, 'verified': verified_list,
+                'unverified': unverified_list}
     return render(request, 'account/verification.html', context)
 
 
 @login_required
 def account_disconnect_service(request, service):
     # Should really use a POST request to disconnect rather than a get
-    if service in ('facebook', 'google', 'linkedin_oauth2'):
+    if service in ('facebook', 'google', 'linkedin'):
         try:
-            account = SocialAccount.objects.get(user=request.user, provider='google')
+            account = SocialAccount.objects.get(user=request.user, provider=service)
             account.delete()
             return HttpResponseRedirect(reverse('accounts:account_verification'))
         except:

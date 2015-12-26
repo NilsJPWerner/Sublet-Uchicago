@@ -2,13 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from .models import listing, ExtendedUser
+from .models import Listing, ExtendedUser
 
 
 # Register your models here.
 class ListingAdmin(admin.ModelAdmin):
-    model = listing
-    readonly_fields = ('id',)
+    model = Listing
 
 
 class ExtendedUserAdmin(admin.ModelAdmin):
@@ -34,4 +33,4 @@ admin.site.register(User, UserAdmin)
 
 
 admin.site.register(ExtendedUser, ExtendedUserAdmin)
-admin.site.register(listing, ListingAdmin)
+admin.site.register(Listing, ListingAdmin)
