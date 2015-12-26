@@ -1,16 +1,32 @@
 {% extends 'listing/listing_base.html' %}
 
 {% block listing_content %}
-  <form method="post" class="ui form" action="">
-    {% csrf_token %}
+  <form class="ui form" method="post" action="">
       <div class="ui secondary top attached segment">
         <h4 class="">Listing Details</h4>
       </div>
-      <div class="ui bottom attached padded segment">
-        {{ form.as_p }}
-        <button type="submit" class="ui customblue button">Next</button>
+      <div class="ui attached padded segment">
+        {% csrf_token %}
+        <div class="ui two column grid">
+          {% for field in form %}
+            <div class="row">
+              <div class="four wide right aligned column">
+                <label class="inline-label">{{ field.label }}</label>
+              </div>
+              <div class="twelve wide column">
+                {{ field }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  </form>
+      <div class="ui bottom attached segment">
+        <div class="ui one column right aligned grid">
+          <div class="ui sixteen wide column">
+            <button class="ui customblue icon button" type="submit" style="width:90px;">Next<i class="ui right arrow icon"></i></button>
+          </div>
+        </div>
+      </div>
+    </form>
 
 {% endblock %}
