@@ -1,6 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -10,7 +9,7 @@ from django.template.defaultfilters import slugify
 
 from .forms import (ListingForm, ExtendedUserForm,
                     ChangePasswordFormModified, AddEmailFormCombined,
-                    EditDescriptionForm, )
+                    EditDescriptionForm, EditDetailsForm)
 from .models import Listing, ExtendedUser
 from allauth.account.views import (PasswordChangeView, EmailView,
                                     _ajax_response)
@@ -121,7 +120,7 @@ def edit_listing_description(request, listing_id):
         form = EditDescriptionForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('accounts:edit_listing_details'))
+            return HttpResponseRedirect(reverse('accounts:edit_listing_details', args=listing_id))
     else:
         listing = get_object_or_404(Listing, id=listing_id)
         if listing.seller_id != request.user:
@@ -130,13 +129,28 @@ def edit_listing_description(request, listing_id):
         else:
             form = EditDescriptionForm(instance=listing)
 
-    context = {'form': form, 'user': request.user}
+    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
     return render(request, 'listing/edit_listing_description.html', context)
 
 
 @login_required
 def edit_listing_details(request, listing_id):
-    return HttpResponse("Thhings are coming")
+    if request.method == "POST":
+        listing = get_object_or_404(Listing, id=listing_id)
+        form = EditDetailsForm(request.POST, instance=listing)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accounts:edit_listing_details'))
+    else:
+        listing = get_object_or_404(Listing, id=listing_id)
+        if listing.seller_id != request.user:
+            # Make this a little better
+            return HttpResponse("This is not yours")
+        else:
+            form = EditDetailsForm(instance=listing)
+
+    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    return render(request, 'listing/edit_listing_details.html', context)
 
 
 class verification(object):

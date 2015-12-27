@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block head_title %}{% block listing_head_title %}{% endblock %}{% endblock %}
+{% block head %}
+  {% block listing_head %}
+  {% endblock %}
+{% endblock %}
+{% block content %}
+
+<div id="account" class="ui centered two column grid stackable container" style="margin-top: 20px;">
+  <div class="four wide column">
+    <a href="{% url 'accounts:account_home' %}" class="ui fluid icon button">
+        <i class="ui arrow left icon"></i>
+        Back to Dashboard
+    </a>
+    <div class="ui card">
+      <div class="content">
+        <div class="header">
+          Editing: {{ listing.listing_name }}
+        </div>
+        <div class="meta">
+          Friends of Veronika
+        </div>
+        <div class="description">
+          Elliot requested permission to view your contact details
+        </div>
+      </div>
+      <div class="extra content">
+          <div class="ui customblue button">Approve</div>
+      </div>
+    </div>
+    <div class="ui large vertical fluid menu">
+      <a href="{% url 'accounts:edit_listing_description' listing_id %}"  class="item">
+        Description
+        {% if listing.description_complete %}<i class="ui green checkmark icon"></i>{% endif %}
+      </a>
+      <a class="item">
+        Location
+      </a>
+      <a href="{% url 'accounts:edit_listing_details' listing_id %}" class="item">
+        Details
+      </a>
+      <a class="item">
+        Photos
+      </a>
+      <a class="item">
+        Calendar
+      </a>
+      <a class="item">
+        Price
+      </a>
+    </div>
+  </div>
+  <div class="ten wide column">
+    {% block listing_content %}
+    {% endblock %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  {% block listing_scripts %}
+  {% endblock %}
+{% endblock %}

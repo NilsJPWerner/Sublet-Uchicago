@@ -37,6 +37,8 @@ BED_SIZE = (('king', 'King'),
 BATHROOM = (('shared', 'Shared'),
     ('private', 'Private'))
 
+YESNO = (('yes', 'Yes'), ('no', 'No'))
+
 
 class ExtendedUser(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, default="0", null=True)
@@ -62,10 +64,14 @@ class Listing(models.Model):
 
     # Blank is temporary, need to add a method to allow blank save
     # but then require it to be published
-    # Descrition step
+    
+    # Descrition
     listing_name = models.CharField(max_length=40, blank=True)
     summary = models.TextField(max_length=400, blank=True)
+    
+    # Location
     address = models.CharField(max_length=100, blank=True)
+    zip_code = models.IntegerField(default=0, blank=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(41.796662))
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(-87.594183))
 
@@ -82,9 +88,12 @@ class Listing(models.Model):
     pets_live_here = models.BooleanField(default=False)
     pets_allowed = models.BooleanField(default=False)
 
+    # Price 
+    price = models.IntegerField(default=0, blank=True)
+    amenities_included = models.CharField(choices=YESNO, max_length=10, blank=True)
+    amenities_price = models.IntegerField(default=0, blank=True)
+    prefered_payment_method = models.CharField(max_length=20, blank=True)
 
-
-    price = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
@@ -94,6 +103,11 @@ class Listing(models.Model):
     published = models.BooleanField(default=True)
     #added stuff
     slug = models.SlugField(max_length=300)
+
+    def description_complete(self):
+        if self.listing_name and self.summary:
+            return True
+        return False
 
 
     # def get_absolute_url(self):

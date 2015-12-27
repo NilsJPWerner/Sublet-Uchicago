@@ -17,7 +17,7 @@ class ListingForm(forms.ModelForm):
 class EditDescriptionForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ('listing_name', 'summary', 'address')
+        fields = ('listing_name', 'summary')
 
 
 class EditDetailsForm(forms.ModelForm):

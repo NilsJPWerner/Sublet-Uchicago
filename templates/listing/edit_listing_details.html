@@ -1,0 +1,16 @@
+{% extends 'listing/listing_base.html' %}
+
+{% block listing_content %}
+  <form method="post" class="ui form" action="">
+    {% csrf_token %}
+      <div class="ui secondary top attached segment">
+        <h4 class="">Listing Details</h4>
+      </div>
+      <div class="ui bottom attached padded segment">
+        {{ form.as_p }}
+        <button type="submit" class="ui customblue button">Next</button>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}
