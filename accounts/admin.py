@@ -2,12 +2,16 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from .models import Listing, ExtendedUser
+from .models import *
 
 
 # Register your models here.
 class ListingAdmin(admin.ModelAdmin):
     model = Listing
+
+
+class PhotoAdmin(admin.ModelAdmin):
+    model = Photo
 
 
 class ExtendedUserAdmin(admin.ModelAdmin):
@@ -31,6 +35,6 @@ class UserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-
 admin.site.register(ExtendedUser, ExtendedUserAdmin)
 admin.site.register(Listing, ListingAdmin)
+admin.site.register(Photo, PhotoAdmin)

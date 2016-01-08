@@ -1,56 +1,29 @@
+import os
+
+from django.conf import settings
+from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
+from django.views.generic.edit import FormView
 
 from .forms import (ListingForm, ExtendedUserForm,
                     ChangePasswordFormModified, AddEmailFormCombined,
-                    EditDescriptionForm, EditDetailsForm)
-from .models import Listing, ExtendedUser
-from allauth.account.views import (PasswordChangeView, EmailView,
-                                    _ajax_response)
+                    EditDescriptionForm, EditDetailsForm, EditLocationForm,)
+from .models import Listing, ExtendedUser, Photo
+
+from allauth.account.views import (PasswordChangeView, EmailView, _ajax_response)
 from allauth.account.adapter import get_adapter
 from allauth.account import signals
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
-
-
-# def add(request):
-#     # Check if User is logged in
-#     # if not request.user.is_authenticated():
-#     #     messages.warning(request, 'Please login to add a listing!')
-#     #     return HttpResponseRedirect('/accounts/home')
-
-#     listingform = ListingForm(prefix='listingform')
-#     if request.method == 'GET':
-#         return render_to_response('add_listing.html', 
-#             locals(), context_instance=RequestContext(request))
-
-
-
-#     if request.method == 'POST':
-#         form = ListingForm(request.POST, prefix='listingform')
-#         if form.is_valid(): 
-#             cd = form.cleaned_data
-#             inputSlug = slugify(cd['description'])
-#             new = listing(
-#                 description=cd['description'],
-#                 details=cd['details'],
-#                 price=cd['price'],
-#                 seller_id=request.user,
-#                 slug=inputSlug,
-#                 location=cd['location'])
-#             new.save()
-#             return HttpResponseRedirect('/listing/' + inputSlug)
-#         else: 
-#             #display more specific error message
-#             messages.warning(request, 'Your listing is invalid, please try again!')
-#             return HttpResponseRedirect('')
-
+from jfu.http import upload_receive, UploadResponse, JFUResponse
 
 # def get_listing(request, slug):
 #     listingObject = listing.objects.get(slug=slug)
@@ -114,13 +87,23 @@ def add_listing(request):
 
 
 @login_required
+def edit_listing(request, listing_id):
+    return HttpResponseRedirect(reverse('accounts:edit_listing_description', args=(listing_id,)))
+
+
+class edit_listing_class(FormView):
+    pass
+
+
+# Change these form views to one class
+@login_required
 def edit_listing_description(request, listing_id):
     if request.method == "POST":
         listing = get_object_or_404(Listing, id=listing_id)
         form = EditDescriptionForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('accounts:edit_listing_details', args=listing_id))
+            return HttpResponseRedirect(reverse('accounts:edit_listing_location', args=listing_id))
     else:
         listing = get_object_or_404(Listing, id=listing_id)
         if listing.seller_id != request.user:
@@ -131,6 +114,26 @@ def edit_listing_description(request, listing_id):
 
     context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
     return render(request, 'listing/edit_listing_description.html', context)
+
+
+@login_required
+def edit_listing_location(request, listing_id):
+    if request.method == "POST":
+        listing = get_object_or_404(Listing, id=listing_id)
+        form = EditLocationForm(request.POST, instance=listing)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accounts:edit_listing_details', args=listing_id))
+    else:
+        listing = get_object_or_404(Listing, id=listing_id)
+        if listing.seller_id != request.user:
+            # Make this a little better
+            return HttpResponse("This is not yours")
+        else:
+            form = EditLocationForm(instance=listing)
+
+    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    return render(request, 'listing/edit_listing_location.html', context)
 
 
 @login_required
@@ -151,6 +154,58 @@ def edit_listing_details(request, listing_id):
 
     context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
     return render(request, 'listing/edit_listing_details.html', context)
+
+
+def edit_listing_photos(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id)
+    if listing.seller_id != request.user:
+        # Make this a little better
+        return HttpResponse("This is not yours")
+    context = {'accepted_mime_types': 'image/*', 'listing': listing, 'listing_id': listing_id}
+    return render(request, 'listing/edit_listing_photos.html', context)
+
+
+@require_POST
+def upload(request, listing_id):
+
+    print listing_id
+    # The assumption here is that jQuery File Upload
+    # has been configured to send files one at a time.
+    # If multiple files can be uploaded simulatenously,
+    # 'file' may be a list of files.
+    image = upload_receive(request)
+
+    instance = Photo(image=image)
+    instance.save()
+
+    basename = os.path.basename(instance.image.path)
+
+    file_dict = {
+        'name': basename,
+        'size': image.size,
+
+        'url': instance.image.url,
+        'thumbnailUrl': instance.image.url,
+
+        'deleteUrl': reverse('accounts:jfu_delete', kwargs={'pk': instance.pk}),
+        'deleteType': 'POST',
+    }
+
+    return UploadResponse(request, file_dict)
+
+
+@require_POST
+def upload_delete(request, pk):
+    success = True
+    try:
+        instance = Photo.objects.get(id=pk)
+        instance.delete()
+        print "yay"
+    except Photo.DoesNotExist:
+        print "oh no"
+        success = False
+
+    return JFUResponse(request, success)
 
 
 class verification(object):

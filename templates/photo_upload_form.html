@@ -1,0 +1,116 @@
+{% extends 'jfu/upload_form.html' %}
+
+{% load staticfiles %}
+
+{% block JS_OPTS %}
+//autoUpload: true,
+sequentialUploads: true,
+acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i
+{% endblock %}
+
+
+{% block CSS_EXTRA %}
+<link rel="stylesheet" type="text/css" href="{% static "css/uploader.css" %}">
+{% endblock %}
+
+{% block UPLOAD_FORM %}
+
+{% comment %}
+ The file upload form used as target for the file upload widget 
+{% endcomment %}
+<form id="fileupload" class="ui grid form" action="{{ upload_handler_url }}" method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    {% block UPLOAD_FORM_BUTTON_BAR %}
+    <div class="ui row fileupload-buttonbar">
+        <div class="ui eleven wide column">
+
+            <button class="ui button hidden-field-container">
+                <i class="ui icon plus"></i>
+                <span>Add photos</span>
+                <input class="hidden-field" type="file" name="files[]" multiple
+                    {% if accepted_mime_types %}
+                        accept = '{{ accepted_mime_types|join:"," }}'
+                    {% endif %}>
+            </button>
+
+            <button type="submit" class="ui button start">
+                <i class="ui icon upload"></i>
+                <span>Start upload</span>
+            </button>
+            <!-- <button type="reset" class="ui button">
+                <i class="glyphicon glyphicon-ban-circle"></i>
+                <span>Cancel upload</span>
+            </button> -->
+            <button type="button" class="ui button delete">
+                <i class="ui icon delete"></i>
+                <span>Delete</span>
+            </button>
+            <div class="fileupload-progress fade">
+                <div 
+                    class="progress progress-striped active" 
+                    role="progressbar" 
+                    aria-valuemin="0" aria-valuemax="100"
+                >
+                    <div class="progress-bar progress-bar-success" style="width:0%;">
+                    </div>
+                </div>
+                {% comment %}
+                 The extended global progress information 
+                {% endcomment %}
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+
+    {% comment %}
+     The loading indicator is shown during file processing 
+    {% endcomment %}
+
+    {% block UPLOAD_FORM_LINDICATOR %}
+    <div class="fileupload-loading"></div>
+    {% endblock %}
+
+    {% block UPLOAD_FORM_LISTING %}
+    {% comment %}
+     The table listing the files available for upload/download 
+    {% endcomment %}
+    <table role="presentation" class="ui celled striped table">
+        <tbody class="files"></tbody>
+    </table>
+    {% endblock %}
+
+    {% block UPLOAD_FORM_EXTRA %}
+    {% endblock %}
+
+</form>
+{% endblock %}
+
+
+
+{% block JS_UPLOAD_TEMPLATE_CONTROLS %}
+<td>
+    {% block JS_UPLOAD_TEMPLATE_START %}
+    {{ JQ_OPEN }} if (!i && !o.options.autoUpload) { {{ JQ_CLOSE }}
+        <button type="button" class="ui button start">
+            <i class="ui icon upload"></i>
+            <span>Start</span>
+        </button>
+    {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+    {% endblock %}
+
+    {% block JS_UPLOAD_TEMPLATE_CANCEL %}
+    {{ JQ_OPEN }} if (!i) { {{ JQ_CLOSE }}
+        <button type="button" class="ui button cancel">
+            <i class="ui icon cancel"></i>
+            <span>Cancel</span>
+        </button>
+    {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+    {% endblock %}
+</td>
+{% endblock %}
+
+

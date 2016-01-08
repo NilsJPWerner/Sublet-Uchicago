@@ -1,0 +1,24 @@
+html {
+  font-size: 14px;
+}
+
+.hidden-field-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.hidden-field {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+.preview > a > img {
+  max-width: 80px;
+}

@@ -52,9 +52,8 @@ PROJECT_APPS = (
     # 'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
-    'haystack',
-    'whoosh',
     'accounts',
+    'jfu',
 )
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -85,6 +84,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
+                'django.core.context_processors.static'
             ],
         },
     },

@@ -9,45 +9,79 @@
 
 <div id="account" class="ui centered two column grid stackable container" style="margin-top: 20px;">
   <div class="four wide column">
-    <a href="{% url 'accounts:account_home' %}" class="ui fluid icon button">
+    <div class="ui large one item menu">
+      <a href="{% url 'accounts:account_home' %}" class="ui item">
         <i class="ui arrow left icon"></i>
         Back to Dashboard
-    </a>
+      </a>
+    </div>
     <div class="ui card">
       <div class="content">
         <div class="header">
           Editing: {{ listing.listing_name }}
         </div>
         <div class="meta">
-          Friends of Veronika
         </div>
         <div class="description">
-          Elliot requested permission to view your contact details
+          {% if listing.listing_complete %}
+            You are ready to publish your listing. Don't worry you can come back and edit it later.
+          {% else %}
+            To publish your listing complete the steps below. You can always come back and finish it later.
+          {% endif %}
         </div>
       </div>
       <div class="extra content">
-          <div class="ui customblue button">Approve</div>
+          {% if listing.listing_complete %}
+            <div class="ui fluid customblue button">Publish</div>
+          {% else %}
+            <div class="ui fluid disabled button">Publish</div>
+          {% endif %}
       </div>
     </div>
     <div class="ui large vertical fluid menu">
       <a href="{% url 'accounts:edit_listing_description' listing_id %}"  class="item">
         Description
-        {% if listing.description_complete %}<i class="ui green checkmark icon"></i>{% endif %}
+        {% if listing.description_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
-      <a class="item">
+      <a href="{% url 'accounts:edit_listing_location' listing_id %}" class="item">
         Location
+        {% if listing.location_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
       <a href="{% url 'accounts:edit_listing_details' listing_id %}" class="item">
         Details
+        {% if listing.details_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
-      <a class="item">
+      <a href="{% url 'accounts:edit_listing_photos' listing_id %}" class="item">
         Photos
+        <i class="ui grey plus icon"></i>
       </a>
       <a class="item">
         Calendar
+        {% if listing.calendar_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
       <a class="item">
         Price
+        {% if listing.price_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
     </div>
   </div>
