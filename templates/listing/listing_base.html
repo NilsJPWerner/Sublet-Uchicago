@@ -65,7 +65,11 @@
       </a>
       <a href="{% url 'accounts:edit_listing_photos' listing_id %}" class="item">
         Photos
-        <i class="ui grey plus icon"></i>
+        {% if listing.photos_complete %}
+          <i class="ui green checkmark icon"></i>
+        {% else %}
+          <i class="ui grey plus icon"></i>
+        {% endif %}
       </a>
       <a class="item">
         Calendar

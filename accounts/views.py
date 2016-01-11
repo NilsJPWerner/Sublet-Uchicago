@@ -158,10 +158,11 @@ def edit_listing_details(request, listing_id):
 
 def edit_listing_photos(request, listing_id):
     listing = get_object_or_404(Listing, id=listing_id)
+    photos = Photo.objects.filter(listing=listing_id)
     if listing.seller_id != request.user:
         # Make this a little better
         return HttpResponse("This is not yours")
-    context = {'accepted_mime_types': 'image/*', 'listing': listing, 'listing_id': listing_id}
+    context = {'accepted_mime_types': 'image/*', 'listing': listing, 'listing_id': listing_id, 'photos': photos}
     return render(request, 'listing/edit_listing_photos.html', context)
 
 
@@ -173,9 +174,10 @@ def upload(request, listing_id):
     # has been configured to send files one at a time.
     # If multiple files can be uploaded simulatenously,
     # 'file' may be a list of files.
+    listing = get_object_or_404(Listing, id=listing_id)
     image = upload_receive(request)
 
-    instance = Photo(image=image)
+    instance = Photo(image=image, listing=listing)
     instance.save()
 
     basename = os.path.basename(instance.image.path)
@@ -199,10 +201,11 @@ def upload_delete(request, pk):
     success = True
     try:
         instance = Photo.objects.get(id=pk)
+        if instance.listing.seller_id != request.user:
+            # Make this a little better
+            return HttpResponse("This is not yours")
         instance.delete()
-        print "yay"
     except Photo.DoesNotExist:
-        print "oh no"
         success = False
 
     return JFUResponse(request, success)

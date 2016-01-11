@@ -129,7 +129,10 @@ class Listing(models.Model):
             return True
         return False
 
-    # photos complete
+    def photos_complete(self):
+        if Photo.objects.filter(listing=self.id):
+            return True
+        return False
 
     def calendar_complete(self):
         if self.quarter:
@@ -210,6 +213,19 @@ class Photo(models.Model):
     def get_small_filename(self):
         return 's_' + self.filename
 
+    def get_name(self):
+        return os.path.basename(self.image.path)
+
+    def get_size(self):
+        size = self.image.size
+        if size >= 1000000:
+            return str(truncate(size/1000000, 2)) + " MB"
+        else:
+            return str(truncate(size/1000, 2)) + " KB"
+
+    def get_delete_url(self):
+        return reverse('accounts:jfu_delete', kwargs={'pk': self.id})
+
     # def delete(self):
     #     try:
     #         os.remove(self.get_medium_filename())
@@ -219,4 +235,11 @@ class Photo(models.Model):
     #     super(Photo, self).delete()
 
 
+def truncate(f, n):
+    '''Truncates/pads a float f to n decimal places without rounding'''
+    s = '{}'.format(f)
+    if 'e' in s or 'E' in s:
+        return '{0:.{1}f}'.format(f, n)
+    i, p, d = s.partition('.')
+    return '.'.join([i, (d+'0'*n)[:n]])
 

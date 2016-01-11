@@ -5,7 +5,16 @@
 {% block JS_OPTS %}
 //autoUpload: true,
 sequentialUploads: true,
-acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i
+previewMaxWidth : 200,
+previewMaxHeight : 200,
+acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i,
+disableImageResize: false,
+//imageMaxWidth: 80,
+imageMaxHeight: 1000,
+//imageCrop: true
+{% endblock %}
+
+{% block CSS_BOOTSTRAP %}
 {% endblock %}
 
 
@@ -18,68 +27,81 @@ acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i
 {% comment %}
  The file upload form used as target for the file upload widget 
 {% endcomment %}
-<form id="fileupload" class="ui grid form" action="{{ upload_handler_url }}" method="POST" enctype="multipart/form-data">
+<form id="fileupload" class="ui form" action="{{ upload_handler_url }}" method="POST" enctype="multipart/form-data">
 
     {% csrf_token %}
 
     {% block UPLOAD_FORM_BUTTON_BAR %}
-    <div class="ui row fileupload-buttonbar">
-        <div class="ui eleven wide column">
-
-            <button class="ui button hidden-field-container">
-                <i class="ui icon plus"></i>
-                <span>Add photos</span>
-                <input class="hidden-field" type="file" name="files[]" multiple
-                    {% if accepted_mime_types %}
-                        accept = '{{ accepted_mime_types|join:"," }}'
-                    {% endif %}>
-            </button>
-
-            <button type="submit" class="ui button start">
-                <i class="ui icon upload"></i>
-                <span>Start upload</span>
-            </button>
-            <!-- <button type="reset" class="ui button">
-                <i class="glyphicon glyphicon-ban-circle"></i>
-                <span>Cancel upload</span>
-            </button> -->
-            <button type="button" class="ui button delete">
-                <i class="ui icon delete"></i>
-                <span>Delete</span>
-            </button>
-            <div class="fileupload-progress fade">
-                <div 
-                    class="progress progress-striped active" 
-                    role="progressbar" 
-                    aria-valuemin="0" aria-valuemax="100"
-                >
-                    <div class="progress-bar progress-bar-success" style="width:0%;">
-                    </div>
-                </div>
-                {% comment %}
-                 The extended global progress information 
-                {% endcomment %}
-                <div class="progress-extended">&nbsp;</div>
-            </div>
-
-        </div>
-    </div>
-    {% endblock %}
-
-    {% comment %}
-     The loading indicator is shown during file processing 
-    {% endcomment %}
-
-    {% block UPLOAD_FORM_LINDICATOR %}
-    <div class="fileupload-loading"></div>
     {% endblock %}
 
     {% block UPLOAD_FORM_LISTING %}
     {% comment %}
      The table listing the files available for upload/download 
     {% endcomment %}
-    <table role="presentation" class="ui celled striped table">
-        <tbody class="files"></tbody>
+    <table role="presentation" class="ui  single line celled table">
+        <thead>
+            <th colspan="3">
+                <div class="fileupload-buttonbar">
+                    <button class="ui button customblue hidden-field-container">
+                        <i class="ui icon plus"></i>
+                        <span>Add photos</span>
+                        <input class="hidden-field" type="file" name="files[]" multiple
+                            {% if accepted_mime_types %}
+                                accept = '{{ accepted_mime_types|join:"," }}'
+                            {% endif %}>
+                    </button>
+
+                    <button type="submit" class="ui positive button start">
+                        <i class="ui icon upload"></i>
+                        <span>Upload all</span>
+                    </button>
+                    <div class="fileupload-progress fade" style="width:40%; display: inline-block;">
+                        <div 
+                            class="progress progress active" 
+                            role="progressbar" 
+                            aria-valuemin="0" aria-valuemax="100"
+                        >
+                            <div class="progress-bar progress-bar" style="width:0%;">
+                            </div>
+                        </div>
+                        {% comment %}
+                         The extended global progress information 
+                        {% endcomment %}
+                        <!-- <div class="progress-extended">&nbsp;</div> -->
+                    </div>
+                </div>
+            </th>
+        </thead>
+        <tbody class="files">
+        {% for photo in photos %}
+            <tr class="template-download fade in">
+                <td class="image-column">
+                    <span class="preview">
+                        <a href="{{ photo.image.url }}"
+                        data-gallery><img src="{{ photo.image.url }}"></a>
+                    </span>
+                </td>
+                <td>
+                    <p class="name">
+                        <a href="{{ photo.image.url }}"
+                        title="{{ photo.image.name }}">
+                        {{ photo.get_name }}
+                        </a>
+                        <p class="size">{{ photo.get_size }}</p>
+                   </p>
+                </td>
+                <td>
+                    <button class="ui orange button fluid delete" 
+                            data-type="POST"
+                            data-data='{ "csrfmiddlewaretoken" : "{{ csrf_token }}" }'
+                            data-url="{{ photo.get_delete_url }}">
+                        <i class="ui icon delete"></i>
+                        <span>Delete</span>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %} 
+        </tbody>
     </table>
     {% endblock %}
 
@@ -90,27 +112,135 @@ acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i
 {% endblock %}
 
 
+{% block JS_UPLOAD_TEMPLATE %}
+<script id="template-upload" type="text/x-tmpl">
+{{ JQ_OPEN }} for (var i=0, file; file=o.files[i]; i++) { {{ JQ_CLOSE }}
 
-{% block JS_UPLOAD_TEMPLATE_CONTROLS %}
-<td>
-    {% block JS_UPLOAD_TEMPLATE_START %}
-    {{ JQ_OPEN }} if (!i && !o.options.autoUpload) { {{ JQ_CLOSE }}
-        <button type="button" class="ui button start">
-            <i class="ui icon upload"></i>
-            <span>Start</span>
-        </button>
-    {{ JQ_OPEN }} } {{ JQ_CLOSE }}
-    {% endblock %}
+    <tr class="template-upload fade">
 
-    {% block JS_UPLOAD_TEMPLATE_CANCEL %}
-    {{ JQ_OPEN }} if (!i) { {{ JQ_CLOSE }}
-        <button type="button" class="ui button cancel">
-            <i class="ui icon cancel"></i>
-            <span>Cancel</span>
-        </button>
-    {{ JQ_OPEN }} } {{ JQ_CLOSE }}
-    {% endblock %}
-</td>
+        {% block JS_UPLOAD_TEMPLATE_PREVIEW %}
+        <td class="image-column">
+            <span class="preview"></span>
+        </td>
+        {% endblock %}
+
+        {% block JS_UPLOAD_TEMPLATE_UPLOAD %}
+        <td style="word-wrap: break-word">
+            <p class="name">{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</p>
+            <strong class="error text-danger"></strong>
+            <p class="size">Processing...</p>
+        </td>
+        {% endblock %}
+
+
+
+        {% block JS_UPLOAD_TEMPLATE_CONTROLS %}
+        <td>
+            {% block JS_UPLOAD_TEMPLATE_START %}
+            {{ JQ_OPEN }} if (!i && !o.options.autoUpload) { {{ JQ_CLOSE }}
+                <!-- this needs to be present for the upload function to work but its hidden -->
+                <button style="display: none;" class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+            {% endblock %}
+
+            {% block JS_UPLOAD_TEMPLATE_CANCEL %}
+            {{ JQ_OPEN }} if (!i) { {{ JQ_CLOSE }}
+                <button class="ui fluid orange  button cancel">
+                    <i class="ui icon cancel"></i>
+                    <span>Remove</span>
+                </button>
+                <button class="ui positive fluid button start" disabled>
+                    <i class="ui icon upload"></i>
+                    <span>Upload</span>
+                </button>
+            {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+            {% endblock %}
+        </td>
+        {% endblock %}
+
+    </tr>
+{{ JQ_OPEN }} } {{ JQ_CLOSE }}
+</script>
 {% endblock %}
+
+
+
+
+{% block JS_DOWNLOAD_TEMPLATE %}
+<script id="template-download" type="text/x-tmpl">
+{{ JQ_OPEN }} for (var i=0, file; file=o.files[i]; i++) { {{ JQ_CLOSE }}
+
+    <tr class="template-download fade">
+        {% block JS_DOWNLOAD_TEMPLATE_PREVIEW %}
+        <td class="image-column">
+            <span class="preview">
+                {{ JQ_OPEN }} if (file.thumbnailUrl) { {{ JQ_CLOSE }}
+                    <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
+                     title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     data-gallery><img src="{{ JQ_OPEN }}=file.thumbnailUrl{{ JQ_CLOSE }}"></a>
+                {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+            </span>
+        </td>
+        {% endblock %}
+
+        {% block JS_DOWNLOAD_TEMPLATE_DOWNLOAD %}
+        <td>
+            <p class="name">
+                {{ JQ_OPEN }} if (file.url) { {{ JQ_CLOSE }}
+                    <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
+                     title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     {{ JQ_OPEN }}=file.thumbnailUrl?'data-gallery':''{{ JQ_CLOSE }}>
+                     {{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}
+                    </a>
+                    <p class="size">{{ JQ_OPEN }}=o.formatFileSize(file.size){{ JQ_CLOSE }}</p>
+                {{ JQ_OPEN }} } else { {{ JQ_CLOSE }}
+                    <span>{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</span>
+                {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+            </p>
+
+            {% block JS_DOWNLOAD_TEMPLATE_ERROR %}
+                {{ JQ_OPEN }} if (file.error) { {{ JQ_CLOSE }}
+                    <div><span class="label label-danger">Error</span> {{ JQ_OPEN }}=file.error{{ JQ_CLOSE }}</div>
+                {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+            {% endblock %}
+
+        </td>
+        {% endblock %}
+
+        {% block JS_DOWNLOAD_TEMPLATE_FSIZE %}
+        {% endblock %}
+
+        {% block JS_DOWNLOAD_TEMPLATE_DELETE %}
+        <td>
+            {{ JQ_OPEN }} if (file.deleteUrl) { {{ JQ_CLOSE }}
+                <button class="ui orange fluid button delete" 
+                        data-type="{{ JQ_OPEN }}=file.deleteType{{ JQ_CLOSE }}"
+                        data-data='{ "csrfmiddlewaretoken" : "{{ csrf_token }}" }'
+                        data-url="{{ JQ_OPEN }}=file.deleteUrl{{ JQ_CLOSE }}"
+                        {{ JQ_OPEN }} if (file.deleteWithCredentials) { %} 
+                            data-xhr-fields='{"withCredentials":true}'{% } 
+                        {{ JQ_CLOSE }}>
+                    <i class="ui icon delete"></i>
+                    <span>Delete</span>
+                </button>
+            {{ JQ_OPEN }} } else { {{ JQ_CLOSE }}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {{ JQ_OPEN }} } {{ JQ_CLOSE }}
+        </td>
+        {% endblock %}
+    </tr>
+{{ JQ_OPEN }} } {{ JQ_CLOSE }}
+</script>
+{% endblock %}
+
+
 
 
