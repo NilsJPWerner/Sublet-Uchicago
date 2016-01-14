@@ -23,7 +23,7 @@ class EditDescriptionForm(forms.ModelForm):
 class EditLocationForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ('address', 'zip_code', 'latitude', 'longitude')
+        fields = ('street_address', 'apt', 'city', 'state', 'zip_code', 'latitude', 'longitude')
 
 
 class EditDetailsForm(forms.ModelForm):

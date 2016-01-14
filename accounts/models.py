@@ -77,7 +77,11 @@ class Listing(models.Model):
     summary = models.TextField(max_length=400, blank=True)
 
     # Location
-    address = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)  # Not used atm
+    street_address = models.CharField(max_length=100, blank=True)
+    apt = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=40, blank=True)
     zip_code = models.IntegerField(blank=True, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(41.796662))
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(-87.594183))
@@ -120,7 +124,7 @@ class Listing(models.Model):
         return False
 
     def location_complete(self):
-        if self.address and self.zip_code:
+        if self.street_address and self.zip_code:
             return True
         return False
 

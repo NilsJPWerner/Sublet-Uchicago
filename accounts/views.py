@@ -175,6 +175,9 @@ def upload(request, listing_id):
     # If multiple files can be uploaded simulatenously,
     # 'file' may be a list of files.
     listing = get_object_or_404(Listing, id=listing_id)
+    if listing.seller_id != request.user:
+        # Make this a little better
+        return HttpResponse("This is not yours")
     image = upload_receive(request)
 
     instance = Photo(image=image, listing=listing)

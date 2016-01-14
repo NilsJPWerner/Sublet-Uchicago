@@ -1,5 +1,12 @@
 {% extends 'listing/listing_base.html' %}
 
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static "css/location.css" %}">
+{% endblock %}
+
 {% block listing_content %}
   <form class="ui form" method="post" action="">
     <div class="ui secondary top attached segment">
@@ -13,7 +20,31 @@
             <label class="inline-label">Listing Address</label>
           </div>
           <div class="twelve wide column">
-            {{ form.address }}
+            {% render_field form.street_address placeholder="" %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">Apt, Suite, Bldg</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.apt }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">City</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.city }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="four wide right aligned column">
+            <label class="inline-label">State</label>
+          </div>
+          <div class="twelve wide column">
+            {{ form.state }}
           </div>
         </div>
         <div class="row">
@@ -24,8 +55,10 @@
             {{ form.zip_code }}
           </div>
         </div>
-        {{ form.latitude }}
-        {{ form.longitude }}
+
+        {{ form.latitude|add_class:"hidden" }}
+        {{ form.longitude|add_class:"hidden" }}
+        <div id="map" style="width:700px; height:400px;"></div>
       </div>
     </div>
     <div class="ui bottom attached segment">
@@ -36,5 +69,112 @@
       </div>
     </div>
   </form>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    $(window).keydown(function(event){
+      if(event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+      }
+    });
+  });
+
+  function initMap() {
+    var center = new google.maps.LatLng(document.getElementById('id_latitude').value, document.getElementById('id_longitude').value);
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: center, 
+      zoom: 15,
+      mapTypeControl: false,
+      zoomControl:true,
+      streetViewControl: false,
+    });
+
+    var marker=new google.maps.Marker({
+      position: center,
+      draggable: true,
+      map: map
+      });
+
+    google.maps.event.addListener(marker, 'dragend', function (evt) {
+      map.panTo(this.getPosition());
+      document.getElementById('id_latitude').value = evt.latLng.lat().toFixed(6);
+      document.getElementById('id_longitude').value = evt.latLng.lng().toFixed(6);
+    });
+
+    // Autocomplete stuff
+
+    var input, placeSearch, autocomplete;
+    var componentForm = {
+      street_number: 'short_name',
+      route: 'long_name',
+      locality: 'long_name',
+      administrative_area_level_1: 'short_name',
+      postal_code: 'short_name'
+    };
+
+
+    input = document.getElementById('id_street_address');
+    autocomplete = new google.maps.places.Autocomplete(input, {types: ['geocode']});
+    autocomplete.addListener('place_changed', function(event) {
+      fillInAddress();
+      var place = autocomplete.getPlace();
+      var location = place.geometry.location;
+      var position = new google.maps.LatLng(location.lat(), location.lng());
+      map.panTo(position);
+      marker.setPosition(position);
+      document.getElementById('id_latitude').value = location.lat().toFixed(6);
+      document.getElementById('id_longitude').value = location.lng().toFixed(6);
+    });
+
+    function fillInAddress() {
+      // Get the place details from the autocomplete object.
+      var place = autocomplete.getPlace();
+
+      var streetnum, road
+
+      // Get each component of the address from the place details
+      // and fill the corresponding field on the form.
+      for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        if (componentForm[addressType]) {
+          var val = place.address_components[i][componentForm[addressType]];
+          if (addressType == 'locality') {
+            document.getElementById('id_city').value = val;
+          }
+          else if (addressType == 'administrative_area_level_1') {
+            document.getElementById('id_state').value = val;
+          }
+          else if (addressType == 'postal_code') {
+            document.getElementById('id_zip_code').value = val;
+          }
+          else if (addressType == 'street_number') {
+            streetnum = val;
+          }
+          else if (addressType == 'route') {
+            road = val;
+          }
+        }
+      }
+      document.getElementById('id_street_address').value = streetnum+ " " + road
+
+    }
+
+  }
+
+// google.maps.event.addListener(myMarker, 'dragstart', function (evt) {
+//     document.getElementById('current').innerHTML = '<p>Currently dragging marker...</p>';
+// });
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP5xmOaC6toBn_BrLSA_DZeLBMPl1lm3w&libraries=places&callback=initMap"
+    async defer></script>
+
 
 {% endblock %}

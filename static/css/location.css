@@ -1,0 +1,36 @@
+
+.pac-container {
+  border-radius: 0 0 .28571429rem .28571429rem;
+  border-style: solid;
+  border-width: 0px 1px 1px 1px;
+  border-color: #96c8da;
+  box-shadow: 0 2px 3px 0 rgba(34,36,38,.15)!important;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  font-family: inherit;
+  margin-top: -4px;
+}
+
+.pac-item {
+  font-size: 1rem;
+  line-height: 1em;
+  height: auto;
+  padding: .71428571rem 1.14285714rem!important;
+  border-top: 1px solid #fafafa;
+}
+
+.pac-item-query {
+  font-size: 1rem;
+  line-height: 1em;
+  height: auto;
+}
+
+.pac-icon {
+  display: none;
+}
+
+#id_street_address:focus {
+  box-sizing: border-box;
+  box-shadow: 0 2px 3px 0 rgba(34,36,38,.15);
+}

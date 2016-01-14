@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block head_title %}{% block listing_head_title %}{% endblock %}{% endblock %}
-{% block head %}
-  {% block listing_head %}
-  {% endblock %}
-{% endblock %}
 {% block content %}
 
 <div id="account" class="ui centered two column grid stackable container" style="margin-top: 20px;">
@@ -95,9 +91,4 @@
   </div>
 </div>
 
-{% endblock %}
-
-{% block scripts %}
-  {% block listing_scripts %}
-  {% endblock %}
 {% endblock %}

@@ -46,6 +46,7 @@ PREREQ_APPS = (
 )
 
 PROJECT_APPS = (
+    'widget_tweaks',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

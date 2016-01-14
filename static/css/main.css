@@ -10,6 +10,10 @@ p {
     line-height: 1.45;
 }
 
+.hidden {
+    display: none;
+}
+
 .button {
     box-shadow: 0px -2px 0px 0px rgba(34, 36, 38, 0.1) inset!important;
 }
