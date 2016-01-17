@@ -28,7 +28,7 @@
       </div>
       <div class="extra content">
           {% if listing.listing_complete %}
-            <div class="ui fluid customblue button">Publish</div>
+            <div class="ui fluid green button">Publish</div>
           {% else %}
             <div class="ui fluid disabled button">Publish</div>
           {% endif %}
@@ -67,17 +67,9 @@
           <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
-      <a class="item">
+      <a href="{% url 'accounts:edit_listing_calendar' listing_id %}" class="item">
         Calendar
         {% if listing.calendar_complete %}
-          <i class="ui green checkmark icon"></i>
-        {% else %}
-          <i class="ui grey plus icon"></i>
-        {% endif %}
-      </a>
-      <a class="item">
-        Price
-        {% if listing.price_complete %}
           <i class="ui green checkmark icon"></i>
         {% else %}
           <i class="ui grey plus icon"></i>

@@ -17,7 +17,7 @@ class ListingForm(forms.ModelForm):
 class EditDescriptionForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ('listing_name', 'summary')
+        fields = ('listing_name', 'summary', 'price')
 
 
 class EditLocationForm(forms.ModelForm):
@@ -36,6 +36,12 @@ class EditDetailsForm(forms.ModelForm):
             'bathroom': forms.Select(attrs={'class': 'ui dropdown'}),
             'roomate_count': forms.Select(attrs={'class': 'ui dropdown'}),
         }
+
+
+class EditCalendarForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ('fall_quarter', 'winter_quarter', 'spring_quarter', 'summer_quarter', 'start_date', 'end_date')
 
 
 class ExtendedUserForm(forms.ModelForm):

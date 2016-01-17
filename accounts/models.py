@@ -75,6 +75,7 @@ class Listing(models.Model):
     # Descrition
     listing_name = models.CharField(max_length=40, blank=True)
     summary = models.TextField(max_length=400, blank=True)
+    price = models.IntegerField(default=0, blank=True)
 
     # Location
     country = models.CharField(max_length=100, blank=True)  # Not used atm
@@ -100,13 +101,12 @@ class Listing(models.Model):
     pets_allowed = models.BooleanField(default=False)
 
     # Calendar
-    quarter = models.CharField(choices=QUARTER, max_length=10, blank=True)
-
-    # Price 
-    price = models.IntegerField(default=0, blank=True)
-    amenities_included = models.CharField(choices=YESNO, max_length=10, blank=True)
-    amenities_price = models.IntegerField(default=0, blank=True)
-    prefered_payment_method = models.CharField(max_length=20, blank=True)
+    fall_quarter = models.BooleanField(default=False)
+    winter_quarter = models.BooleanField(default=False)
+    spring_quarter = models.BooleanField(default=False)
+    summer_quarter = models.BooleanField(default=False)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True)
 
     status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
@@ -119,7 +119,7 @@ class Listing(models.Model):
     slug = models.SlugField(max_length=300)
 
     def description_complete(self):
-        if self.listing_name and self.summary:
+        if self.listing_name and self.summary and self.price:
             return True
         return False
 
@@ -139,19 +139,14 @@ class Listing(models.Model):
         return False
 
     def calendar_complete(self):
-        if self.quarter:
+        if self.fall_quarter or self.winter_quarter or self.spring_quarter or self.summer_quarter:
             return True
-        return False
-
-    def price_complete(self):
-        if self.price and self.amenities_included and self.prefered_payment_method:
-            if self.amenities_included == 'no' and not self.amenities_price:
-                return False
+        elif self.start_date and self.end_date:
             return True
         return False
 
     def listing_complete(self):
-        if self.description_complete() and self.location_complete() and self.details_complete() and self.calendar_complete() and self.price_complete():
+        if self.description_complete() and self.location_complete() and self.photos_complete() and self.details_complete() and self.calendar_complete():
             return True
         return False
 

@@ -12,13 +12,12 @@
 <div class="ui bottom attached segment">
   <div class="ui one column right aligned grid">
     <div class="ui sixteen wide column">
-      <a class="ui customblue icon button" style="width:90px;">Next<i class="ui right arrow icon"></i></a>
+      <a href="{% url 'accounts:edit_listing_calendar' listing_id %}" class="ui customblue icon button" style="width:90px;">Next<i class="ui right arrow icon"></i></a>
     </div>
   </div>
 </div>
 
 {% endblock %}
-
 
 {% block jquery %}
 {% endblock %}

@@ -148,3 +148,60 @@ div .ui.form .inline.fields{
     margin-bottom: 0;
 }
 
+/*     Calendar     */
+
+.datepicker.datepicker-inline {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(34, 36, 38, 0.14902);
+    padding: 10px;
+}
+
+.active.day {
+    background-color: #439fe0!important;
+    border-radius: 3px!important;
+    text-shadow: none!important;
+    box-shadow: 0px -2px 0px 0px rgba(34, 36, 38, 0.1) inset!important;
+}
+
+.datepicker-inline {
+    width: auto!important;
+}
+
+.quarter-checkbox {
+    width: auto;
+    height: auto;
+}
+
+.quarter-checkbox label {
+    position: relative;
+    display: block;
+    width: 100%;
+    border-radius: .28571429rem;
+    cursor: pointer;
+    background: #e5e6e7;
+    color: rgba(0,0,0,.6);
+    padding: 15px 10px;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 700;
+}
+
+.quarter-checkbox label:hover {
+    background-color: #cacbcd;
+    color: rgba(0,0,0,.8);
+    box-shadow: 0 0 0 1px transparent inset,0 0 0 0 rgba(34,36,38,.15) inset;
+}
+
+.quarter-checkbox input[type=checkbox]:checked + label {
+    background: #babbbc;
+    color: rgba(0,0,0,.9);
+}
+
+.quarter-checkbox label > img {
+    padding: 4px;
+}
+
+
+
+

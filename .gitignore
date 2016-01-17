@@ -58,5 +58,7 @@ target/
 
 db.sqlite3
 /env
+/media
+/staticfiles
 *pyc
 

@@ -1,0 +1,112 @@
+{% extends 'listing/listing_base.html' %}
+
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/css/bootstrap-datepicker3.standalone.min.css">
+<style type="text/css">
+  input[type=checkbox] {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block listing_content %}
+  <form class="ui form" method="post" action="">
+      <div class="ui secondary top attached segment">
+        <h4 class="">Calendar</h4>
+      </div>
+      <div class="ui attached padded segment">
+        {% csrf_token %}
+        <div class="ui grid">
+          <div class="row">
+            <div class="four wide column">
+              <div class="quarter-checkbox">
+                {{ form.fall_quarter }}
+                <label for="{{ form.fall_quarter.auto_id }}">
+                    Fall Quarter
+                </label>
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="quarter-checkbox">
+                {{ form.winter_quarter }}
+                <label for="{{ form.winter_quarter.auto_id }}">
+                    Winter Quarter
+                </label>
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="quarter-checkbox">
+                {{ form.spring_quarter }}
+                <label for="{{ form.spring_quarter.auto_id }}">
+                    Spring Quarter
+                </label>
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="quarter-checkbox">
+                {{ form.summer_quarter }}
+                <label for="{{ form.summer_quarter.auto_id }}">
+                    Summer Quarter
+                </label>
+              </div>
+            </div>
+          </div>
+          {{ form.start_date|add_class:"datepicker hidden" }}
+          <div id="start_picker" data-date="01/01/2016"></div>
+          {{ form.end_date|add_class:"datepicker hidden" }}
+          <div id="end_picker" data-date="01/01/2016"></div>
+        </div>
+      </div>
+      <div class="ui bottom attached segment">
+        <div class="ui one column right aligned grid">
+          <div class="ui sixteen wide column">
+            <button class="ui customblue icon button" type="submit" style="width:90px;">Save</button>
+            {% if listing.listing_complete %}
+              <div class="ui green button">Publish</div>
+            {% else %}
+              <div class="ui disabled button">Publish</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/js/bootstrap-datepicker.min.js"></script>
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+      $('#start_picker').datepicker({
+        format: "yyyy-mm-dd",
+        startDate: "2016-01-01",
+        weekStart: 1
+      });
+      $('#start_picker').datepicker('setDate', new Date(Date.parse("{{ listing.start_date }}")));
+      $('#end_picker').datepicker({
+        format: "yyyy-mm-dd",
+        startDate: "2016-01-01",
+        weekStart: 1
+      });
+      $('#end_picker').datepicker('setDate', new Date(Date.parse("{{ listing.end_date }}")));
+      $('#start_picker').on("changeDate", function() {
+          $('#id_start_date').val(
+              $('#start_picker').datepicker('getFormattedDate')
+          );
+      });
+      $('#start_picker').on("changeDate", function(g) {
+          $('#end_picker').datepicker().datepicker('setStartDate', g.date); 
+      });
+      $('#end_picker').on("changeDate", function() {
+          $('#id_end_date').val(
+              $('#end_picker').datepicker('getFormattedDate')
+          );
+      });
+  });
+</script>
+
+{% endblock %}

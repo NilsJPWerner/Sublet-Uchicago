@@ -15,7 +15,7 @@ from django.views.generic.edit import FormView
 
 from .forms import (ListingForm, ExtendedUserForm,
                     ChangePasswordFormModified, AddEmailFormCombined,
-                    EditDescriptionForm, EditDetailsForm, EditLocationForm,)
+                    EditDescriptionForm, EditDetailsForm, EditLocationForm, EditCalendarForm)
 from .models import Listing, ExtendedUser, Photo
 
 from allauth.account.views import (PasswordChangeView, EmailView, _ajax_response)
@@ -143,7 +143,7 @@ def edit_listing_details(request, listing_id):
         form = EditDetailsForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('accounts:edit_listing_details'))
+            return HttpResponseRedirect(reverse('accounts:edit_listing_details', args=listing_id))
     else:
         listing = get_object_or_404(Listing, id=listing_id)
         if listing.seller_id != request.user:
@@ -154,6 +154,26 @@ def edit_listing_details(request, listing_id):
 
     context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
     return render(request, 'listing/edit_listing_details.html', context)
+
+
+@login_required
+def edit_listing_calendar(request, listing_id):
+    if request.method == "POST":
+        listing = get_object_or_404(Listing, id=listing_id)
+        form = EditCalendarForm(request.POST, instance=listing)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('accounts:edit_listing_calendar', args=listing_id))
+    else:
+        listing = get_object_or_404(Listing, id=listing_id)
+        if listing.seller_id != request.user:
+            # Make this a little better
+            return HttpResponse("This is not yours")
+        else:
+            form = EditCalendarForm(instance=listing)
+
+    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    return render(request, 'listing/edit_listing_calendar.html', context)
 
 
 def edit_listing_photos(request, listing_id):
