@@ -3,38 +3,28 @@
 {% block listing_content %}
   <form class="ui form" method="post" action="">
     <div class="ui secondary top attached segment">
-      <h4 class="">Listing Description</h4>
+      <h3>Describe your listing</h3>
     </div>
     <div class="ui attached padded segment">
       {% csrf_token %}
-      Every space on Airbnb is unique. Highlight what makes your listing welcoming so that it stands out to guests who want to stay in your area.
-      <div class="ui divider"></div>
-      <div class="ui two column grid">
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Listing Title</label>
-          </div>
-          <div class="twelve wide column">
-            {{ form.listing_name }}
-          </div>
+      <div class="ui large form">
+        <div class="field">
+          <label>Listing Title</label>
+          {{ form.listing_name }}
         </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Summary</label>
-          </div>
-          <div class="twelve wide column">
-            {{ form.summary }}
-          </div>
+        <div class="field">
+          <label>Listing Summary</label>
+          {{ form.summary }}
         </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Price</label>
-          </div>
-          <div class="twelve wide column">
+        <div class="field">
+          <label>Monthly rent</label>
+          <div class="ui left labeled input">
+            <div class="ui label">$</div>
             {{ form.price }}
           </div>
         </div>
       </div>
+
     </div>
     <div class="ui bottom attached segment">
       <div class="ui one column right aligned grid">

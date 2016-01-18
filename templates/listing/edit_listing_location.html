@@ -10,55 +10,40 @@
 {% block listing_content %}
   <form class="ui form" method="post" action="">
     <div class="ui secondary top attached segment">
-      <h4 class="">Listing Location</h4>
+      <h3 class="">Place your listing on a map</h3>
     </div>
     <div class="ui attached padded segment">
       {% csrf_token %}
-      <div class="ui two column grid">
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Listing Address</label>
-          </div>
-          <div class="twelve wide column">
-            {% render_field form.street_address placeholder="" %}
-          </div>
+      <div class="ui large form">
+        <div class="field">
+          <label>Street Address</label>
+          {% render_field form.street_address placeholder="" %}
         </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Apt, Suite, Bldg</label>
-          </div>
-          <div class="twelve wide column">
+        <div class="two fields">
+          <div class="field">
+            <label>Apt, Suite, Building.</label>
             {{ form.apt }}
           </div>
-        </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">City</label>
-          </div>
-          <div class="twelve wide column">
+          <div class="field">
+            <label>City</label>
             {{ form.city }}
           </div>
         </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">State</label>
-          </div>
-          <div class="twelve wide column">
+        <div class="two fields">
+          <div class="field">
+            <label>State</label>
             {{ form.state }}
           </div>
-        </div>
-        <div class="row">
-          <div class="four wide right aligned column">
-            <label class="inline-label">Zip Code</label>
-          </div>
-          <div class="twelve wide column">
+          <div class="field">
+            <label>Zip Code</label>
             {{ form.zip_code }}
           </div>
         </div>
-
+        <div class="ui divider"></div>
         {{ form.latitude|add_class:"hidden" }}
         {{ form.longitude|add_class:"hidden" }}
-        <div id="map" style="width:700px; height:400px;"></div>
+        <strong>See if the location is in the right place, and adjust accordingly</strong><br><br>
+        <div id="map" style="width:100%; height:300px;"></div>
       </div>
     </div>
     <div class="ui bottom attached segment">

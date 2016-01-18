@@ -3,21 +3,90 @@
 {% block listing_content %}
   <form class="ui form" method="post" action="">
       <div class="ui secondary top attached segment">
-        <h4 class="">Listing Details</h4>
+        <h3>Add some details to your listing</h3>
       </div>
       <div class="ui attached padded segment">
         {% csrf_token %}
-        <div class="ui two column grid">
-          {% for field in form %}
-            <div class="row">
-              <div class="four wide right aligned column">
-                <label class="inline-label">{{ field.label }}</label>
-              </div>
-              <div class="twelve wide column">
-                {{ field }}
+        <div class="ui large form">
+          <div class="two fields">
+            <div class="field">
+              <label>Bed Size</label>
+              {{ form.bed_size }}
+            </div>
+            <div class="field">
+              <label>Other Roommates</label>
+              {{ form.roommate_count }}
+            </div>
+          </div>
+          <div class="two fields">
+            <div class="field">
+              <label>Bathroom</label>
+              {{ form.bathroom }}
+            </div>
+          </div>
+
+          <div class="ui divider"></div>
+
+          <div class="two fields">
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Air Conditioning</strong></label>
+                {{ form.ac }}
               </div>
             </div>
-          {% endfor %}
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Internet</strong></label>
+                {{ form.internet }}
+              </div>
+            </div>
+          </div>
+
+          <div class="two fields">
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>In-unit washer and dryer</strong></label>
+                {{ form.in_unit_washer_dryer }}
+              </div>
+            </div>
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Wheelchair accessible</strong></label>
+                {{ form.wheel_chair_accessible }}
+              </div>
+            </div>
+          </div>
+
+          <div class="two fields">
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>TV</strong></label>
+                {{ form.tv }}
+              </div>
+            </div>
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Pets live here</strong></label>
+                {{ form.pets_live_here }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="two fields">
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Cable TV</strong></label>
+                {{ form.cable_tv }}
+              </div>
+            </div>
+            <div class="inline field">
+              <div class="ui checkbox">
+                <label><strong>Pets allowed</strong></label>
+                {{ form.pets_allowed }}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
       <div class="ui bottom attached segment">

@@ -6,17 +6,6 @@ from decimal import Decimal
 from PIL import Image
 import os
 
-#Disclaimer: Our models are based on https://github.com/sczizzo/Dhaka/blob/develop/db/schema.rb
-# Create your models here.
-
-
-# class images(models.Model):
-#   listing_id = models.IntegerField(null=False) #Maybe implement as foreignkey?
-#   created_at = models.DateTimeField(auto_now_add=True, null=False)
-#   updated_at = models.DateTimeField(auto_now=True, auto_now_add=True, null=False)
-#   photo_file_name = models.CharField(max_length=150)
-#   photo_content_type = models.CharField(max_length=20)
-#   photo_file_size = models.IntegerField(null=False)
 
 UNI_DIV = (('NA', 'Not Affiliated'),
     ('first', 'First Year'),
@@ -89,7 +78,7 @@ class Listing(models.Model):
 
     # Details step
     bed_size = models.CharField(choices=BED_SIZE, max_length=10, blank=True)
-    roomate_count = models.CharField(choices=ROOMMATES, max_length=5, blank=True)
+    roommate_count = models.CharField(choices=ROOMMATES, max_length=5, blank=True)
     bathroom = models.CharField(choices=BATHROOM, max_length=10, blank=True)
     ac = models.BooleanField(default=False)
     in_unit_washer_dryer = models.BooleanField(default=False)
@@ -105,8 +94,8 @@ class Listing(models.Model):
     winter_quarter = models.BooleanField(default=False)
     spring_quarter = models.BooleanField(default=False)
     summer_quarter = models.BooleanField(default=False)
-    start_date = models.DateField(blank=True)
-    end_date = models.DateField(blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
@@ -129,7 +118,7 @@ class Listing(models.Model):
         return False
 
     def details_complete(self):
-        if self.bed_size and self.roomate_count and self.bathroom:
+        if self.bed_size and self.roommate_count and self.bathroom:
             return True
         return False
 
@@ -149,6 +138,20 @@ class Listing(models.Model):
         if self.description_complete() and self.location_complete() and self.photos_complete() and self.details_complete() and self.calendar_complete():
             return True
         return False
+
+    def steps_remaining(self):
+        counter = 5
+        if self.description_complete():
+            counter -= 1
+        if self.location_complete():
+            counter -= 1
+        if self.details_complete():
+            counter -= 1
+        if self.photos_complete():
+            counter -= 1
+        if self.calendar_complete():
+            counter -= 1
+        return counter
 
     def get_cover_photo(self):
         if self.photo_set.filter(is_cover_photo=True).count() > 0:

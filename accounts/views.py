@@ -143,7 +143,7 @@ def edit_listing_details(request, listing_id):
         form = EditDetailsForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('accounts:edit_listing_details', args=listing_id))
+            return HttpResponseRedirect(reverse('accounts:edit_listing_photos', args=listing_id))
     else:
         listing = get_object_or_404(Listing, id=listing_id)
         if listing.seller_id != request.user:

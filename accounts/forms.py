@@ -29,12 +29,12 @@ class EditLocationForm(forms.ModelForm):
 class EditDetailsForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ('bed_size', 'roomate_count', 'bathroom', 'ac', 'in_unit_washer_dryer', 'tv',
+        fields = ('bed_size', 'roommate_count', 'bathroom', 'ac', 'in_unit_washer_dryer', 'tv',
             'cable_tv', 'internet', 'wheel_chair_accessible', 'pets_live_here', 'pets_allowed')
         widgets = {
             'bed_size': forms.Select(attrs={'class': 'ui dropdown'}),
             'bathroom': forms.Select(attrs={'class': 'ui dropdown'}),
-            'roomate_count': forms.Select(attrs={'class': 'ui dropdown'}),
+            'roommate_count': forms.Select(attrs={'class': 'ui dropdown'}),
         }
 
 

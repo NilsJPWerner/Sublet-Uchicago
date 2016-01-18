@@ -35,8 +35,9 @@ p {
     background-color: #3e90c9!important;
 }
 
-
-/*    Menu    */
+/* -------------------- */
+/*         Menu         */
+/* -------------------- */
 
 #top-menu {
     border-radius: 0;
@@ -56,8 +57,9 @@ p {
 }
 
 
-/*-------------*/
-/*    Account Login    */
+/* -------------------- */
+/*    Account Login     */
+/* -------------------- */
 
 #account .ui.icon.center.aligned.header {
     color: #999;
@@ -97,7 +99,12 @@ p {
 }
 
 
-/*    Account items    */
+
+
+
+/* -------------------- */
+/*     Account items    */
+/* -------------------- */
 
 #account .ui.icon.center.aligned.header {
     color: #999;
@@ -148,7 +155,26 @@ div .ui.form .inline.fields{
     margin-bottom: 0;
 }
 
-/*     Calendar     */
+
+
+
+/* -------------------- */
+/*     Listing forms    */
+/* -------------------- */
+
+
+.ui.large.form label {
+    font-size: 15px;
+}
+
+.ui.large.form input[type=text] {
+    font-size: 16px;
+}
+
+
+/* -------------------- */
+/*        Calendar      */
+/* -------------------- */
 
 .datepicker.datepicker-inline {
     border-style: solid;

@@ -2,6 +2,11 @@ html {
   font-size: 14px;
 }
 
+.name {
+  max-width: 200px;
+  overflow: hidden;
+}
+
 .hidden-field-container {
   position: relative;
   overflow: hidden;
@@ -24,7 +29,7 @@ html {
 }
 
 .preview > a > img {
-  max-width: 200px;
+  max-width: 150px;
 }
 
 .progress {
