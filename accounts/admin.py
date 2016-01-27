@@ -5,15 +5,6 @@ from django.contrib.auth.models import User
 from .models import *
 
 
-# Register your models here.
-class ListingAdmin(admin.ModelAdmin):
-    model = Listing
-
-
-class PhotoAdmin(admin.ModelAdmin):
-    model = Photo
-
-
 class ExtendedUserAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'profile_picture', 'phone_number', 'uni_division', 'description')
 
@@ -31,10 +22,7 @@ class UserAdmin(UserAdmin):
     inlines = (ExtendedUserInLine, )
 
 
-# Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-
 admin.site.register(ExtendedUser, ExtendedUserAdmin)
-admin.site.register(Listing, ListingAdmin)
-admin.site.register(Photo, PhotoAdmin)
+

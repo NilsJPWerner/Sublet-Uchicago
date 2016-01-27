@@ -19,44 +19,10 @@
   <body>
 
     <div id="top-menu" class="ui large menu">
-      <a class="header item">
+      <a class="header item" href="{% url 'home' %}">
         <img class="logo" src="{% static "img/logo_200x200.png" %}">
         Marketplace
       </a>
-      <a id="categories" class="browse item">
-        Categories
-        <i class="dropdown icon"></i>
-      </a>
-      <div class="ui flowing basic admission popup">
-        <div class="ui three column relaxed divided grid">
-          <div class="column">
-            <h4 class="ui header">Business</h4>
-            <div class="ui link list">
-              <a class="item">Design &amp; Urban Ecologies</a>
-              <a class="item">Fashion Design</a>
-              <a class="item">Fine Art</a>
-              <a class="item">Strategic Design</a>
-            </div>
-          </div>
-          <div class="column">
-            <h4 class="ui header">Liberal Arts</h4>
-            <div class="ui link list">
-              <a class="item">Anthropology</a>
-              <a class="item">Economics</a>
-              <a class="item">Media Studies</a>
-              <a class="item">Philosophy</a>
-            </div>
-          </div>
-          <div class="column">
-            <h4 class="ui header">Social Sciences</h4>
-            <div class="ui link list">
-              <a class="item">Food Studies</a>
-              <a class="item">Journalism</a>
-              <a class="item">Non Profit Management</a>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="ui category search item">
         <div class="ui transparent left icon input">
           <i class="search link icon"></i>
@@ -86,7 +52,7 @@
           {{ request.user.extendeduser.first_name }}
           <i class="circular user icon"></i>
           <div class="menu">
-            <a href="{% url 'accounts:account_home' %}" class="item">Dashboard</a>
+            <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
             <a class="item">View your listings</a>
             <a class="item">Edit profile</a>
             <a class="item" href="{% url 'account_logout' %}">Logout</a>

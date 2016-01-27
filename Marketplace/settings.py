@@ -54,6 +54,7 @@ PROJECT_APPS = (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
     'accounts',
+    'listings',
     'jfu',
 )
 

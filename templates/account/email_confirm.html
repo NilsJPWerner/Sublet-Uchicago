@@ -18,7 +18,7 @@
 
           <p>Please confirm that <a href="mailto:{{ confirmation.email_address.email }}">{{ confirmation.email_address.email }}</a> is an e-mail address for user {{ user_display }}.</p>
 
-          <form class="ui form" method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+          <form class="ui form" method="post" action="{% url 'confirm_email' confirmation.key %}">
           {% csrf_token %}
             <div class="ui centered grid">
               <div class="ui six wide column">

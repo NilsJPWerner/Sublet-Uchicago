@@ -7,12 +7,12 @@
 </div>
 <div class="ui attached padded segment">
   {% load jfutags %} 
-  {% jfu 'photo_upload_form.html' 'accounts:jfu_upload' listing_id %} 
+  {% jfu 'photo_upload_form.html' 'listings:jfu_upload' listing_id %} 
 </div>
 <div class="ui bottom attached segment">
   <div class="ui one column right aligned grid">
     <div class="ui sixteen wide column">
-      <a href="{% url 'accounts:edit_listing_calendar' listing_id %}" class="ui customblue icon button" style="width:90px;">Next<i class="ui right arrow icon"></i></a>
+      <a href="{% url 'listings:edit_listing_calendar' listing_id %}" class="ui customblue icon button" style="width:90px;">Next<i class="ui right arrow icon"></i></a>
     </div>
   </div>
 </div>

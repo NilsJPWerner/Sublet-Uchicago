@@ -1,0 +1,23 @@
+{% if results|length %}
+ 
+<table>
+<tr class=’even’>
+<td colspan=”3” class=”right”>
+<strong>Found {{ results|length }} listings</strong>
+</td>
+</tr>
+ 
+{% for listing in results %}
+<td><strong>{{ forloop.counter }}.</strong></td>
+<td>
+{{ listing.listing_name }}<br/>
+<span class=”hint”>{{ listing.bathroom }}</span>
+</td>
+</tr>
+{% endfor %}
+    </table>
+{% else %}
+    <div class=”note”>
+Your search yielded no results
+</div>
+{% endif %}

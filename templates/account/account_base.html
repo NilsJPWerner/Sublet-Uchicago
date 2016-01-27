@@ -28,11 +28,11 @@
         </div>
       </div>
       <div class="ui large fluid vertical menu">
-        <a href="{% url 'accounts:account_home' %}" class="{% if request.resolver_match.url_name == "account_home" %}active{% endif %} item">
+        <a href="{% url 'accounts:home' %}" class="{% if request.resolver_match.url_name == "home" %}active{% endif %} item">
           <i class="dashboard icon"></i>
           Dashboard
         </a>
-        <a class="ui left icon item">
+        <a href="{% url 'accounts:listings' %}" class="{% if request.resolver_match.url_name == "listings" %}active{% endif %} item">
           <i class="home icon"></i>
           Your listings
         </a>
@@ -40,15 +40,15 @@
           <i class="star icon"></i>
           Starred listings
         </a>
-        <a href="{% url 'accounts:account_verification' %}" class="{% if request.resolver_match.url_name == "account_verification" %}active{% endif %} item">
+        <a href="{% url 'accounts:verification' %}" class="{% if request.resolver_match.url_name == "verification" %}active{% endif %} item">
           <i class="checkmark icon"></i>
           Verifications
         </a>
-        <a href="{% url 'accounts:account_edit_profile' %}" class="{% if request.resolver_match.url_name == "account_edit_profile" %}active{% endif %} item">
+        <a href="{% url 'accounts:edit_profile' %}" class="{% if request.resolver_match.url_name == "edit_profile" %}active{% endif %} item">
           <i class="user icon"></i>
           Edit Profile
         </a>
-        <a href="{% url 'accounts:account_settings' %}" class="{% if request.resolver_match.url_name == "account_settings" %}active{% endif %} item">
+        <a href="{% url 'accounts:settings' %}" class="{% if request.resolver_match.url_name == "settings" %}active{% endif %} item">
           <i class="setting icon"></i>
           Settings
         </a>

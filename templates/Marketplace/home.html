@@ -1,1 +1,34 @@
 {% extends "base.html" %}   
+
+{% block content %}
+<div class="ui grid container">
+    <div class="six wide column">
+        <div class="ui form"></div>
+            <select id="bathroom" class="ui dropdown">
+                <option value="shared">Shared</option>
+                <option value="private">Private</option>
+            </select>
+            <input id="search" class="ui button" type="submit" value="Search"/>
+        </div>
+        <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"/></span>
+        <div id="results"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready( function() {
+    $("#search").click( function() {
+        query = $("#bathroom").val();
+        $("#results").html("&nbsp;").load('{% url "search" %}?q=' + query);
+    });
+});
+ 
+$(document).ajaxStart( function() {
+    $("#spinner").show();
+}).ajaxStop( function() {
+    $("#spinner").hide();
+});
+</script>
+{% endblock %}
