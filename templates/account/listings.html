@@ -1,14 +1,32 @@
 {% extends 'account/account_base.html' %}
-{% block account_head_title %}Verifications{% endblock %}
+{% load staticfiles %}
+{% block account_head_title %}Your listings{% endblock %}
 {% block account_content %}
     <div class="sixteen wide column grid">
         <div class="ui secondary top attached segment">
             <h4 class="">Your Listings</h4>
         </div>
         <div class="ui bottom attached padded segment">
-            <div class="ui row">
-                <div class="ui five wide column">
-                </div>
+            <div class="ui grid">
+                {% for listing in listings %}
+                    <div class="ui row">
+                        <div class="ui five wide column">
+                            {% with listing.get_cover_photo as photo %}
+                                {% if photo %} 
+                                    <img src="{{ photo.image.url }}">
+                                {% else %}
+                                    <img src="{% static "/static/img/accounts/empty-photo.png" %}">
+                                {% endif %} 
+                            {% endwith %}   
+                        </div>
+                        <div class="ui five wide column">
+                            {{ listing.name }}    
+                        </div>
+                        <div class="ui five wide column">
+                            Poop     
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

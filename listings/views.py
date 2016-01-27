@@ -28,74 +28,65 @@ def edit_listing(request, listing_id):
 # Change these form views to one class
 @login_required
 @listing_ownership
-def edit_listing_description(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+def edit_listing_description(request, listing):
     if request.method == "POST":
         form = EditDescriptionForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_location', args=listing_id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_location', args=listing.id))
     else:
         form = EditDescriptionForm(instance=listing)
-
-    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    context = {'form': form, 'user': request.user, 'listing': listing}
     return render(request, 'listing/edit_listing_description.html', context)
 
 
 @login_required
 @listing_ownership
-def edit_listing_location(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+def edit_listing_location(request, listing):
     if request.method == "POST":
         form = EditLocationForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_details', args=listing_id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_details', args=listing.id))
     else:
         form = EditLocationForm(instance=listing)
-
-    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    context = {'form': form, 'user': request.user, 'listing': listing}
     return render(request, 'listing/edit_listing_location.html', context)
 
 
 @login_required
 @listing_ownership
-def edit_listing_details(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+def edit_listing_details(request, listing):
     if request.method == "POST":
         form = EditDetailsForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_photos', args=listing_id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_photos', args=listing.id))
     else:
         form = EditDetailsForm(instance=listing)
-
-    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    context = {'form': form, 'user': request.user, 'listing': listing}
     return render(request, 'listing/edit_listing_details.html', context)
 
 
 @login_required
 @listing_ownership
-def edit_listing_calendar(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+def edit_listing_calendar(request, listing):
     if request.method == "POST":
         form = EditCalendarForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_calendar', args=listing_id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_calendar', args=listing.id))
     else:
         form = EditCalendarForm(instance=listing)
-
-    context = {'form': form, 'user': request.user, 'listing': listing, 'listing_id': listing_id}
+    context = {'form': form, 'user': request.user, 'listing': listing}
     return render(request, 'listing/edit_listing_calendar.html', context)
 
 
 @login_required
 @listing_ownership
-def edit_listing_photos(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
-    photos = Photo.objects.filter(listing=listing_id)
-    context = {'accepted_mime_types': 'image/*', 'listing': listing, 'listing_id': listing_id, 'photos': photos}
+def edit_listing_photos(request, listing):
+    photos = Photo.objects.filter(listing=listing.id)
+    context = {'accepted_mime_types': 'image/*', 'listing': listing, 'photos': photos}
     return render(request, 'listing/edit_listing_photos.html', context)
 
 

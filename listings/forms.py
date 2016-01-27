@@ -5,7 +5,7 @@ from .models import Listing
 class EditDescriptionForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ('listing_name', 'summary', 'price')
+        fields = ('name', 'summary', 'price')
 
 
 class EditLocationForm(forms.ModelForm):

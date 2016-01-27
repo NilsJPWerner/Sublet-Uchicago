@@ -1,6 +1,8 @@
-Django==1.8.6
+Django==1.9.1
 django-allauth==0.24.1
+django-realtime==1.1
 django-widget-tweaks==1.4.1
+libmagic==1.0
 oauthlib==1.0.3
 Pillow==3.0.0
 python-magic==0.4.10

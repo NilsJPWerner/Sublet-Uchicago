@@ -31,7 +31,7 @@ class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Descrition
-    listing_name = models.CharField(max_length=40, blank=True)
+    name = models.CharField(max_length=40, blank=True)
     summary = models.TextField(max_length=400, blank=True)
     price = models.IntegerField(default=0, blank=True)
 
@@ -72,7 +72,7 @@ class Listing(models.Model):
     published = models.BooleanField(default=False)
 
     def description_complete(self):
-        if self.listing_name and self.summary and self.price:
+        if self.name and self.summary and self.price:
             return True
         return False
 

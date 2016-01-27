@@ -18,7 +18,7 @@
           Listing Steps
         </div>
       </div>
-      <a href="{% url 'listings:edit_listing_description' listing_id %}"  class=" {% if request.resolver_match.url_name == "edit_listing_description" %}active{% endif %} item">
+      <a href="{% url 'listings:edit_listing_description' listing_id=listing.id %}"  class=" {% if request.resolver_match.url_name == "edit_listing_description" %}active{% endif %} item">
         Description
         {% if listing.description_complete %}
           <i class="ui green checkmark icon"></i>
@@ -26,7 +26,7 @@
           <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
-      <a href="{% url 'listings:edit_listing_location' listing_id %}" class="{% if request.resolver_match.url_name == "edit_listing_location" %}active{% endif %} item">
+      <a href="{% url 'listings:edit_listing_location' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_location" %}active{% endif %} item">
         Location
         {% if listing.location_complete %}
           <i class="ui green checkmark icon"></i>
@@ -34,7 +34,7 @@
           <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
-      <a href="{% url 'listings:edit_listing_details' listing_id %}" class="{% if request.resolver_match.url_name == "edit_listing_details" %}active{% endif %} item">
+      <a href="{% url 'listings:edit_listing_details' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_details" %}active{% endif %} item">
         Details
         {% if listing.details_complete %}
           <i class="ui green checkmark icon"></i>
@@ -42,7 +42,7 @@
           <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
-      <a href="{% url 'listings:edit_listing_photos' listing_id %}" class="{% if request.resolver_match.url_name == "edit_listing_photos" %}active{% endif %} item">
+      <a href="{% url 'listings:edit_listing_photos' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_photos" %}active{% endif %} item">
         Photos
         {% if listing.photos_complete %}
           <i class="ui green checkmark icon"></i>
@@ -50,7 +50,7 @@
           <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
-      <a href="{% url 'listings:edit_listing_calendar' listing_id %}" class="{% if request.resolver_match.url_name == "edit_listing_calendar" %}active{% endif %} item">
+      <a href="{% url 'listings:edit_listing_calendar' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_calendar" %}active{% endif %} item">
         Calendar
         {% if listing.calendar_complete %}
           <i class="ui green checkmark icon"></i>
@@ -87,9 +87,9 @@
       </div>
       <div class="extra content">
           {% if listing.published %}
-            <a href="{% url "listings:unpublish_listing" listing_id %}" class="ui fluid orange button">Unpublish</a>
+            <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui fluid orange button">Unpublish</a>
           {% elif listing.listing_complete %}
-            <a href="{% url "listings:publish_listing" listing_id %}" class="ui fluid green button">Publish</a>
+            <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui fluid green button">Publish</a>
           {% else %}
             <div class="ui fluid disabled button">Publish</div>
           {% endif %}
