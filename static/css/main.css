@@ -35,6 +35,7 @@ p {
     background-color: #3e90c9!important;
 }
 
+
 /* -------------------- */
 /*         Menu         */
 /* -------------------- */
@@ -56,6 +57,19 @@ p {
     margin-left: 10px;
 }
 
+
+/* -------------------- */
+/*      Front Page      */
+/* -------------------- */
+
+#front-page .map-column {
+    padding: 0;
+}
+
+
+.ui.disabled.dimmer {
+    display: none;
+}
 
 /* -------------------- */
 /*    Account Login     */
@@ -151,11 +165,9 @@ span.help-text {
     line-height: 1.45;
 }
 
-div .ui.form .inline.fields{
+.ui.form .inline.fields {
     margin-bottom: 0;
 }
-
-
 
 
 /* -------------------- */
@@ -164,7 +176,7 @@ div .ui.form .inline.fields{
 
 
 .ui.large.form label {
-    font-size: 15px;
+    font-size: 1.05em;
 }
 
 .ui.large.form input[type=text] {

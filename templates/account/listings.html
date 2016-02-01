@@ -6,11 +6,11 @@
         <div class="ui secondary top attached segment">
             <h4 class="">Your Listings</h4>
         </div>
-        <div class="ui bottom attached padded segment">
+        <div class="ui attached padded segment">
             <div class="ui grid">
                 {% for listing in listings %}
                     <div class="ui row">
-                        <div class="ui five wide column">
+                        <div class="ui four wide column computer tablet only">
                             {% with listing.get_cover_photo as photo %}
                                 {% if photo %} 
                                     <img src="{{ photo.image.url }}">
@@ -19,15 +19,68 @@
                                 {% endif %} 
                             {% endwith %}   
                         </div>
-                        <div class="ui five wide column">
-                            {{ listing.name }}    
+                        <div class="ui eight wide column">
+                            <h3 style="margin: 5px 0px;">{{ listing.name }}</h3>
+                            <a href="{% url "listings:edit_listing" listing_id=listing.id %}">Edit your listing</a>
+                            <br>
+                            <a href="{% url 'listings:delete_listing' listing.id %}">Delete listing</a>
                         </div>
-                        <div class="ui five wide column">
-                            Poop     
+                        <div class="ui four wide column">
+                            {% if listing.published %}
+                                <a class="ui orange fluid button" style="margin-top: 20%;" href="{% url 'listings:unpublish_listing' listing.id %}">Unpublish</a>
+                            {% elif listing.complete %}
+                                <a class="ui positive fluid button" style="margin-top: 20%;" href="{% url 'listings:publish_listing' listing.id %}">Publish</a>
+                            {% else %}
+                                <a class="ui yellow fluid button" style="margin-top: 20%;" href="{% url "listings:edit_listing" listing_id=listing.id %}">{{ listing.steps_remaining }} steps left</a>
+                            {% endif %}
                         </div>
                     </div>
+                    {% if not forloop.last %}<div class="ui divider"></div>{% endif %}
                 {% endfor %}
             </div>
         </div>
+        <div class="ui bottom attached segment">
+            <div class="ui one column right aligned grid">
+                <div class="ui sixteen wide column">
+                    <a href="{% url "listings:add_listing" %}" class="ui customblue button">Add listing</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div id="confirm_delete" class="ui small modal">
+        <div class="header">
+            Delete listing
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete this listing?</p>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">
+                Cancel
+            </div>
+            <div class="ui negative approve right labeled icon button">
+                Yes
+                <i class="remove icon"></i>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $('.delete').click(function(){
+        event.preventDefault();
+        var deleteLink = $(this).attr("href");
+        var row = $(this).parents('.ui.row');
+        var divider = row.prev('.divider');
+        $('#confirm_delete').modal({
+            onApprove : function() {
+                $.get(deleteLink);
+                divider.hide().remove();
+                row.hide().remove();
+            }
+        })
+        .modal('show');
+    });
+</script>
 {% endblock %}

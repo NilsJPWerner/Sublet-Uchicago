@@ -1,34 +1,62 @@
 {% extends "base.html" %}   
 
 {% block content %}
-<div class="ui grid container">
-    <div class="six wide column">
-        <div class="ui form"></div>
-            <select id="bathroom" class="ui dropdown">
+<div id="front-page" class="ui grid">
+    <div class="seven wide column">
+        <div class="sixteen wide column">
+            <div class="ui form"></div>
+            <select id="bedsize" class="ui filter dropdown">
+                <option value="shared">Don't mind</option>
+                <option value="private">Twin or above</option>
+                <option value="private">Queen or above</option>
+                <option value="private">King only</option>
+            </select>
+            <select id="bathroom" class="ui filter dropdown">
                 <option value="shared">Shared</option>
                 <option value="private">Private</option>
             </select>
-            <input id="search" class="ui button" type="submit" value="Search"/>
+            <div id="spinner" class="ui active dimmer inverted disabled">
+                <div class="ui text loader"></div>
+            </div>
+            <div id="results"></div>
         </div>
-        <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"/></span>
-        <div id="results"></div>
+    </div>
+    <div class="nine wide column map-column">
+        <div id="map" style="height: calc(100vh - 62px); width: 100%" ></div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
-$(document).ready( function() {
-    $("#search").click( function() {
+$(document).ready(function() {
+    $(".filter").change(function() {
         query = $("#bathroom").val();
         $("#results").html("&nbsp;").load('{% url "search" %}?q=' + query);
     });
 });
  
 $(document).ajaxStart( function() {
-    $("#spinner").show();
+    $("#spinner").removeClass('disabled');
 }).ajaxStop( function() {
-    $("#spinner").hide();
+    $("#spinner").addClass('disabled')
 });
 </script>
+
+<script type="text/javascript">
+var map;
+function initMap() {
+  var myCenter=new google.maps.LatLng(41.801625,-87.599969);
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: myCenter, 
+    zoom: 14,
+    mapTypeControl: false,
+    zoomControl:true,
+  });
+}
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP5xmOaC6toBn_BrLSA_DZeLBMPl1lm3w&callback=initMap">
+</script>
+
 {% endblock %}

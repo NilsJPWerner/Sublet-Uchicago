@@ -33,7 +33,7 @@ def edit_listing_description(request, listing):
         form = EditDescriptionForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_location', args=listing.id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_location', args=(listing.id,)))
     else:
         form = EditDescriptionForm(instance=listing)
     context = {'form': form, 'user': request.user, 'listing': listing}
@@ -47,7 +47,7 @@ def edit_listing_location(request, listing):
         form = EditLocationForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_details', args=listing.id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_details', args=(listing.id,)))
     else:
         form = EditLocationForm(instance=listing)
     context = {'form': form, 'user': request.user, 'listing': listing}
@@ -61,7 +61,7 @@ def edit_listing_details(request, listing):
         form = EditDetailsForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_photos', args=listing.id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_photos', args=(listing.id,)))
     else:
         form = EditDetailsForm(instance=listing)
     context = {'form': form, 'user': request.user, 'listing': listing}
@@ -75,7 +75,7 @@ def edit_listing_calendar(request, listing):
         form = EditCalendarForm(request.POST, instance=listing)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('listings:edit_listing_calendar', args=listing.id))
+            return HttpResponseRedirect(reverse('listings:edit_listing_calendar', args=(listing.id,)))
     else:
         form = EditCalendarForm(instance=listing)
     context = {'form': form, 'user': request.user, 'listing': listing}
@@ -92,9 +92,9 @@ def edit_listing_photos(request, listing):
 
 @login_required
 @require_POST
-@listing_ownership
 def upload(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+    listing = get_object_or_404(Listing, pk=listing_id, user=request.user)
+
     image = upload_receive(request)
 
     instance = Photo(image=image, listing=listing)
@@ -116,11 +116,13 @@ def upload(request, listing_id):
 
 @login_required
 @require_POST
-@listing_ownership
 def upload_delete(request, pk):
     success = True
     try:
         instance = Photo.objects.get(pk=pk)
+        if instance.listing.user != request.user:
+            success = False
+            return JFUResponse(request, success)
         instance.delete()
     except Photo.DoesNotExist:
         success = False
@@ -129,27 +131,27 @@ def upload_delete(request, pk):
 
 @login_required
 @listing_ownership
-def publish_listing(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
+def publish_listing(request, listing):
     if (listing.listing_complete()):
         listing.published = True
         listing.save()
-        return HttpResponseRedirect(reverse("accounts:account_home"))
+        return HttpResponseRedirect(reverse("accounts:listings"))
     else:
         # In case someone is sneaky and tries to publish before complete
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# Need to make the listing automatically unpublish if it is incomplete
+@login_required
+@listing_ownership
+def unpublish_listing(request, listing):
+    listing.published = False
+    listing.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
 @listing_ownership
-def unpublish_listing(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id)
-    if (listing.listing_complete()):
-        listing.published = False
-        listing.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        # In case someone is sneaky and tries to publish before complete
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
+def delete_listing(request, listing):
+    listing.delete()
+    return HttpResponseRedirect(reverse("accounts:listings"))

@@ -32,7 +32,7 @@ def your_listings(request):
     return render(request, 'account/listings.html', context)
 
 
-class verification(object):
+class verif(object):
     """docstring for verification"""
     def __init__(self, name, link, disconnect_link, description):
         self.name = name
@@ -43,21 +43,21 @@ class verification(object):
 
 @login_required
 def verification(request):
-    uchicago = verification('Uchicago E-mail',
+    uchicago = verif('Uchicago E-mail',
         reverse('accounts:settings'),
         reverse('accounts:settings'),
         'Insert text about Uchicago E-mail account')
     # Django limitations forced me to hardcode the connect urls.
     # Not very DRY so might eventually fix
-    facebook = verification('Facebook',
+    facebook = verif('Facebook',
         '/accounts/facebook/login/?process=connect',
         reverse('accounts:disconnect_service', args=('facebook',)),
         'Insert text about facebook here')
-    google = verification('Google',
+    google = verif('Google',
         '/accounts/google/login/?process=connect&next=%2Faccounts%2Fverification%2F',
         reverse('accounts:disconnect_service', args=('google',)),
         'Insert text about google here')
-    linkedin = verification('Linkedin',
+    linkedin = verif('Linkedin',
         '/accounts/linkedin/login/?process=connect&next=%2Faccounts%2Fverification%2F',
         reverse('accounts:disconnect_service', args=('linkedin',)),
         'Insert text about linkedin here')
