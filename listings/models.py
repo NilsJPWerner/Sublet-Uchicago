@@ -11,21 +11,15 @@ ROOMMATES = (('0', '0'), ('1', '1'),
             ('2', '2'), ('3', '3'),
             ('4', '4'), ('5+', '5+'))
 
-BED_SIZE = (('king', 'King'),
-    ('queen', 'Queen'),
-    ('full', 'Full'),
-    ('twin', 'Twin'))
+BED_SIZE = ((4, 'King'),
+    (3, 'Queen'),
+    (2, 'Full'),
+    (1, 'Twin'))
 
 BATHROOM = (('shared', 'Shared'),
     ('private', 'Private'))
 
 YESNO = (('yes', 'Yes'), ('no', 'No'))
-
-QUARTER = (('summer', 'Summer'),
-    ('fall', 'Fall'),
-    ('winter', 'Winter'),
-    ('spring', 'Spring'))
-
 
 class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,7 +40,7 @@ class Listing(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(-87.594183))
 
     # Details step
-    bed_size = models.CharField(choices=BED_SIZE, max_length=10, blank=True)
+    bed_size = models.IntegerField(choices=BED_SIZE, blank=True)
     roommate_count = models.CharField(choices=ROOMMATES, max_length=5, blank=True)
     bathroom = models.CharField(choices=BATHROOM, max_length=10, blank=True)
     ac = models.BooleanField(default=False)

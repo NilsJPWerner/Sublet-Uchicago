@@ -63,13 +63,25 @@ p {
 /* -------------------- */
 
 #front-page .map-column {
-    padding: 0;
+    padding: 0 0.95em 0 0;
 }
-
 
 .ui.disabled.dimmer {
     display: none;
 }
+
+#front-page .ui.default.dropdown:hover>.text, .ui.default.dropdown>.text {
+    color: rgba(140, 140, 140, 1);
+}
+
+#front-page .ui.dropdown:hover>.default.text, .ui.dropdown>.default.text {
+    color: rgba(140, 140, 140, 1);
+}
+
+#front-page .data-column {
+    padding-left: 2em;
+}
+
 
 /* -------------------- */
 /*    Account Login     */

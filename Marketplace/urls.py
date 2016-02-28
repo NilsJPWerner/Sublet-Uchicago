@@ -16,7 +16,8 @@ urlpatterns = [
     url(r'^map/', TemplateView.as_view(template_name="Marketplace/map.html"), name="map"),
 
     # Ajax search
-    url(r'^search/$', views.ajax_listing_search, name="search"),
+    url(r'^search_data/$', views.ajax_listing_search_data, name="search_data"),
+    url(r'^search_coordinates/$', views.ajax_listing_search_coordinates, name="search_coordinates"),
 
     # Profile tools
     url(r'^accounts/', include('allauth.urls'), name='accounts'),
