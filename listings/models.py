@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from accounts.models import ExtendedUser
 
 from decimal import Decimal
 from PIL import Image
@@ -21,13 +22,14 @@ BATHROOM = (('shared', 'Shared'),
 
 YESNO = (('yes', 'Yes'), ('no', 'No'))
 
+
 class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Descrition
     name = models.CharField(max_length=40, blank=True)
     summary = models.TextField(max_length=400, blank=True)
-    price = models.IntegerField(default=0, blank=True)
+    price = models.IntegerField(blank=True, null=True)
 
     # Location
     country = models.CharField(max_length=100, blank=True)  # Not used atm
@@ -40,7 +42,7 @@ class Listing(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default=Decimal(-87.594183))
 
     # Details step
-    bed_size = models.IntegerField(choices=BED_SIZE, blank=True)
+    bed_size = models.IntegerField(choices=BED_SIZE, blank=True, null=True)
     roommate_count = models.CharField(choices=ROOMMATES, max_length=5, blank=True)
     bathroom = models.CharField(choices=BATHROOM, max_length=10, blank=True)
     ac = models.BooleanField(default=False)
@@ -95,6 +97,8 @@ class Listing(models.Model):
     def listing_complete(self):
         if self.description_complete() and self.location_complete() and self.photos_complete() and self.details_complete() and self.calendar_complete():
             return True
+        self.published = False
+        self.save()
         return False
 
     def steps_remaining(self):
@@ -118,6 +122,15 @@ class Listing(models.Model):
             return self.photo_set.all()[0]
         else:
             return None
+
+    def get_photos(self, num):
+        photos = self.photo_set.filter()
+        if photos.count() > 0:
+            return photos[0:num]
+        else:
+            return None
+
+    # def get_user(self):
 
 
 class Photo(models.Model):

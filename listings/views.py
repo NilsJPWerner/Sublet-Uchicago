@@ -90,6 +90,7 @@ def edit_listing_photos(request, listing):
     return render(request, 'listing/edit_listing_photos.html', context)
 
 
+# Need to add listing ownership
 @login_required
 @require_POST
 def upload(request, listing_id):
@@ -114,6 +115,7 @@ def upload(request, listing_id):
     return UploadResponse(request, file_dict)
 
 
+# Need to add listing ownership
 @login_required
 @require_POST
 def upload_delete(request, pk):

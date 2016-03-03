@@ -12,12 +12,12 @@
                     <div class="ui row">
                         <div class="ui four wide column computer tablet only">
                             {% with listing.get_cover_photo as photo %}
-                                {% if photo %} 
+                                {% if photo %}
                                     <img src="{{ photo.image.url }}">
                                 {% else %}
                                     <img src="{% static "/static/img/accounts/empty-photo.png" %}">
-                                {% endif %} 
-                            {% endwith %}   
+                                {% endif %}
+                            {% endwith %}
                         </div>
                         <div class="ui eight wide column">
                             <h3 style="margin: 5px 0px;">{{ listing.name }}</h3>
@@ -28,7 +28,7 @@
                         <div class="ui four wide column">
                             {% if listing.published %}
                                 <a class="ui orange fluid button" style="margin-top: 20%;" href="{% url 'listings:unpublish_listing' listing.id %}">Unpublish</a>
-                            {% elif listing.complete %}
+                            {% elif listing.listing_complete %}
                                 <a class="ui positive fluid button" style="margin-top: 20%;" href="{% url 'listings:publish_listing' listing.id %}">Publish</a>
                             {% else %}
                                 <a class="ui yellow fluid button" style="margin-top: 20%;" href="{% url "listings:edit_listing" listing_id=listing.id %}">{{ listing.steps_remaining }} steps left</a>

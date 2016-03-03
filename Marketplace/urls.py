@@ -17,7 +17,7 @@ urlpatterns = [
 
     # Ajax search
     url(r'^search_data/$', views.ajax_listing_search_data, name="search_data"),
-    url(r'^search_coordinates/$', views.ajax_listing_search_coordinates, name="search_coordinates"),
+    url(r'^get_cover_photo/$', views.ajax_get_cover_photo, name="get_cover_photo"),
 
     # Profile tools
     url(r'^accounts/', include('allauth.urls'), name='accounts'),

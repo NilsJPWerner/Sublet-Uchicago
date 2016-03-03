@@ -3,8 +3,9 @@
 {% load staticfiles %}
 
 {% block JS_OPTS %}
-//autoUpload: true,
+autoUpload: true,
 sequentialUploads: true,
+maxNumberOfFiles: 12,
 previewMaxWidth : 150,
 previewMaxHeight : 150,
 acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i,
@@ -51,10 +52,10 @@ imageMaxHeight: 1000,
                             {% endif %}>
                     </button>
 
-                    <button type="submit" class="ui positive button start">
+                    <!-- <button type="submit" class="ui positive button start">
                         <i class="ui icon upload"></i>
                         <span>Upload all</span>
-                    </button>
+                    </button> -->
                     <div class="fileupload-progress fade" style="width:40%; display: inline-block;">
                         <div 
                             class="progress progress active" 

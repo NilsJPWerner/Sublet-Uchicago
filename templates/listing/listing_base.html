@@ -62,26 +62,26 @@
 
     <div class="ui card">
       <div class="content">
-        {% if listing.published %}
-          <div class="ui center aligned header">
-            Currently published
-          </div>
-          <div class="description">
-            This listing is currently published and publicly accessible. You can temporarily unpublish the listing.
-          </div>
-        {% elif listing.listing_complete %}
+        {% if listing.listing_complete %}
           <div class="ui center aligned header">
             Ready to publish!
           </div>
           <div class="description">
             You are ready to publish your listing. Don't worry you can come back and edit it later.
           </div>
+        {% elif listing.published %}
+          <div class="ui center aligned header">
+            Currently published
+          </div>
+          <div class="description">
+            This listing is currently published and publicly accessible. You can temporarily unpublish the listing.
+          </div>
         {% else %}
           <div class="ui center aligned header">
             Steps remaining: {{ listing.steps_remaining }}
           </div>
           <div class="description">
-            To publish your listing complete the steps below. You can always come back and finish it later.
+            To publish your listing complete the steps above. You can always come back and finish it later.
           </div>
         {% endif %}
       </div>

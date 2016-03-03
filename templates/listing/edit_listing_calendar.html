@@ -64,8 +64,10 @@
         <div class="ui one column right aligned grid">
           <div class="ui sixteen wide column">
             <button class="ui customblue icon button" type="submit" style="width:90px;">Save</button>
-            {% if listing.listing_complete %}
-              <div class="ui green button">Publish</div>
+            {% if listing.published %}
+              <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui orange button">Unpublish</a>
+            {% elif listing.listing_complete %}
+              <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui green button">Publish</a>
             {% else %}
               <div class="ui disabled button">Publish</div>
             {% endif %}

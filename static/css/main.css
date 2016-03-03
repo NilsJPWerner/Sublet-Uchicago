@@ -80,8 +80,46 @@ p {
 
 #front-page .data-column {
     padding-left: 2em;
+    height: 92vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
+.slider-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: inherit;
+}
+
+.unslider > a {
+    cursor: pointer;
+}
+
+.unslider-arrow {
+    top: 25%;
+    color: white;
+    opacity: 0.8;
+    z-index: 20;
+}
+
+.unslider-arrow:hover {
+    color: white;
+    opacity: 1;
+}
+
+.unslider-arrow.prev {
+    left: 5px!important;
+}
+
+.unslider-arrow.next {
+    right: 5px!important;
+}
+
+#front-page i.chevron {
+    margin-right: 0;
+    cursor: pointer;
+}
 
 /* -------------------- */
 /*    Account Login     */
