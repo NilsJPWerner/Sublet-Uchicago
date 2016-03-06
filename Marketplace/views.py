@@ -20,28 +20,30 @@ def ajax_listing_search_data(request):
     price_low = (request.GET.get('price_low'))
     price_high = int(request.GET.get('price_high'))
 
-    # Filter by quarters first
+    # Price filtering
+    results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low, price__lte=price_high)
+
+    # Filter by quarters
     if (not fall) and (not winter) and (not spring) and (not summer):
-        results = Listing.objects.filter(published=True)
+        results = results.filter(published=True)
     else:
-        results = Listing.objects.filter(published=True,
+        results = results.filter(published=True,
             fall_quarter=fall, winter_quarter=winter,
             spring_quarter=spring, summer_quarter=summer)
 
     if bathroom != "none":
         results = results.filter(bathroom=bathroom)
-    results = results.filter(bed_size__gte=bedsize)
-    # Price filtering
-    results = results.filter(price__gte=price_low, price__lte=price_high)
 
-    # .order_by('username')
+    results = results.filter(bed_size__gte=bedsize)
+
     listings = []
     for i in results:
         data = model_to_dict(i)
         photos = i.get_photos(4)
         photo_list = []
-        for p in photos:
+        for p in photos[1:]:
             photo_list.append(p.image.url)
+        data["cover_photo"] = photos[0].image.url
         data["photos"] = photo_list
         listings.append(data)
 
