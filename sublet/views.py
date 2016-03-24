@@ -64,7 +64,7 @@ def search(request):
         return HttpResponse(ret, content_type='application/json')
 
     else:
-        return render(request, "Marketplace/search.html", {})
+        return render(request, "sublet/search.html", {})
 
 
 def public_profile(request, user):
@@ -92,5 +92,5 @@ def public_profile(request, user):
         uv.append(("Linkedin", "Not Connected"))
 
     context = {'user': u, 'verified': v, 'unverified': uv}
-    return render(request, 'Marketplace/public_profile.html', context)
+    return render(request, 'sublet/public_profile.html', context)
 

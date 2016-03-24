@@ -13,7 +13,7 @@ urlpatterns = [
 
     # Static pages
     url(r'^search/$', views.search, name="search"),
-    url(r'^map/', TemplateView.as_view(template_name="Marketplace/map.html"), name="map"),
+    url(r'^map/', TemplateView.as_view(template_name="sublet/map.html"), name="map"),
 
     # Ajax search
     url(r'^search_data/$', views.search, name="search_data"),

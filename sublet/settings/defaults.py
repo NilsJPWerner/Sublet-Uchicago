@@ -40,7 +40,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'Marketplace.urls'
+ROOT_URLCONF = 'sublet.urls'
 
 SITE_ID = 1
 
@@ -84,7 +84,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-WSGI_APPLICATION = 'Marketplace.wsgi.application'
+WSGI_APPLICATION = 'sublet.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -114,7 +114,7 @@ LOGIN_REDIRECT_URL = "/accounts/home"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 5
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "Marketplace "
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "Sublet "
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # make this "mandatory" later and implement an smtp client
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_ON_GET = True

@@ -1,0 +1,1 @@
+web: gunicorn canaree.wsgi --log-file -
