@@ -12,9 +12,6 @@ PREREQ_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-)
-
-PROJECT_APPS = (
     'widget_tweaks',
     'allauth',
     'allauth.account',
@@ -22,6 +19,9 @@ PROJECT_APPS = (
     # 'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
+)
+
+PROJECT_APPS = (
     'accounts',
     'listings',
     'jfu',
@@ -63,7 +63,7 @@ TEMPLATES = [
     },
 ]
 
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
