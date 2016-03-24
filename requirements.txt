@@ -12,5 +12,6 @@ requests==2.8.1
 requests-oauthlib==0.5.0
 sorl-thumbnail==12.3
 wheel==0.24.0
-whitenoise==2.0.4
-gunicorn==19.4.0
+whitenoise
+gunicorn
+psycopg2
