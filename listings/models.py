@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from accounts.models import ExtendedUser
 
 from decimal import Decimal
 from PIL import Image
@@ -142,7 +141,7 @@ class Photo(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     # # Maybe add something that renames the file to something standard
-    # # Maybe also resize original image to something more sane 
+    # # Maybe also resize original image to something more sane
     # def save(self):
     #     if self.is_cover_photo:
     #         other_cover_photos = Photo.objects.filter(album=self.album, is_cover_photo=True)

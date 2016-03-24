@@ -6,14 +6,13 @@ from django.http import HttpResponseRedirect, Http404
 from django.core.exceptions import ObjectDoesNotExist
 
 
-from .forms import ExtendedUserForm, ChangePasswordFormModified, AddEmailFormCombined                
+from .forms import ExtendedUserForm, ChangePasswordFormModified, AddEmailFormCombined
 from .models import ExtendedUser
 from listings.models import Listing
 
 from allauth.account.views import (PasswordChangeView, EmailView, _ajax_response)
 from allauth.account.adapter import get_adapter
 from allauth.account import signals
-from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 
 
@@ -33,7 +32,6 @@ def your_listings(request):
 
 
 class verif(object):
-    """docstring for verification"""
     def __init__(self, name, link, disconnect_link, description):
         self.name = name
         self.link = link
@@ -65,25 +63,20 @@ def verification(request):
     verified_list = []
     unverified_list = [uchicago, facebook, google, linkedin]
 
-    email_list = EmailAddress.objects.filter(user=request.user, verified=True)
-    for email in email_list:
-        if '@uchicago.edu' in email.email:
-            unverified_list.remove(uchicago)
-            verified_list.append(uchicago)
-            break
-    account_list = SocialAccount.objects.filter(user=request.user)
-    for account in account_list:
-        if account.provider == 'facebook':
-            verified_list.append(facebook)
-            unverified_list.remove(facebook)
-        elif account.provider == 'google':
-            verified_list.append(google)
-            unverified_list.remove(google)
-        elif account.provider == 'linkedin':
-            verified_list.append(linkedin)
-            unverified_list.remove(linkedin)
-    context = {'user': request.user, 'verified': verified_list,
-                'unverified': unverified_list}
+    if (request.user.extendeduser.uchicago_email()):
+        unverified_list.remove(uchicago)
+        verified_list.append(uchicago)
+    if (request.user.extendeduser.social_account('facebook')):
+        verified_list.append(facebook)
+        unverified_list.remove(facebook)
+    if (request.user.extendeduser.social_account('google')):
+        verified_list.append(google)
+        unverified_list.remove(google)
+    if (request.user.extendeduser.social_account('linkedin')):
+        verified_list.append(linkedin)
+        unverified_list.remove(linkedin)
+
+    context = {'user': request.user, 'verified': verified_list, 'unverified': unverified_list}
     return render(request, 'account/verification.html', context)
 
 

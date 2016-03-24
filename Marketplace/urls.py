@@ -12,12 +12,14 @@ urlpatterns = [
     url(r'^', include('listings.urls', namespace="listings")),
 
     # Static pages
-    url(r'^$', TemplateView.as_view(template_name="Marketplace/home.html"), name="home"),
+    url(r'^search/$', views.search, name="search"),
     url(r'^map/', TemplateView.as_view(template_name="Marketplace/map.html"), name="map"),
 
     # Ajax search
-    url(r'^search_data/$', views.ajax_listing_search_data, name="search_data"),
-    url(r'^get_cover_photo/$', views.ajax_get_cover_photo, name="get_cover_photo"),
+    url(r'^search_data/$', views.search, name="search_data"),
+
+    # Public pages
+    url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),
 
     # Profile tools
     url(r'^accounts/', include('allauth.urls'), name='accounts'),

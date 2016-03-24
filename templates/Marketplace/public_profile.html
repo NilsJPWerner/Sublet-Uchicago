@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block head_title %}   TEMPORARY   {% endblock %}
+{% block content %}
+
+<div id="account" class="ui centered two column grid stackable container" style="margin-top: 20px;">
+    <div class="four wide column">
+        <div class="ui fluid card">
+            <div class="image">
+                <img src="{% static "/static/img/accounts/empty-photo.png" %}">
+            </div>
+            <div class="content">
+                <p class="header">Welcome back {{ user.extendeduser.first_name }}</p>
+                <div class="description ">
+                <!-- <strong>Location:</strong> -->
+                </div>
+            </div>
+        </div>
+        <div class="ui secondary top attached segment" style="margin-top: 30px;">
+          <h4 class="">Verifications</h4>
+        </div>
+        <div class="ui bottom attached padded segment">
+            <div class="ui list">
+                {% for header, text in verified %}
+                    <div class="item">
+                        <i class="ui green checkmark icon"></i>
+                        <div class="content">
+                            <div class="header">{{ header }}</div>
+                            {{ text }}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for header, text in unverified %}
+                    <div class="item greyed">
+                        <i class="ui grey minus icon"></i>
+                        <div class="content">
+                            <div class="header">{{ header }}</div>
+                            {{ text }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+    <div class="ten wide column">
+        <div class="ui secondary top attached segment">
+          <h4 class="">Shared Friends</h4>
+        </div>
+        <div class="ui bottom attached padded segment">
+            poop
+        </div>
+
+        <div class="ui secondary top attached segment">
+          <h4 class="">Listings</h4>
+        </div>
+        <div class="ui bottom attached padded segment">
+            <div class="ui small images">
+                {% for listing in user.extendeduser.get_listings %}
+                    <img src="{{ listing.get_cover_photo.image.url }}">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

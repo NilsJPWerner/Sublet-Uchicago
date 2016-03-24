@@ -23,7 +23,7 @@
                             <h3 style="margin: 5px 0px;">{{ listing.name }}</h3>
                             <a href="{% url "listings:edit_listing" listing_id=listing.id %}">Edit your listing</a>
                             <br>
-                            <a href="{% url 'listings:delete_listing' listing.id %}">Delete listing</a>
+                            <a class="delete" href="{% url 'listings:delete_listing' listing.id %}">Delete listing</a>
                         </div>
                         <div class="ui four wide column">
                             {% if listing.published %}

@@ -19,7 +19,7 @@
   <body>
 
     <div id="top-menu" class="ui large menu">
-      <a class="header item" href="{% url 'home' %}">
+      <a class="header item" href="{% url 'search' %}">
         <img class="logo" src="{% static "img/logo_200x200.png" %}">
         Marketplace
       </a>
@@ -43,10 +43,6 @@
         <a id="post_listing" class="ui item">
           <i class="plus icon"></i>
           Post a listing
-         <!--  <div class="menu">
-            <a class="item">Selling</a>
-            <a class="item">Wanted</a>
-          </div> -->
         </a>
         <div id="user" class="ui right dropdown browse item">
           {{ request.user.extendeduser.first_name }}
@@ -65,16 +61,16 @@
 
     {% block content %}
     {% endblock %}
-    
+
     {% block jquery %}
       {% comment %}
         This block is used to get rid of the this line for the jru uploader to prevent jquery conflicts
       {% endcomment %}
-      <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
-      <!--<script src="{% static "js/jquery-2.1.4.min.js" %}" type="text/javascript"></script>-->
+      <!--<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>-->
+      <script src="{% static "js/jquery-2.1.4.min.js" %}" type="text/javascript"></script>
     {% endblock %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
-    <!--<script src="{% static "js/semantic.min.js" %}" type="text/javascript"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>-->
+    <script src="{% static "js/semantic.min.js" %}" type="text/javascript"></script>
     <script src="{% static "js/main.js" %}" type="text/javascript"></script>
     {% block scripts %}
     {% endblock %}
