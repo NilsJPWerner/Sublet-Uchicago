@@ -1,1 +1,1 @@
-web: gunicorn canaree.wsgi --log-file -
+web: gunicorn sublet.wsgi --log-file -
