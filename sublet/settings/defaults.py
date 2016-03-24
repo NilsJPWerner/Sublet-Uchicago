@@ -77,13 +77,6 @@ MEDIA_URL = '/media/'
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
-    },
-}
-
 WSGI_APPLICATION = 'sublet.wsgi.application'
 
 DATABASES = {

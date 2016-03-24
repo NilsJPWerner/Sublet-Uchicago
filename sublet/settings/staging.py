@@ -10,6 +10,7 @@ ALLOWED_HOSTS = ['*']
 
 # Parse database configuration from $DATABASE_URL
 DATABASES['default'] = dj_database_url.config()
+DATABASES['default']['CONN_MAX_AGE'] = 500
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
