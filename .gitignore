@@ -62,3 +62,9 @@ db.sqlite3
 /staticfiles
 *pyc
 
+# Just some local files
+/static/css/themes
+/static/css/semantic.min.css
+/static/js/jquery-2.1.4.min.js
+/static/js/semantic.min.js
+

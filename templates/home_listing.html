@@ -1,6 +1,0 @@
-{% csrf_token %}
-    <a> This is a link to add a new listing! </a>
-    <h2> Below are all of our listings.</h2>
-    {% for listing in all_listings %}
-    	<h3> {{listing.description}} </h3>
-    {% endfor %}

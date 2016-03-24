@@ -9,8 +9,8 @@
 	{% load staticfiles %}
 
 	<!-- Bootstrap/Semantic & stylesheets-->
- 	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css"> -->
-  <link rel="stylesheet" href="{% static "css/semantic.min.css" %}">
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
+  <!-- <link rel="stylesheet" href="{% static "css/semantic.min.css" %}">-->
 	<link rel="stylesheet" href="{% static "css/main.css" %}">
 
   {% block head %}
@@ -64,13 +64,14 @@
 
     {% block jquery %}
       {% comment %}
-        This block is used to get rid of the this line for the jru uploader to prevent jquery conflicts
+        DONT REMOVE THIS
+        This block is used to get rid of the this line for the jfu uploader to prevent jquery conflicts
       {% endcomment %}
-      <!--<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>-->
-      <script src="{% static "js/jquery-2.1.4.min.js" %}" type="text/javascript"></script>
+      <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+      <!--<script src="{% static "js/jquery-2.1.4.min.js" %}" type="text/javascript"></script>-->
     {% endblock %}
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>-->
-    <script src="{% static "js/semantic.min.js" %}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+    <!--<script src="{% static "js/semantic.min.js" %}" type="text/javascript"></script>-->
     <script src="{% static "js/main.js" %}" type="text/javascript"></script>
     {% block scripts %}
     {% endblock %}
