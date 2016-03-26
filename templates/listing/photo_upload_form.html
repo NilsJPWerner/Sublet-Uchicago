@@ -3,16 +3,16 @@
 {% load staticfiles %}
 
 {% block JS_OPTS %}
-autoUpload: true,
 sequentialUploads: true,
-maxNumberOfFiles: 12,
+maxNumberOfFiles: 10,
 previewMaxWidth : 150,
 previewMaxHeight : 150,
-acceptFileTypes: /(\.|\/)(png|gif|jpe?g)$/i,
+acceptFileTypes: /(\.|\/)(png|jpe?g)$/i,
 disableImageResize: false,
 //imageMaxWidth: 80,
 imageMaxHeight: 1000,
-//imageCrop: true
+//imageCrop: true,
+previewCanvas: false
 {% endblock %}
 
 {% block CSS_BOOTSTRAP %}
@@ -26,20 +26,26 @@ imageMaxHeight: 1000,
 {% block UPLOAD_FORM %}
 
 {% comment %}
- The file upload form used as target for the file upload widget 
+ The file upload form used as target for the file upload widget
 {% endcomment %}
 <form id="fileupload" class="ui form" action="{{ upload_handler_url }}" method="POST" enctype="multipart/form-data">
 
     {% csrf_token %}
 
-    {% block UPLOAD_FORM_BUTTON_BAR %}
-    {% endblock %}
+    {% block UPLOAD_FORM_BUTTON_BAR %}{% endblock %}
+    {% block JS_BOOTSTRAP %}{% endblock %}
+    {% block JS_JQUERY_FILE_UPLOAD_AUDIO %}{% endblock %}
+    {% block JS_JQUERY_FILE_UPLOAD_VIDEO %}{% endblock %}
+    {% block JS_BLUEIMP_GALLERY %}{% endblock %}
+    {% block CSS_BLUEIMP_GALLERY %}{% endblock %}
+    {% block MODAL_GALLERY %}{% endblock %}
+
 
     {% block UPLOAD_FORM_LISTING %}
     {% comment %}
-     The table listing the files available for upload/download 
+     The table listing the files available for upload/download
     {% endcomment %}
-    <table role="presentation" class="ui  single line celled table">
+    <table role="presentation" class="ui fixed single line celled table">
         <thead>
             <th colspan="3">
                 <div class="fileupload-buttonbar">
@@ -52,21 +58,21 @@ imageMaxHeight: 1000,
                             {% endif %}>
                     </button>
 
-                    <!-- <button type="submit" class="ui positive button start">
+                    <button type="submit" class="ui positive button start">
                         <i class="ui icon upload"></i>
                         <span>Upload all</span>
-                    </button> -->
+                    </button>
                     <div class="fileupload-progress fade" style="width:40%; display: inline-block;">
-                        <div 
-                            class="progress progress active" 
-                            role="progressbar" 
+                        <div
+                            class="progress progress active"
+                            role="progressbar"
                             aria-valuemin="0" aria-valuemax="100"
                         >
                             <div class="progress-bar progress-bar" style="width:0%;">
                             </div>
                         </div>
                         {% comment %}
-                         The extended global progress information 
+                         The extended global progress information
                         {% endcomment %}
                         <!-- <div class="progress-extended">&nbsp;</div> -->
                     </div>
@@ -78,21 +84,21 @@ imageMaxHeight: 1000,
             <tr class="template-download fade in">
                 <td class="image-column">
                     <span class="preview">
-                        <a href="{{ photo.image.url }}"
-                        data-gallery><img src="{{ photo.image.url }}"></a>
+                        <a class="lightbox" title="{{ photo.description }}"
+                        href="{{ photo.image.url }}"><img src="{{ photo.image.url }}"></a>
                     </span>
                 </td>
                 <td>
                     <p class="name">
                         <a href="{{ photo.image.url }}"
-                        title="{{ photo.image.name }}">
-                        {{ photo.get_name }}
+                        title="{{ photo.description }}">
+                        {{ photo.description }}
                         </a>
                         <p class="size">{{ photo.get_size }}</p>
                    </p>
                 </td>
                 <td>
-                    <button class="ui orange button fluid delete" 
+                    <button class="ui orange button fluid delete"
                             data-type="POST"
                             data-data='{ "csrfmiddlewaretoken" : "{{ csrf_token }}" }'
                             data-url="{{ photo.get_delete_url }}">
@@ -101,7 +107,7 @@ imageMaxHeight: 1000,
                     </button>
                 </td>
             </tr>
-        {% endfor %} 
+        {% endfor %}
         </tbody>
     </table>
     {% endblock %}
@@ -127,9 +133,12 @@ imageMaxHeight: 1000,
 
         {% block JS_UPLOAD_TEMPLATE_UPLOAD %}
         <td style="word-wrap: break-word">
-            <p class="name">{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</p>
+            <!-- <p class="name">{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</p> -->
+            <div class="field">
+                <label>Description</label>
+                <textarea rows=3 class="description" name="description[]" required></textarea>
+              </div>
             <strong class="error text-danger"></strong>
-            <p class="size">Processing...</p>
         </td>
         {% endblock %}
 
@@ -181,8 +190,8 @@ imageMaxHeight: 1000,
                 {{ JQ_OPEN }} if (file.thumbnailUrl) { {{ JQ_CLOSE }}
                     <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
                      title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
-                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
-                     data-gallery><img src="{{ JQ_OPEN }}=file.thumbnailUrl{{ JQ_CLOSE }}"></a>
+
+                     class="lightbox"><img src="{{ JQ_OPEN }}=file.thumbnailUrl{{ JQ_CLOSE }}"></a>
                 {{ JQ_OPEN }} } {{ JQ_CLOSE }}
             </span>
         </td>
@@ -194,8 +203,7 @@ imageMaxHeight: 1000,
                 {{ JQ_OPEN }} if (file.url) { {{ JQ_CLOSE }}
                     <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
                      title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
-                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
-                     {{ JQ_OPEN }}=file.thumbnailUrl?'data-gallery':''{{ JQ_CLOSE }}>
+                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}">
                      {{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}
                     </a>
                     <p class="size">{{ JQ_OPEN }}=o.formatFileSize(file.size){{ JQ_CLOSE }}</p>
@@ -219,12 +227,12 @@ imageMaxHeight: 1000,
         {% block JS_DOWNLOAD_TEMPLATE_DELETE %}
         <td>
             {{ JQ_OPEN }} if (file.deleteUrl) { {{ JQ_CLOSE }}
-                <button class="ui orange fluid button delete" 
+                <button class="ui orange fluid button delete"
                         data-type="{{ JQ_OPEN }}=file.deleteType{{ JQ_CLOSE }}"
                         data-data='{ "csrfmiddlewaretoken" : "{{ csrf_token }}" }'
                         data-url="{{ JQ_OPEN }}=file.deleteUrl{{ JQ_CLOSE }}"
-                        {{ JQ_OPEN }} if (file.deleteWithCredentials) { %} 
-                            data-xhr-fields='{"withCredentials":true}'{% } 
+                        {{ JQ_OPEN }} if (file.deleteWithCredentials) { %}
+                            data-xhr-fields='{"withCredentials":true}'{% }
                         {{ JQ_CLOSE }}>
                     <i class="ui icon delete"></i>
                     <span>Delete</span>

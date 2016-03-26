@@ -15,9 +15,6 @@ urlpatterns = [
     url(r'^search/$', views.search, name="search"),
     url(r'^map/', TemplateView.as_view(template_name="sublet/map.html"), name="map"),
 
-    # Ajax search
-    url(r'^search_data/$', views.search, name="search_data"),
-
     # Public pages
     url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),
 

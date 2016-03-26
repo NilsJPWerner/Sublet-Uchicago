@@ -12,6 +12,7 @@ PREREQ_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup',
     'widget_tweaks',
     'allauth',
     'allauth.account',

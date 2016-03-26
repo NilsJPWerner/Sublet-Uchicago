@@ -90,6 +90,7 @@ def edit_listing_photos(request, listing):
     return render(request, 'listing/edit_listing_photos.html', context)
 
 
+# Need to restrict the number of photos allowed to be uploaded
 # Need to add listing ownership
 @login_required
 @require_POST
@@ -97,13 +98,13 @@ def upload(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id, user=request.user)
 
     image = upload_receive(request)
+    description = request.POST.get("description[]")
 
-    instance = Photo(image=image, listing=listing)
+    instance = Photo(image=image, listing=listing, description=description)
     instance.save()
-    basename = os.path.basename(instance.image.path)
 
     file_dict = {
-        'name': basename,
+        'name': description,
         'size': image.size,
 
         'url': instance.image.url,

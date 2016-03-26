@@ -1,4 +1,17 @@
+//////////////////////////////
+/////   GOOGLE MAP STUFF  ////
+//////////////////////////////
+
+var map;
+var markers = {};
+var infoWindow;
+var default_marker;
+var highlight_marker;
+
+// This is the callback function from google maps
+// Will run after google maps has loaded
 function initMap() {
+    // Initialize a map centered on Hyde Park
     var myCenter = new google.maps.LatLng(41.795113,-87.594300);
     map = new google.maps.Map(document.getElementById('map'), {
         center: myCenter,
@@ -7,14 +20,17 @@ function initMap() {
         zoomControl: true,
     });
 
+    // Create an info window to later be shared by the listing markers
     infoWindow = new google.maps.InfoWindow({
         content:"Poopie mcgoopie"
     });
 
+    // Add an event to close the infowindow if you click outisde of it
     google.maps.event.addListener(map, "click", function(event) {
         infoWindow.close();
     });
 
+    // Build a default marker template with a blue marker
     default_marker = {
         url: "/static/img/marker.png", // url
         scaledSize: new google.maps.Size(40, 40), // scaled size
@@ -22,6 +38,7 @@ function initMap() {
         anchor: new google.maps.Point(20,40) // anchor
     };
 
+    // Build a highlight marker for hovers with a red marker
     highlight_marker = {
         url: "/static/img/highlight_marker.png", // url
         scaledSize: new google.maps.Size(40, 40), // scaled size
@@ -29,29 +46,65 @@ function initMap() {
         anchor: new google.maps.Point(20,40) // anchor
     };
 
+    // If the url contains a query from a previous ajax call, use that instead
+    // of the current form data. This is so that you can share or save the url
+    // of a search and come back to it later.
     if (window.location.search.length > 1) {
         search_with_url(window.location.pathname + window.location.search);
-        search_slider.noUiSlider.set([getParameterByName('price_low'),
+        price_slider.noUiSlider.set([getParameterByName('price_low'),
             getParameterByName('price_high')]);
     }
+    // Otherwise just search normally
     else {
         search();
     }
 };
 
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setMapOnAll(null);
+}
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i in markers) {
+    markers[i].setMap(map);
+  }
+}
+
+// Shows any markers currently in the array.
+function showMarkers() {
+  setMapOnAll(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = {};
+}
+
+
+
+
+//////////////////////////////
+/////    ON LOAD STUFF    ////
+//////////////////////////////
+
+var price_slider;
 
 $(document).ready(function() {
-
     var low = 300
     var high = 700
-    // If there are prices in the url use them
+    // If there are prices in the url use them instead
+    // This is to return to prev state if page is loaded anew
     if (getUrlParam('price_low') || getUrlParam('price_high')) {
         low = getUrlParam('price_low')
         high = getUrlParam('price_high')
     }
 
-    search_slider = document.getElementById('slider');
-    noUiSlider.create(search_slider, {
+    // Activate the price slider
+    price_slider = document.getElementById('slider');
+    noUiSlider.create(price_slider, {
         start: [low, high],
         connect: true,
         step: 1,
@@ -61,11 +114,10 @@ $(document).ready(function() {
         },
     });
 
+    // When the slider value changes, update the numbers
     var range_low = document.getElementById('slider_low'),
         range_high = document.getElementById('slider_high');
-
-    // When the slider value changes, update the numbers
-    search_slider.noUiSlider.on('update', function( values, handle ) {
+    price_slider.noUiSlider.on('update', function( values, handle ) {
         if ( handle ) {
             range_high.innerHTML = '$' + values[handle];
         } else {
@@ -73,21 +125,32 @@ $(document).ready(function() {
         }
     });
 
+    // if any of the fields are modified perform ajax search
     $(".filter").change(function() {
         search();
     });
 
-    search_slider.noUiSlider.on('change', function(){
+    // if the price slider is touched perform ajax search
+    price_slider.noUiSlider.on('change', function(){
         search();
     });
 });
 
-var map;
-var markers = {};
-var infoWindow;
-var default_marker;
-var highlight_marker;
-var search_slider;
+
+
+
+///////////////////////////////
+///// RESULT HTML TEMPLATE ////
+///////////////////////////////
+
+// Explanation/rant for this shit.
+// Fuck this thing. I needed to build the cards for the results
+// and I didn't want to do it server side as I needed to return
+// json data rather than html to get shit to work with the map.
+// So I used the javascript templating plugin mustache to build
+// the html. Javascript sucks at having multiline strings though
+// so in order for this to be legible I had to split it into a
+// list of strings to then be joined when used.
 
 var template = [
     '<div id="listing-{{id}}"" class="ui fluid card" data-marker="{{id}}">',
@@ -124,32 +187,15 @@ var template = [
     '</div>'
 ].join('\n');
 
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
-  setMapOnAll(null);
-}
 
-// Sets the map on all markers in the array.
-function setMapOnAll(map) {
-  for (var i in markers) {
-    markers[i].setMap(map);
-  }
-}
 
-// Shows any markers currently in the array.
-function showMarkers() {
-  setMapOnAll(map);
-}
-
-// Deletes all markers in the array by removing references to them.
-function deleteMarkers() {
-  clearMarkers();
-  markers = {};
-}
-
+//////////////////////////////
+/////   SEARCH FUNCTIONS  ////
+//////////////////////////////
 
 // Searches database for inputed requirements
 function search() {
+    // Gets all the field data from the filters
     q_bedsize = $("#bedsize").val();
     q_bathroom = $("#bathroom").val();
     q_fall = $("#fall").is(':checked');
@@ -158,12 +204,26 @@ function search() {
     q_summer = $("#summer").is(':checked');
     slider_vals = slider.noUiSlider.get();
     $.ajax({
-        cache: false,
-        url: '/search_data/',
+        url: '/search/',
         type: 'GET',
-        data: { bedsize: q_bedsize, bathroom : q_bathroom, fall : q_fall,
+        data: {ajax: 1, bedsize: q_bedsize, bathroom : q_bathroom, fall : q_fall,
             winter : q_winter, spring : q_spring, summer : q_summer,
             price_low : Math.round(slider_vals[0]), price_high : Math.round(slider_vals[1])} ,
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            search_success(response, this.url);
+        },
+        error: function () {
+
+        }
+    });
+}
+
+// Use the current url to do the search
+function search_with_url(url) {
+    $.ajax({
+        url: url,
+        type: 'GET',
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
@@ -174,21 +234,12 @@ function search() {
     });
 }
 
-// Use the current url to do the search
-function search_with_url(url) {
-    $.ajax({
-        cache: false,
-        url: url,
-        type: 'GET',
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            search_success(response, this.url);
-        },
-        error: function () {
-            alert("error");
-        }
-    });
-}
+
+
+
+//////////////////////////////
+/////   SEARCH RESULTS    ////
+//////////////////////////////
 
 function search_success(response, url) {
     var html = '';
@@ -200,6 +251,7 @@ function search_success(response, url) {
             markers2keep.push(response[i].id.toString());
         }
     };
+
     // Remove markers that are not going to be shown
     for (var i in markers) {
         if (markers2keep.indexOf(i) === -1) {
@@ -212,12 +264,13 @@ function search_success(response, url) {
     for (var i = 0; i < response.length; i++) {
         var data = response[i];
 
-        // Render the cards and add to html
+        // Render the cards and add to html string
         var output = Mustache.render(template, data);
         html += output
 
         // If the marker is not already present
         if (!(data.id in markers)) {
+            // Add a marker to the map
             latlng = new google.maps.LatLng(data.latitude, data.longitude);
             var marker = new google.maps.Marker({
                 position: latlng,
@@ -229,11 +282,17 @@ function search_success(response, url) {
             });
             markers[data.id] = marker;
 
+            // Add a listener to the marker
+            // I should really remove the event listener on marker delete but eh
             marker.addListener("click", function() {
                 infoWindow.setContent(this['data_name']);
                 infoWindow.open(map, markers[this['data_id']]);
             });
 
+            // Add a mouseover listener to change the marker color on hover
+            // I'm limiting the scope to only the result wrapper to avoid
+            // unescesary mouse position checking, and because the actual
+            // html cards haven't been added to the dom yet.
             $("#results").on({
                 'mouseenter': function () {
                     var id = $(this).data("marker");
@@ -246,8 +305,11 @@ function search_success(response, url) {
             }, '#listing-' + data.id);
         };
     };
+
+    // Insert all the result cards into the dom
     document.getElementById('results').innerHTML = html;
 
+    // Acrivate all the sliders in all the result cards
     var slider = $('.slider').unslider({
         speed: 400,
         animation: 'horizontal',
@@ -268,7 +330,7 @@ function search_success(response, url) {
             var src = img.attr("data-src");
             img.attr("src", src).removeAttr('data-src');
             img.on('load', function() {
-              // hide/remove the loading image
+                // hide/remove the loading image
                 dimmer.fadeOut(400, function() {
                     $(this).remove();
                 });
@@ -277,19 +339,24 @@ function search_success(response, url) {
     });
 
     // Update url to the ajax request
-    history.pushState('', 'New Page Title', url);
+    history.pushState('', 'Search', url);
 }
+
+
+
+
+//////////////////////////////
+/////     SEARCH ERROR    ////
+//////////////////////////////
 
 function search_error() {
     alert("error");
 }
 
 
-$(document).ajaxStart( function() {
-    $("#spinner").removeClass('disabled');
-}).ajaxStop( function() {
-    $("#spinner").addClass('disabled')
-});
+//////////////////////////////
+/////  UTILITY FUNCTIONS  ////
+//////////////////////////////
 
 
 // function to get url parameter. Credit: http://stackoverflow.com/questions/901115
@@ -303,4 +370,11 @@ function getUrlParam(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+
+$(document).ajaxStart( function() {
+    $("#spinner").removeClass('disabled');
+}).ajaxStop( function() {
+    $("#spinner").addClass('disabled')
+});
 

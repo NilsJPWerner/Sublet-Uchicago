@@ -1,13 +1,17 @@
 {% extends 'listing/listing_base.html' %}
 
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+{% endblock %}
+
 {% block listing_content %}
 
 <div class="ui secondary top attached segment">
   <h3>Add some photos of your listing</h3>
 </div>
 <div class="ui attached padded segment">
-  {% load jfutags %} 
-  {% jfu 'listing/photo_upload_form.html' 'listings:jfu_upload' listing_id=listing.id %} 
+  {% load jfutags %}
+  {% jfu 'listing/photo_upload_form.html' 'listings:jfu_upload' listing_id=listing.id %}
 </div>
 <div class="ui bottom attached segment">
   <div class="ui one column right aligned grid">
@@ -20,4 +24,44 @@
 {% endblock %}
 
 {% block jquery %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript">
+
+  // I should probably reinitialize
+  $(document).ready(function() {
+    $('.lightbox').magnificPopup({
+      type: 'image',
+      gallery:{
+        enabled:true
+      }
+    });
+
+    $('#fileupload').bind('fileuploadcompleted', function (e, data) {
+      $('.lightbox').magnificPopup({
+            type: 'image',
+            gallery:{
+              enabled:true
+            },
+            titleSrc: 'title',
+        });
+    });
+
+    // This picks up the title input and adds it to the formData to be sent over ajax
+    // It also adds in the csrf token for
+    $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+        var inputs = data.context.find('.description');
+        if (inputs.filter(function () {
+                return !this.value && $(this).prop('required');
+            }).first().focus().length) {
+            data.context.find('button').prop('disabled', false);
+            return false;
+        }
+        data.formData = inputs.serializeArray();
+        data.formData.push({ name: 'csrfmiddlewaretoken', value: "{{ csrf_token }}" });
+    });
+  });
+</script>
 {% endblock %}
