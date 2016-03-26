@@ -51,8 +51,8 @@ function initMap() {
     // of a search and come back to it later.
     if (window.location.search.length > 1) {
         search_with_url(window.location.pathname + window.location.search);
-        price_slider.noUiSlider.set([getParameterByName('price_low'),
-            getParameterByName('price_high')]);
+        price_slider.noUiSlider.set([getUrlParam('price_low'),
+            getUrlParam('price_high')]);
     }
     // Otherwise just search normally
     else {
@@ -154,6 +154,7 @@ $(document).ready(function() {
 
 var template = [
     '<div id="listing-{{id}}"" class="ui fluid card" data-marker="{{id}}">',
+        '<a id="listingtop-{{id}}"></a>',
         '<div class="slider image">',
             '<ul>',
                 '<li><img class="slider-image" src="{{cover_photo}}"></li>',
@@ -284,10 +285,40 @@ function search_success(response, url) {
 
             // Add a listener to the marker
             // I should really remove the event listener on marker delete but eh
+            // Also I want to have the marker highligh for the entire time the
+            // info window is open.
             marker.addListener("click", function() {
-                infoWindow.setContent(this['data_name']);
-                infoWindow.open(map, markers[this['data_id']]);
+                // infoWindow.setContent(this['data_name']);
+                // infoWindow.open(map, markers[this['data_id']]);
+                var card_id = "listing-" + this['data_id'];
+                var topPos = document.getElementById(card_id).offsetTop;
+                $('#data-column').animate({
+                    scrollTop: topPos-20
+                }, 500);
+                    // document.getElementById('data-column').scrollTop = topPos-10;
             });
+
+
+            // Add mouseover listner to the markers to change icon color
+            // on hover.
+            google.maps.event.addListener(markers[data.id], 'mouseover', function() {
+                this.setIcon(highlight_marker);
+                var card_id = "#listing-" + this['data_id'];
+                $(card_id).css({
+                    "box-shadow": '0 1px 3px 0 #bcbdbd,0 0 0 1px #d4d4d5',
+                    "transform": 'translateY(-3px)',
+                    "transition-duration": "0.3s",
+                });
+            });
+            google.maps.event.addListener(markers[data.id], 'mouseout', function() {
+                this.setIcon(default_marker);
+                var card_id = "#listing-" + this['data_id'];
+                $(card_id).css({
+                    "box-shadow": '',
+                    "transform": ''
+                });
+            });
+
 
             // Add a mouseover listener to change the marker color on hover
             // I'm limiting the scope to only the result wrapper to avoid
@@ -303,6 +334,7 @@ function search_success(response, url) {
                     markers[id].setIcon(default_marker);
                 },
             }, '#listing-' + data.id);
+
         };
     };
 
