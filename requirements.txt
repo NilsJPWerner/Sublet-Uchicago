@@ -15,4 +15,5 @@ wheel==0.24.0
 whitenoise
 gunicorn
 psycopg2
-django-storages
+django-storages==1.4
+boto
