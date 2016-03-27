@@ -2,14 +2,15 @@
 
 /*    Main    */
 html {
-    height:100%;
+    min-height:100%;
 }
 
 body {
     background-color: rgb(248, 248, 249);
     font-size: 15px;
     color: #565a5c;
-    min-height: 100%
+    min-height: 100%;
+    margin: 0;
 }
 
 p {
@@ -51,17 +52,34 @@ p {
     border-radius: 0;
 }
 
+#top-menu .header.item.logo {
+    font-size: 1.2em;
+}
+
 #top-menu img.logo {
     margin-right: 1.1em;
 }
 
-.ui.menu .search.item:before {
-    width: 0px;
-}
-
-
 #top-menu i.circular.icon {
     margin-left: 10px;
+}
+
+#top-menu .mobile-menu.right.menu {
+    display: none;
+}
+
+#top-menu .mobile-menu.right.menu i {
+    margin: 0;
+}
+
+@media only screen and (max-width: 768px) {
+    .ui.large.menu .computer-menu {
+        display: none!important;
+    }
+
+    .ui.large.menu .mobile-menu {
+        display: flex!important;
+    }
 }
 
 
@@ -73,16 +91,33 @@ p {
     min-height: 100%;
 }
 
+#top-menu.transparent {
+    background-color: transparent;
+}
+
+#top-menu.transparent .item:before {
+    width: 0px;
+}
+
 #landing .masthead {
-    margin-top: -20px;
     height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/static/img/rockefeller.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 .masthead h1.ui.header {
     margin-top: 3em;
     margin-bottom: 0em;
-    font-size: 4em;
+    font-size: 5em;
     font-weight: normal;
+}
+
+.masthead h2 {
+    margin-top: 0.4em;
+    font-size: 2em;
 }
 
 

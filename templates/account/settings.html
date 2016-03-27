@@ -4,18 +4,18 @@
 {% block account_head_title %}Settings{% endblock %}
 
 {% block account_content %}
- 
-<form action="{% url 'accounts:email_add_successful' %}" class="ui form" method="post">      
+
+<form action="{% url 'accounts:email_add_successful' %}" class="ui form" method="post">
   <div class="ui secondary top attached segment">
     <h4 class="">Manage Your E-mail Addresses</h4>
   </div>
   <div class="ui attached padded segment">
-    
+
     {% if user.emailaddress_set.all %}
 
         {% csrf_token %}
         <div class="ui two column grid">
-          
+
             <div class="row">
               <div class="four wide right aligned column">
                 <label class="inline-label">E-mail Addresses</label>
@@ -39,7 +39,7 @@
                     </div>
                   {% endfor %}
                   <div class="field">
-                    <a id="add_email_link" href=""><i class="ui plus icon"></i> Add an e-mail address</a>
+                    <a id="add_email_link" href=""><i id="expand-icon" class="ui plus icon"></i> Add an e-mail address</a>
                   </div>
                   <div id="add_email_field" class="twelve wide field" style="display: none;">
                     <div class="ui action input">
@@ -51,13 +51,13 @@
               </div>
             </div>
         </div>
-        
+
 
 
     {% else %}
       <p><strong>Warning</strong> You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc.</p>
     {% endif %}
-    
+
   </div>
   <div class="ui bottom attached segment">
     <div class="ui one column right aligned grid">
@@ -134,6 +134,7 @@ $(document).ready(function() {
   $( '#add_email_link' ).click(function( event ) {
     event.preventDefault();
     $('#add_email_field').toggle('fast');
+    $( "#expand-icon" ).toggleClass('plus minus');
   });
 });
 (function() {

@@ -16,19 +16,12 @@
   {% endblock %}
 
   <body>
-
-    <div id="top-menu" class="ui {% if request.resolver_match.url_name == "landing" %}transition hidden{% endif %} large menu">
-      <a class="header item" href="{% url 'landing' %}">
-        <img class="logo" src="{% static "img/logo_200x200.png" %}">
-        Sublet
+    {% if request.resolver_match.url_name != "landing" %}
+    <div id="top-menu" class="ui large menu">
+      <a class="header item logo" href="{% url 'landing' %}">
+        {# <img class="logo" src="{% static "img/logo_200x200.png" %}"> #}
+        Sublet @ UChicago
       </a>
-      <div class="ui category search item">
-        <div class="ui transparent left icon input">
-          <i class="search link icon"></i>
-          <input class="prompt" type="text" placeholder="Search all listings...">
-        </div>
-        <div class="results"></div>
-      </div>
       <div class="right menu">
         {% if user.is_anonymous %}
         <a href="{% url 'account_signup' %}" class="item">
@@ -56,6 +49,7 @@
         {% endif %}
       </div>
     </div>
+    {% endif %}
 
 
     {% block content %}

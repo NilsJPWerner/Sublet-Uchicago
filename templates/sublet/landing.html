@@ -5,6 +5,42 @@
 
 {% block content %}
 <div id="landing">
+
+  <div id="top-menu" class="ui transparent fixed inverted large menu">
+    <a class="header item logo" href="{% url 'landing' %}">
+      Sublet @ UChicago
+    </a>
+    <div class="computer-menu right menu">
+      {% if user.is_anonymous %}
+      <a href="{% url 'account_signup' %}" class="item">
+        Sign up
+      </a>
+      <a href="{% url 'account_login' %}" class="item">
+        Log in
+      </a>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <a id="post_listing" class="ui item">
+        <i class="plus icon"></i>
+        Post a listing
+      </a>
+      <div id="user" class="ui right dropdown browse item">
+        {{ request.user.extendeduser.first_name }}
+        <i class="circular user icon"></i>
+        <div class="menu">
+          <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
+          <a class="item">View your listings</a>
+          <a class="item">Edit profile</a>
+          <a class="item" href="{% url 'account_logout' %}">Logout</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="mobile-menu right menu">
+      <a class="menu-button item"><i class="sidebar large icon"></i></a>
+    </div>
+  </div>
+
   <div class="ui inverted vertical masthead center aligned segment">
 
       <div class="ui text container">
