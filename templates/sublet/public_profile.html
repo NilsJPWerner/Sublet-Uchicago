@@ -10,10 +10,10 @@
                 <img src="{% static "/static/img/accounts/empty-photo.png" %}">
             </div>
             <div class="content">
-                <p class="header">Welcome back {{ user.extendeduser.first_name }}</p>
-                <div class="description ">
-                <!-- <strong>Location:</strong> -->
-                </div>
+                <p class="header">{{ user.extendeduser.first_name }} {{ user.extendeduser.last_name }}</p>
+                <!-- <div class="description ">
+                    <strong>Location:</strong>
+                </div> -->
             </div>
         </div>
         <div class="ui secondary top attached segment" style="margin-top: 30px;">
@@ -46,6 +46,13 @@
     </div>
     <div class="ten wide column">
         <div class="ui secondary top attached segment">
+          <h4 class="">About me</h4>
+        </div>
+        <div class="ui bottom attached padded segment">
+            {{ user.extendeduser.description }}
+        </div>
+
+        <div class="ui secondary top attached segment">
           <h4 class="">Shared Friends</h4>
         </div>
         <div class="ui bottom attached padded segment">
@@ -59,6 +66,7 @@
             <div class="ui small images">
                 {% for listing in user.extendeduser.get_listings %}
                     <img src="{{ listing.get_cover_photo.image.url }}">
+                    {{ listing.name }}
                 {% endfor %}
             </div>
         </div>

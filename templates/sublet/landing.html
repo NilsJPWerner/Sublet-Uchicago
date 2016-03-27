@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}Home{% endblock %}
+
+{% block content %}
+<div id="landing">
+  <div class="ui inverted vertical masthead center aligned segment">
+
+      <div class="ui text container">
+        <h1 class="ui inverted header">
+          Looking to Sublet?
+        </h1>
+        <h2>List or find a sublet etc etc.</h2>
+        <a class="ui huge primary button" href="{% url 'search' %}">Find a sublet  <i class="right search icon"></i></a>
+        <a class="ui huge primary button" href="{% url 'account_signup' %}">List a sublet <i class="right home icon"></i></a>
+      </div>
+
+  </div>
+</div>
+{% endblock %}

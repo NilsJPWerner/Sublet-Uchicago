@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block head_title %}Search{% endblock %}
+
 {% block head %}
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/8.2.1/nouislider.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css">
 {% endblock %}
 
 {% block content %}
-<div id="front-page" class="ui grid">
+<div id="search" class="ui grid">
     <div id="data-column" class="eight wide column data-column">
         <div class="row">
             <div class="ui form">

@@ -11,9 +11,9 @@ urlpatterns = [
     url(r'^', include('accounts.urls', namespace="accounts")),
     url(r'^', include('listings.urls', namespace="listings")),
 
-    # Static pages
+    # Main pages
+    url(r'^$', TemplateView.as_view(template_name="sublet/landing.html"), name="landing"),
     url(r'^search/$', views.search, name="search"),
-    url(r'^map/', TemplateView.as_view(template_name="sublet/map.html"), name="map"),
 
     # Public pages
     url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),

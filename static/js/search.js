@@ -286,16 +286,15 @@ function search_success(response, url) {
             // Add a listener to the marker
             // I should really remove the event listener on marker delete but eh
             // Also I want to have the marker highligh for the entire time the
-            // info window is open.
+            // info window is open. Also velocity >>>> Jquery
             marker.addListener("click", function() {
                 // infoWindow.setContent(this['data_name']);
                 // infoWindow.open(map, markers[this['data_id']]);
-                var card_id = "listing-" + this['data_id'];
-                var topPos = document.getElementById(card_id).offsetTop;
-                $('#data-column').animate({
-                    scrollTop: topPos-20
-                }, 500);
-                    // document.getElementById('data-column').scrollTop = topPos-10;
+                var card_id = "#listing-" + this['data_id'];
+                $(card_id).velocity("scroll", {
+                    container: $("#data-column"),
+                    easing: "easeInOut",
+                    duration: 900 });
             });
 
 
@@ -348,8 +347,8 @@ function search_success(response, url) {
         infinite: false,
         nav: false,
         arrows: {
-            prev: '<a class="unslider-arrow prev"><i class="chevron large left icon"></i></a>',
-            next: '<a class="unslider-arrow next"><i class="chevron large right icon"></i></a>',
+            prev: '<a class="unslider-arrow prev"><i class="chevron big left icon"></i></a>',
+            next: '<a class="unslider-arrow next"><i class="chevron big right icon"></i></a>',
         }
     });
 
