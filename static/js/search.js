@@ -106,6 +106,7 @@ $(document).ready(function() {
     price_slider = document.getElementById('slider');
     noUiSlider.create(price_slider, {
         start: [low, high],
+        tooltips: [ true, true ],
         connect: true,
         step: 1,
         range: {

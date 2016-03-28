@@ -12,47 +12,74 @@
 <div id="search" class="ui grid">
     <div id="data-column" class="eight wide column data-column">
         <div class="row">
-            <div class="ui form">
-                <div class="fields">
-                    <div class="inline field">
-                      <div id="test" class="ui checkbox">
-                        <label><strong>Fall</strong></label>
-                        <input id="fall" class="filter" type="checkbox" name="Fall" value="True">
-                      </div>
+            <div class="ui grid form">
+                <div class="row">
+                    <div class="four wide column">
+                        Quarter
                     </div>
-                    <div class="inline field">
-                      <div class="ui checkbox">
-                        <label><strong>Winter</strong></label>
-                        <input id="winter" class="filter" type="checkbox" name="Winter" value="True">
-                      </div>
-                    </div>
-                    <div class="inline field">
-                      <div class="ui checkbox">
-                        <label><strong>Spring</strong></label>
-                        <input id="spring" class="filter" type="checkbox" name="Spring" value="True">
-                      </div>
-                    </div>
-                    <div class="inline field">
-                      <div class="ui checkbox">
-                        <label><strong>Summer</strong></label>
-                        <input id="summer" class="filter" type="checkbox" name="Summer" value="True">
-                      </div>
+                    <div class="twelve wide column">
+                        <div class="fields">
+                            <div class="inline field">
+                              <div class="ui bordered checkbox">
+                                <label><strong>Fall</strong></label>
+                                <input id="fall" class="filter" type="checkbox" name="Fall" value="True">
+                              </div>
+                            </div>
+                            <div class="inline field">
+                              <div class="ui bordered checkbox">
+                                <label><strong>Winter</strong></label>
+                                <input id="winter" class="filter" type="checkbox" name="Winter" value="True">
+                              </div>
+                            </div>
+                            <div class="inline field">
+                              <div class="ui bordered checkbox">
+                                <label><strong>Spring</strong></label>
+                                <input id="spring" class="filter" type="checkbox" name="Spring" value="True">
+                              </div>
+                            </div>
+                            <div class="inline field">
+                              <div class="ui bordered checkbox">
+                                <label><strong>Summer</strong></label>
+                                <input id="summer" class="filter" type="checkbox" name="Summer" value="True">
+                              </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <select id="bedsize" class="ui filter dropdown">
-                    <option value="0">Bed Size</option>
-                    <option value="2">Full or above</option>
-                    <option value="3">Queen or above</option>
-                    <option value="4">King only</option>
-                </select>
-                <select id="bathroom" class="ui filter dropdown">
-                    <option value="none">Bathroom</option>
-                    <option value="shared">Shared</option>
-                    <option value="private">Private</option>
-                </select>
-                <div id="slider" class="filter"></div>
-                <div id="slider_low">100</div>
-                <div id="slider_high">400</div>
+
+                <div class="ui divider"></div>
+
+                <div class="row">
+                    <div class="four wide column">
+                        Options
+                    </div>
+                    <div class="twelve wide column">
+                        <select id="bedsize" class="ui filter dropdown">
+                            <option value="0">Bed Size</option>
+                            <option value="2">Full or above</option>
+                            <option value="3">Queen or above</option>
+                            <option value="4">King only</option>
+                        </select>
+                        <select id="bathroom" class="ui filter dropdown">
+                            <option value="none">Bathroom</option>
+                            <option value="shared">Shared</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ui divider"></div>
+
+                <div class="row">
+                    <div class="four wide column">
+                        Price Range
+                    </div>
+                    <div class="twelve wide column">
+                        <div id="slider" class="filter"></div>
+                        <div id="slider_low">100</div>
+                        <div id="slider_high">400</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
