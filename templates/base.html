@@ -16,25 +16,28 @@
   {% endblock %}
 
   <body>
-    {% if request.resolver_match.url_name != "landing" %}
-    <div id="top-menu" class="ui large menu">
+    <div id="top-menu" class="ui large {% if request.resolver_match.url_name == "landing" %}fixed inverted transparent{% endif %} menu">
       <a class="header item logo" href="{% url 'landing' %}">
         {# <img class="logo" src="{% static "img/logo_200x200.png" %}"> #}
         Sublet @ UChicago
       </a>
-      <div class="right menu">
+      <div class="computer-menu right menu">
+        <a href="{% url "search" %}" class="ui item">
+          <i class="search icon"></i>
+          Search Listings
+        </a>
         {% if user.is_anonymous %}
         <a href="{% url 'account_signup' %}" class="item">
-          Sign up
+          Sign Up
         </a>
         <a href="{% url 'account_login' %}" class="item">
-          Log in
+          Log In
         </a>
         {% endif %}
         {% if user.is_authenticated %}
-        <a id="post_listing" class="ui item">
+        <a href="{% url "listings:add_listing" %}" class="ui item">
           <i class="plus icon"></i>
-          Post a listing
+          Post Listing
         </a>
         <div id="user" class="ui right dropdown browse item">
           {{ request.user.extendeduser.first_name }}
@@ -48,9 +51,10 @@
         </div>
         {% endif %}
       </div>
+      <div class="mobile-menu right menu">
+        <a class="menu-button item"><i class="sidebar large icon"></i></a>
+      </div>
     </div>
-    {% endif %}
-
 
     {% block content %}
     {% endblock %}
