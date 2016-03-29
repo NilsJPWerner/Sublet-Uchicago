@@ -3,6 +3,8 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 
+{% block head_title %}Edit Location{% endblock %}
+
 {% block head %}
   <link rel="stylesheet" href="{% static "css/location.css" %}">
 {% endblock %}
@@ -59,7 +61,7 @@
 
 
 
-{% block scripts %}
+{% block listing_scripts %}
 <script type="text/javascript" src="{% static "js/location-form.js" %}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP5xmOaC6toBn_BrLSA_DZeLBMPl1lm3w&libraries=places&callback=initMap"
     async defer></script>

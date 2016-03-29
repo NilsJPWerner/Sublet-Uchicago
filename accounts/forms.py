@@ -11,7 +11,7 @@ from allauth.account.utils import filter_users_by_email
 class ExtendedUserForm(forms.ModelForm):
     class Meta:
         model = ExtendedUser
-        fields = ('first_name', 'last_name', 'profile_picture', 'phone_number', 'uni_division', 'description')
+        fields = ('first_name', 'last_name', 'profile_picture', 'phone_number', 'uni_division', 'description',)
         widgets = {
           "profile_picture": forms.FileInput(attrs={'class': 'ui'}),
           "uni_division": forms.Select(attrs={'class': 'ui dropdown'}),

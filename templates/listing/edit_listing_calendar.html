@@ -3,6 +3,8 @@
 {% load widget_tweaks %}
 {% load staticfiles %}
 
+{% block head_title %}Edit Calendar{% endblock %}
+
 {% block head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/css/bootstrap-datepicker3.standalone.min.css">
 <style type="text/css">
@@ -78,7 +80,7 @@
 
 {% endblock %}
 
-{% block scripts %}
+{% block listing_scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.1/js/bootstrap-datepicker.min.js"></script>
 
 <script type="text/javascript">
@@ -101,7 +103,7 @@
           );
       });
       $('#start_picker').on("changeDate", function(g) {
-          $('#end_picker').datepicker().datepicker('setStartDate', g.date); 
+          $('#end_picker').datepicker().datepicker('setStartDate', g.date);
       });
       $('#end_picker').on("changeDate", function() {
           $('#id_end_date').val(

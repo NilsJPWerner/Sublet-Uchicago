@@ -109,6 +109,7 @@ $(document).ready(function() {
         tooltips: [ true, true ],
         connect: true,
         step: 1,
+        margin: 100,
         range: {
             'min': 0,
             'max': 1000
@@ -172,6 +173,7 @@ var template = [
             '</ul>',
         '</div>',
         '<div class="content">',
+            '<i class="ui right floated large star icon" data-id="{{id}}"></i>',
             '<a class="header">{{name}}</a>',
             '<div class="meta">',
                 '<span class="date"></span>',

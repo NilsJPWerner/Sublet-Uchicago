@@ -87,12 +87,13 @@
       </div>
       <div class="extra content">
           {% if listing.published %}
-            <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui fluid orange button">Unpublish</a>
+            <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui orange button">Unpublish</a>
           {% elif listing.listing_complete %}
-            <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui fluid green button">Publish</a>
+            <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui green button">Publish</a>
           {% else %}
-            <div class="ui fluid disabled button">Publish</div>
+            <div class="ui disabled button">Publish</div>
           {% endif %}
+          <a href="{% url "listings:delete_listing" listing_id=listing.id %}" class="ui red delete button">Delete</a>
       </div>
     </div>
   </div>
@@ -103,4 +104,39 @@
   </div>
 </div>
 
+<div id="confirm_delete" class="ui small modal">
+    <div class="header">
+        Delete listing
+    </div>
+    <div class="content">
+        <p>Are you sure you want to delete this listing? You will not be able to retrieve it if deleted.</p>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">
+            Cancel
+        </div>
+        <div class="ui negative approve right labeled icon button">
+            Yes
+            <i class="remove icon"></i>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $('.delete').click(function(){
+        event.preventDefault();
+        var deleteLink = $(this).attr("href");
+        $('#confirm_delete').modal({
+            onApprove : function() {
+                window.location.href = deleteLink;
+            }
+        })
+        .modal('show');
+    });
+  </script>
+  {% block listing_scripts %}
+  {% endblock %}
 {% endblock %}

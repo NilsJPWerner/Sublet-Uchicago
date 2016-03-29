@@ -27,6 +27,7 @@ class ExtendedUser(models.Model):
     phone_number = models.CharField(max_length=20, blank=True)
     uni_division = models.CharField(choices=UNI_DIV, max_length=50, blank=True)
     description = models.TextField(blank=True)
+    starred = models.ManyToManyField(Listing)
 
     # Check if the user has a verified uchicago email address
     def uchicago_email(self):
@@ -46,6 +47,11 @@ class ExtendedUser(models.Model):
 
     def get_absolute_url(self):
         return reverse('public_profile', args=[str(self.id)])
+
+    def is_starred(self, listing_id):
+        if (Listing.objects.get(user=self.id, id=listing_id)):
+            return True
+        return False
 
 
 def user_post_save(sender, instance, created, **kwargs):

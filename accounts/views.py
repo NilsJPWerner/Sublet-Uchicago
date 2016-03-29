@@ -104,7 +104,7 @@ def edit_profile(request):
             if 'profile_picture' in request.FILES:
                 profile.profile_picture = request.FILES['profile_picture']
             profile.save()
-            return HttpResponseRedirect(reverse('accounts:home'))
+            return HttpResponseRedirect(reverse('accounts:edit_profile'))
     else:
         try:
             u = ExtendedUser.objects.get(user=request.user)
