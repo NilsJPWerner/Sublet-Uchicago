@@ -48,8 +48,9 @@ class ExtendedUser(models.Model):
     def get_absolute_url(self):
         return reverse('public_profile', args=[str(self.id)])
 
+    """ Checks whether the provided listing id is starred by user """
     def is_starred(self, listing_id):
-        if (Listing.objects.get(user=self.id, id=listing_id)):
+        if (self.starred.filter(id=listing_id).exists()):
             return True
         return False
 

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.core import serializers
 from django.forms.models import model_to_dict
 import json
@@ -9,7 +9,6 @@ from listings.models import Listing
 from django.contrib.auth.models import User
 
 
-# Should limit the fields in this call to save space
 def search(request):
 
     if request.is_ajax():
@@ -46,18 +45,25 @@ def search(request):
         for i in results:
             # Convert each instance into a dict including only needed fields
             data = model_to_dict(i, fields=["name", "id", "latitude", "longitude", "summary", "price"])
+
             # Should add a way to get small photos as an option
             photos = i.get_photos(5)
             photo_list = []
+
             # I split up the photos into cover photo and photos so that
             # all photos except cover photo can be set up to use lazy loading
             for p in photos[1:]:
                 photo_list.append(p.image.url)
             data["cover_photo"] = photos[0].image.url
             data["photos"] = photo_list
+
             # get username and url to profile
             data["username"] = i.user.extendeduser.first_name + " " + i.user.extendeduser.last_name
             data["user_url"] = i.user.extendeduser.get_absolute_url()
+
+            # Check if listing is starred by user if user is logged in
+            if request.user.is_authenticated():
+                data["starred"] = i.extendeduser_set.filter(id=request.user.extendeduser.id).exists()
             listings.append(data)
 
         ret = json.dumps(listings, cls=DjangoJSONEncoder)
@@ -65,6 +71,22 @@ def search(request):
 
     else:
         return render(request, "sublet/search.html", {})
+
+
+# Toggle whether the listing is starred by the user or not.
+def ajax_star(request):
+    if request.method == "POST":
+        listing_id = request.POST.get("listing")
+        listing = get_object_or_404(Listing, id=listing_id)
+        if (request.user.extendeduser.is_starred(listing_id)):
+            request.user.extendeduser.starred.remove(listing)
+            starred = "False"
+        else:
+            request.user.extendeduser.starred.add(listing)
+            starred = "True"
+    else:
+        return HttpResponseBadRequest
+    return HttpResponse(starred)
 
 
 def public_profile(request, user):
@@ -93,4 +115,3 @@ def public_profile(request, user):
 
     context = {'user': u, 'verified': v, 'unverified': uv}
     return render(request, 'sublet/public_profile.html', context)
-

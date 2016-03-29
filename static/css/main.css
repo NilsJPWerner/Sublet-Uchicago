@@ -255,7 +255,7 @@ p {
     line-height: inherit;
 }
 
-.ui.card>.content .star.icon.active {
+.ui.card>.content .star.icon.true {
     opacity: 1;
     color: #ffb70a;
 }

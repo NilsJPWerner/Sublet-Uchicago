@@ -173,13 +173,14 @@ var template = [
             '</ul>',
         '</div>',
         '<div class="content">',
-            '<i class="ui right floated large star icon" data-id="{{id}}"></i>',
+            // Sneaky use of starred boolean as a css class to mark active state
+            '<i class="ui right floated large {{starred}} star icon" data-id="{{id}}"></i>',
             '<a class="header">{{name}}</a>',
             '<div class="meta">',
                 '<span class="date"></span>',
             '</div>',
             '<div class="description">',
-                'Kristy is an art director living in New York.',
+                '{{summary}}',
             '</div>',
         '</div>',
         '<div class="extra content">',
@@ -370,6 +371,21 @@ function search_success(response, url) {
                 });
             });
         };
+    });
+
+    $(".star.icon").click(function (event) {
+        var star = $(this);
+        var id = star.data('id');
+        $.post( "/star/", { "csrfmiddlewaretoken": CSRF_TOKEN, "listing": id,})
+            .done(function (starred) {
+                console.log(starred);
+                if (starred === "True") {
+                    star.addClass('true');
+                }
+                else {
+                    star.removeClass('true');
+                }
+            });
     });
 
     // Update url to the ajax request
