@@ -174,7 +174,7 @@ var template = [
         '</div>',
         '<div class="content">',
             // Sneaky use of starred boolean as a css class to mark active state
-            '<i class="ui right floated large {{starred}} star icon" data-id="{{id}}"></i>',
+            '<i class="ui right floated large {{starred}} star icon" onclick="star(this, {{id}})"></i>',
             '<a class="header">{{name}}</a>',
             '<div class="meta">',
                 '<span class="date"></span>',
@@ -373,21 +373,6 @@ function search_success(response, url) {
         };
     });
 
-    $(".star.icon").click(function (event) {
-        var star = $(this);
-        var id = star.data('id');
-        $.post( "/star/", { "csrfmiddlewaretoken": CSRF_TOKEN, "listing": id,})
-            .done(function (starred) {
-                console.log(starred);
-                if (starred === "True") {
-                    star.addClass('true');
-                }
-                else {
-                    star.removeClass('true');
-                }
-            });
-    });
-
     // Update url to the ajax request
     history.pushState('', 'Search', url);
 }
@@ -420,6 +405,25 @@ function getUrlParam(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+
+// Ajax calls and stars a listing or redirects if not signed in
+function star (element, id) {
+    var star = $(element);
+    $.post( "/star/", { "csrfmiddlewaretoken": CSRF_TOKEN, "listing": id})
+        .done(function (starred) {
+            if (starred === "True") {
+                star.addClass('true');
+            }
+            else if (starred === "False") {
+                star.removeClass('true');
+            }
+            else {
+                // Redirect to login page if not signed in
+                window.location = starred
+            }
+        });
+};
 
 
 $(document).ajaxStart( function() {

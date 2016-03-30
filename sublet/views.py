@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.core import serializers
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -76,17 +76,19 @@ def search(request):
 # Toggle whether the listing is starred by the user or not.
 def ajax_star(request):
     if request.method == "POST":
-        listing_id = request.POST.get("listing")
-        listing = get_object_or_404(Listing, id=listing_id)
-        if (request.user.extendeduser.is_starred(listing_id)):
-            request.user.extendeduser.starred.remove(listing)
-            starred = "False"
+        if request.user.is_authenticated():
+            listing_id = request.POST.get("listing")
+            listing = get_object_or_404(Listing, id=listing_id)
+            if (request.user.extendeduser.is_starred(listing_id)):
+                request.user.extendeduser.starred.remove(listing)
+                return HttpResponse("False")
+            else:
+                request.user.extendeduser.starred.add(listing)
+                return HttpResponse("True")
         else:
-            request.user.extendeduser.starred.add(listing)
-            starred = "True"
+            return HttpResponse(reverse("account_login"))
     else:
         return HttpResponseBadRequest
-    return HttpResponse(starred)
 
 
 def public_profile(request, user):

@@ -250,16 +250,19 @@ p {
     background-color:  rgba(0,0,0,.55);
 }
 
-.ui.card>.content .star.icon {
+#search .star.icon {
     margin-right: -3px;
     line-height: inherit;
+    transition: color .1s ease, opacity .1s ease;
 }
 
-.ui.card>.content .star.icon.true {
-    opacity: 1;
+#search .star.icon.true {
     color: #ffb70a;
 }
 
+#search .star.icon:hover, #search .star.icon.true:hover {
+    color: #ffb70a;
+}
 
 
 /* -------------------- */
