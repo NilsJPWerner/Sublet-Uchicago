@@ -31,6 +31,14 @@ def your_listings(request):
     return render(request, 'account/listings.html', context)
 
 
+@login_required
+def starred_listings(request):
+    user = request.user
+    listings = Listing.objects.filter(user=user.id)
+    context = {'user': user, 'listings': listings}
+    return render(request, 'account/starred_listings.html', context)
+
+
 class verif(object):
     def __init__(self, name, link, disconnect_link, description):
         self.name = name

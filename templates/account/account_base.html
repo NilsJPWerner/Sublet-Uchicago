@@ -34,7 +34,7 @@
           <i class="home icon"></i>
           Your listings
         </a>
-        <a class="item">
+        <a href="{% url 'accounts:starred_listings' %}" class="{% if request.resolver_match.url_name == "starred_listings" %}active{% endif %} item">
           <i class="star icon"></i>
           Starred listings
         </a>

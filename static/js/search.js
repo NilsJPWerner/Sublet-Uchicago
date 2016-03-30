@@ -174,7 +174,8 @@ var template = [
         '</div>',
         '<div class="content">',
             // Sneaky use of starred boolean as a css class to mark active state
-            '<i class="ui right floated large {{starred}} star icon" onclick="star(this, {{id}})"></i>',
+            '<i class="ui right floated large {{starred}} star icon"',
+                'onclick="star(this, {{id}})" data-content="Star this listing"></i>',
             '<a class="header">{{name}}</a>',
             '<div class="meta">',
                 '<span class="date"></span>',
@@ -372,6 +373,17 @@ function search_success(response, url) {
             });
         };
     });
+
+    $('.large.star.icon')
+        .popup({
+            position : 'bottom center',
+            transition: 'fade',
+            delay: {
+                show: 700,
+                hide: 100
+            }
+        })
+    ;
 
     // Update url to the ajax request
     history.pushState('', 'Search', url);
