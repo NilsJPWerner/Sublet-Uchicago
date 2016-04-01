@@ -132,6 +132,19 @@ p {
     font-size: 2em;
 }
 
+.masthead .huge.customblue.button {
+    margin: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .masthead h1.ui.header {
+        font-size: 3.4em;
+    }
+    .masthead h2 {
+        font-size: 1.6em;
+    }
+}
+
 
 /* -------------------- */
 /*        Search        */
