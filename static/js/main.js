@@ -33,3 +33,8 @@ $('.ui.checkbox')
 // $('.ui.radio.checkbox')
 //   .checkbox()
 // ;
+
+$('.sidebar').first()
+  .sidebar('setting', 'transition', 'overlay')
+  .sidebar('attach events', '.menu-button')
+;

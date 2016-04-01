@@ -17,9 +17,29 @@
   {% endblock %}
 
   <body>
+    <div class="ui sidebar inverted vertical menu">
+      <a href="{% url "search" %}" class="ui item"><i class="search icon"></i>Search Listings</a>
+
+      {% if user.is_anonymous %}
+        <a href="{% url 'account_signup' %}" class="item">Sign Up</a>
+        <a href="{% url 'account_login' %}" class="item">Log In</a>
+        {% endif %}
+
+      {% if user.is_authenticated %}
+        <a href="{% url "listings:add_listing" %}" class="ui item"><i class="plus icon"></i>Post Listing</a>
+        <a href="{% url 'accounts:home' %}" class="item"><i class="dashboard icon"></i>Dashboard</a>
+        <a href="{% url "accounts:listings" %}" class="item"><i class="home icon"></i>Your Listings</a>
+        <a href="{% url "accounts:starred_listings" %}" class="item"><i class="star icon"></i>Starred Listings</a>
+        <a href="{% url 'accounts:verification' %}" class="item"><i class="checkmark icon"></i>Verifications</a>
+        <a href="{% url "accounts:edit_profile" %}" class="item"><i class="user icon"></i>Edit Profile</a>
+        <a href="{% url 'account_logout' %}" class="item"><i class="setting icon"></i>Logout</a>
+      {% endif %}
+    </div>
+
+
     <div id="top-menu" class="ui large {% if request.resolver_match.url_name == "landing" %}fixed inverted transparent{% endif %} menu">
       <a class="header item logo" href="{% url 'landing' %}">
-        {# <img class="logo" src="{% static "img/logo_200x200.png" %}"> #}
+        <!-- <img class="logo" src="{% static "img/logo_200x200.png" %}"> -->
         Sublet @ UChicago
       </a>
       <div class="computer-menu right menu">
@@ -41,8 +61,7 @@
           Post Listing
         </a>
         <div id="user" class="ui right dropdown browse item">
-          <i class="ui home icon"></i>
-          Home
+          <i class="ui home icon"></i>Home
           <!--{{ request.user.extendeduser.first_name }}
           <img src="{{ request.user.extendeduser.profile_picture.url }}" class="ui mini circular image">-->
           <div class="menu">
