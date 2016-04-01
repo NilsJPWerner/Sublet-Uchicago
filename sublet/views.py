@@ -4,11 +4,13 @@ from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.cache import never_cache
 
 from listings.models import Listing
 from django.contrib.auth.models import User
 
 
+@never_cache
 def search(request):
 
     if request.is_ajax():

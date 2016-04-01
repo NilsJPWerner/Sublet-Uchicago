@@ -220,6 +220,7 @@ function search() {
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
+            update_history(this.url);
         },
         error: function () {
 
@@ -387,6 +388,7 @@ function search_success(response, url) {
             }
         })
     ;
+
 }
 
 
