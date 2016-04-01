@@ -125,8 +125,11 @@ $(document).ready(function() {
         }
     });
 
+    // If browser goes back in history search with the url
     window.onpopstate =  function(event) {
-        search_with_url(window.location.pathname + window.location.search);
+        if (window.location.search.length > 1) {
+            search_with_url(window.location.pathname + window.location.search);
+        }
     };
 
     // if any of the fields are modified perform ajax search
