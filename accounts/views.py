@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+import urllib2
 
 
 from .forms import ExtendedUserForm, ChangePasswordFormModified, AddEmailFormCombined
@@ -122,6 +125,25 @@ def edit_profile(request):
 
     context = {'form': form, 'user': request.user}
     return render(request, 'account/edit_profile.html', context)
+
+
+@login_required
+def ajax_fb_photo(request):
+    if request.method == "POST":
+        try:
+            fb = SocialAccount.objects.get(user=request.user, provider="facebook")
+            url = fb.get_avatar_url()
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urllib2.urlopen(url).read())
+            img_temp.flush()
+            file_name = "profile_picture_" + str(request.user.id)
+            request.user.extendeduser.profile_picture.save(file_name, File(img_temp))
+            img_temp.close()
+            return HttpResponse(request.user.extendeduser.profile_picture.url)
+        except:
+            return HttpResponse("not_logged_in")
+    else:
+        return HttpResponseBadRequest
 
 
 class settings(PasswordChangeView):

@@ -65,8 +65,8 @@ p {
 }
 
 #top-menu .ui.item {
-    padding-left: 0.9em;
-    padding-right: 0.9em;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 #top-menu .mobile-menu.right.menu {
@@ -85,6 +85,13 @@ p {
     .ui.large.menu .mobile-menu {
         display: flex!important;
     }
+}
+
+#top-menu .mini.circular {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+    border: solid 2px rgb(200, 200, 202);
 }
 
 
@@ -364,12 +371,13 @@ p {
 }
 
 #account #preview {
-    max-height: 100px;
-    max-width: 100px;
+    max-height: 120px;
+    max-width: 120px;
 }
 
-#id_profile_picture {
-    color: transparent;
+#account .photo-button {
+    margin-bottom: 12px;
+    width: 170px;
 }
 
 span.help-text {

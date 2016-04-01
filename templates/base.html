@@ -40,12 +40,15 @@
           Post Listing
         </a>
         <div id="user" class="ui right dropdown browse item">
-          {{ request.user.extendeduser.first_name }}
-          <i class="circular user icon"></i>
+          <i class="ui home icon"></i>
+          Home
+          <!--{{ request.user.extendeduser.first_name }}
+          <img src="{{ request.user.extendeduser.profile_picture.url }}" class="ui mini circular image">-->
           <div class="menu">
             <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
-            <a class="item">View your listings</a>
-            <a class="item">Edit profile</a>
+            <a href="{% url "accounts:listings" %}" class="item">Your Listings</a>
+            <a href="{% url "accounts:starred_listings" %}" class="item">Starred Listings</a>
+            <a href="{% url "accounts:edit_profile" %}" class="item">Edit Profile</a>
             <a class="item" href="{% url 'account_logout' %}">Logout</a>
           </div>
         </div>

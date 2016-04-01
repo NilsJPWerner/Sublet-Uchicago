@@ -1,5 +1,5 @@
 dj-database-url==0.4.0
-Django==1.9.1
+Django==1.9.4
 django-allauth==0.24.1
 django-cleanup==0.4.2
 django-widget-tweaks==1.4.1

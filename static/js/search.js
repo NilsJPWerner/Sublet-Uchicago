@@ -51,8 +51,6 @@ function initMap() {
     // of a search and come back to it later.
     if (window.location.search.length > 1) {
         search_with_url(window.location.pathname + window.location.search);
-        price_slider.noUiSlider.set([getUrlParam('price_low'),
-            getUrlParam('price_high')]);
     }
     // Otherwise just search normally
     else {
@@ -126,6 +124,10 @@ $(document).ready(function() {
             range_low.innerHTML = '$' + values[handle];
         }
     });
+
+    window.onpopstate =  function(event) {
+        search_with_url(window.location.pathname + window.location.search);
+    };
 
     // if any of the fields are modified perform ajax search
     $(".filter").change(function() {
@@ -212,9 +214,9 @@ function search() {
     $.ajax({
         url: '/search/',
         type: 'GET',
-        data: {ajax: 1, bedsize: q_bedsize, bathroom : q_bathroom, fall : q_fall,
-            winter : q_winter, spring : q_spring, summer : q_summer,
-            price_low : Math.round(slider_vals[0]), price_high : Math.round(slider_vals[1])} ,
+        data: {bedsize: q_bedsize, bathroom: q_bathroom, fall: q_fall,
+            winter: q_winter, spring: q_spring, summer: q_summer,
+            price_low: Math.round(slider_vals[0]), price_high: Math.round(slider_vals[1]), ajax: 1} ,
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
@@ -233,6 +235,7 @@ function search_with_url(url) {
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
+            update_form();
         },
         error: function () {
             search_error();
@@ -384,9 +387,6 @@ function search_success(response, url) {
             }
         })
     ;
-
-    // Update url to the ajax request
-    history.pushState('', 'Search', url);
 }
 
 
@@ -437,10 +437,26 @@ function star (element, id) {
         });
 };
 
+// updates form with data from url
+function update_form () {
+    price_slider.noUiSlider.set([getUrlParam('price_low'),
+            getUrlParam('price_high')]);
+    $('.bedsize')
+        .dropdown('set selected', getUrlParam('bedsize'))
+    ;
 
-$(document).ajaxStart( function() {
-    $("#spinner").removeClass('disabled');
-}).ajaxStop( function() {
-    $("#spinner").addClass('disabled')
-});
+    // Need to set for other parts of form
+}
+
+
+function update_history (url) {
+    history.pushState('', 'Search', url);
+}
+
+
+// $(document).ajaxStart( function() {
+//     $("#spinner").removeClass('disabled');
+// }).ajaxStop( function() {
+//     $("#spinner").addClass('disabled')
+// });
 

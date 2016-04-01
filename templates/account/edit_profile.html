@@ -29,9 +29,15 @@
                 <div class="four wide right aligned column">
                     <label class="inline-label">Profile Photo</label>
                 </div>
-                <div class="twelve wide column">
-                    <img id="preview" src="{{ user.extendeduser.profile_picture.url }}" alt="your image" />
-                    {{ form.profile_picture }}
+                <div class="ui twelve wide column grid">
+                    <div class="five wide column">
+                        <img id="preview" src="{{ user.extendeduser.profile_picture.url }}" alt="your image" />
+                    </div>
+                    <div class="ten wide column">
+                        {{ form.profile_picture }}
+                        <button type="button" class="ui button photo-button" onclick="document.getElementById('id_profile_picture').click();" style="margin-top: 6%">Select Local File</button>
+                        <button id="fb-photo" type="button" class="ui button photo-button">Get Facebook Photo</button>
+                    </div>
                 </div>
             </div>
             <!-- <div class="row">
@@ -73,6 +79,8 @@
 
 {% block scripts %}
 <script type="text/javascript">
+    var CSRF_TOKEN = "{{ csrf_token }}";
+
     $("#id_profile_picture").change(function(event) {
 
         if (this.files && this.files[0]) {
@@ -85,5 +93,18 @@
             reader.readAsDataURL(this.files[0]);
         }
     });
+
+    $("#fb-photo").click(function(event) {
+        $.post( "{% url "accounts:ajax_fb_photo" %}", { "csrfmiddlewaretoken": CSRF_TOKEN, })
+            .done(function (result) {
+                if (result === "not_logged_in") {
+                    window.location("/accounts/facebook/login/?process=connect");
+                }
+                else {
+                    $("#preview").attr('src', result);
+                }
+            });
+    });
+
 </script>
 {% endblock scripts %}
