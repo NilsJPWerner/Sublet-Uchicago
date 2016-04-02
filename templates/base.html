@@ -58,84 +58,91 @@
       {% endif %}
     </div>
 
-
-    <div id="top-menu" class="ui large {% if request.resolver_match.url_name == "landing" %}fixed inverted transparent{% endif %} menu">
-      <a class="header item logo" href="{% url 'landing' %}">
-        <!-- <img class="logo" src="{% static "img/logo_200x200.png" %}"> -->
-        Sublet @ UChicago
-      </a>
-      <div class="computer-menu right menu">
-        <a href="{% url "search" %}" class="ui item">
-          <i class="search icon"></i>
-          Search Listings
+    <div class="pusher">
+      <div id="top-menu" class="ui large {% if request.resolver_match.url_name == "landing" %}fixed inverted transparent{% endif %} menu">
+        <a class="header item logo" href="{% url 'landing' %}">
+          <!-- <img class="logo" src="{% static "img/logo_200x200.png" %}"> -->
+          Sublet @ UChicago
         </a>
-        {% if user.is_anonymous %}
-        <a href="{% url 'account_signup' %}" class="item">
-          Sign Up
-        </a>
-        <a href="{% url 'account_login' %}" class="item">
-          Log In
-        </a>
-        {% endif %}
-        {% if user.is_authenticated %}
-        <a href="{% url "listings:add_listing" %}" class="ui item">
-          <i class="plus icon"></i>
-          Post Listing
-        </a>
-        <div id="user" class="ui right dropdown browse item">
-          <i class="ui home icon"></i>Home
-          <!--{{ request.user.extendeduser.first_name }}
-          <img src="{{ request.user.extendeduser.profile_picture.url }}" class="ui mini circular image">-->
-          <div class="menu">
-            <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
-            <a href="{% url "accounts:listings" %}" class="item">Your Listings</a>
-            <a href="{% url "accounts:starred_listings" %}" class="item">Starred Listings</a>
-            <a href="{% url "accounts:edit_profile" %}" class="item">Edit Profile</a>
-            <a class="item" href="{% url 'account_logout' %}">Logout</a>
-          </div>
-        </div>
-        {% endif %}
-      </div>
-      <div class="mobile-menu right menu">
-        <a class="menu-button item"><i class="sidebar large icon"></i></a>
-      </div>
-    </div>
-
-    {% block content %}
-    {% endblock %}
-
-    <div class="ui inverted vertical footer segment">
-      <div class="ui center aligned container">
-        <div class="ui stackable inverted divided equal height stackable grid">
-          <div class="three wide column">
-            <h4 class="ui inverted header">About</h4>
-            <div class="ui inverted link list">
-              <a href="#" class="item">Sitemap</a>
-              <a href="#" class="item">Contact Us</a>
-              <a href="#" class="item">Religious Ceremonies</a>
-              <a href="#" class="item">Gazebo Plans</a>
+        <div class="computer-menu right menu">
+          <a href="{% url "search" %}" class="ui item">
+            <i class="search icon"></i>
+            Search Listings
+          </a>
+          {% if user.is_anonymous %}
+          <a href="{% url 'account_signup' %}" class="item">
+            Sign Up
+          </a>
+          <a href="{% url 'account_login' %}" class="item">
+            Log In
+          </a>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <a href="{% url "listings:add_listing" %}" class="ui item">
+            <i class="plus icon"></i>
+            Post Listing
+          </a>
+          <div id="user" class="ui right dropdown browse item">
+            <i class="ui home icon"></i>Home
+            <div class="menu">
+              <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
+              <a href="{% url "accounts:listings" %}" class="item">Your Listings</a>
+              <a href="{% url "accounts:starred_listings" %}" class="item">Starred Listings</a>
+              <a href="{% url "accounts:edit_profile" %}" class="item">Edit Profile</a>
+              <a class="item" href="{% url 'account_logout' %}">Logout</a>
             </div>
           </div>
-          <div class="three wide column">
-            <h4 class="ui inverted header">Services</h4>
-            <div class="ui inverted link list">
-              <a href="#" class="item">Banana Pre-Order</a>
-              <a href="#" class="item">DNA FAQ</a>
-              <a href="#" class="item">How To Access</a>
-              <a href="#" class="item">Favorite X-Men</a>
+          {% endif %}
+        </div>
+        <div class="mobile-menu right menu">
+          <a class="menu-button item"><i class="sidebar large icon"></i></a>
+        </div>
+      </div>
+
+      <div id="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+
+      <div class="ui inverted vertical footer segment">
+        <div class="ui center aligned container grid">
+          <div class="ui twelve wide column">
+            <div class="ui stackable inverted divided grid">
+              <div class="four wide column">
+                <h4 class="ui inverted header">Development</h4>
+                <div class="ui inverted link list">
+                  <a href="{% url "contact" %}" class="item">Contact</a>
+                  <a href="{% url "contact" %}" class="item">Report a bug</a>
+                  <a href="https://github.com/NilsJPWerner/Sublet-Uchicago" class="item">Source Code</a>
+                  <a href="#" class="item">Blog</a>
+                </div>
+              </div>
+              <div class="four wide column">
+                <h4 class="ui inverted header">Site Map</h4>
+                <div class="ui inverted link list">
+                  <a href="{% url "search" %}" class="item">Search</a>
+                  <a href="{% url "accounts:home" %}" class="item">Dashboard</a>
+                  <a href="{% url "accounts:listings" %}" class="item">Your Listings</a>
+                  <a href="{% url "accounts:edit_profile" %}" class="item">Edit Profile</a>
+                </div>
+              </div>
+              <div class="eight wide column">
+                <h4 class="ui inverted header">Contribute on Github</h4>
+                <div class="ui inverted link list" style="margin-top: 1.3em;">
+                  <a href="https://github.com/NilsJPWerner/Sublet-Uchicago" class="ui basic inverted button"><i class="ui large star icon"></i>Star</a>
+                  <a href="https://github.com/NilsJPWerner/Sublet-Uchicago/fork" class="ui basic inverted button"><i class="ui large fork icon"></i>Fork</a>
+                  <a href="https://github.com/NilsJPWerner/Sublet-Uchicago" class="ui basic inverted button"><i class="ui large eye icon"></i>Watch</a>
+                  <a href="mailto:nils.jp.werner@gmail.com" class="item" style="margin-top: 1em;">nils.jp.werner@gmail.com</a>
+                </div>
+              </div>
+            </div>
+            <div class="ui inverted section divider"></div>
+            <div class="ui center aligned horizontal inverted small divided link list">
+              <a class="item" href="#">Terms and Conditions</a>
+              <a class="item" href="#">Privacy Policy</a>
+              <a class="item" href="http://nils.tech">© 2016 Nils Werner</a>
             </div>
           </div>
-          <div class="seven wide column">
-            <h4 class="ui inverted header">Footer Header</h4>
-            <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
-          </div>
-        </div>
-        <div class="ui inverted section divider"></div>
-        <div class="ui horizontal inverted small divided link list">
-          <a class="item" href="#">Site Map</a>
-          <a class="item" href="#">Contact Us</a>
-          <a class="item" href="#">Terms and Conditions</a>
-          <a class="item" href="#">Privacy Policy</a>
         </div>
       </div>
     </div>

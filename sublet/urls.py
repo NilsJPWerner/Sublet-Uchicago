@@ -14,12 +14,12 @@ urlpatterns = [
     # Main pages
     url(r'^$', TemplateView.as_view(template_name="sublet/landing.html"), name="landing"),
     url(r'^search/$', views.search, name="search"),
+    url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),
+    url(r'^contact/$', views.contact, name="contact"),
 
     # ajax
     url(r'^star/$', views.ajax_star, name="star"),
 
-    # Public pages
-    url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),
 
     # Profile tools
     url(r'^accounts/', include('allauth.urls'), name='accounts'),

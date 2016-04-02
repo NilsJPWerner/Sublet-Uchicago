@@ -10,7 +10,7 @@
             <div class="ui grid">
                 {% for listing in listings %}
                     <div class="ui row">
-                        <div class="ui four wide column computer tablet only">
+                        <div class="ui four wide column">
                             {% with listing.get_cover_photo as photo %}
                                 {% if photo %}
                                     <img src="{{ photo.image.url }}">

@@ -1,13 +1,15 @@
+import json
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
-import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.cache import never_cache
+from django.core.mail import EmailMessage
 
 from listings.models import Listing
 from django.contrib.auth.models import User
+from forms import ContactForm
 
 
 @never_cache
@@ -119,3 +121,26 @@ def public_profile(request, user):
 
     context = {'user': u, 'verified': v, 'unverified': uv}
     return render(request, 'sublet/public_profile.html', context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender = form.cleaned_data['name']
+            cc_myself = form.cleaned_data['cc_myself']
+
+            recipients = ['nils.jp.werner@gmail.com', ]
+            if cc_myself:
+                recipients.append(sender)
+
+            header = subject + ' from:  ' + sender
+            email = EmailMessage(header, message, 'nils.jp.werner@gmail.com', recipients, headers={'From': email})
+            email.send()
+            return HttpResponseRedirect('/')
+    else:
+        form = ContactForm()
+    return render(request, 'sublet/contact.html', {'form': form})
