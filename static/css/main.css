@@ -3,6 +3,7 @@
 /*    Main    */
 html {
     min-height:100%;
+    background-color: rgb(248, 248, 249);
 }
 
 body {
@@ -23,6 +24,10 @@ p {
 
 .button {
     box-shadow: 0px -2px 0px 0px rgba(34, 36, 38, 0.1) inset!important;
+}
+
+body.pushable>.pusher {
+    background-color: rgb(248, 248, 249);
 }
 
 .ui.segment {
@@ -94,6 +99,20 @@ p {
     border: solid 2px rgb(200, 200, 202);
 }
 
+
+
+/* -------------------- */
+/*        Footer        */
+/* -------------------- */
+
+.ui.inverted.vertical.footer.segment {
+    padding: 5em 0em;
+    margin-top: 3em;
+}
+
+.ui.inverted.segment {
+    background-color: #4e5665;
+}
 
 /* -------------------- */
 /*       Landing        */
@@ -401,6 +420,13 @@ span.help-text {
 .ui.form .inline.fields {
     margin-bottom: 0;
 }
+
+@media only screen and (max-width: 768px) {
+    .ui.large.fluid.vertical.menu {
+        display: none;
+    }
+}
+
 
 
 /* -------------------- */
