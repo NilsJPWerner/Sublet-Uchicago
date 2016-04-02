@@ -3,11 +3,10 @@
 /*    Main    */
 html {
     min-height:100%;
-    background-color: rgb(248, 248, 249);
+    background-color: rgb(242, 242, 243);
 }
 
 body {
-    background-color: rgb(248, 248, 249);
     font-size: 15px;
     color: #565a5c;
     min-height: 100%;
@@ -27,7 +26,7 @@ p {
 }
 
 body.pushable>.pusher {
-    background-color: rgb(248, 248, 249);
+    background-color: rgb(242, 242, 243);
 }
 
 .ui.segment {
@@ -35,7 +34,7 @@ body.pushable>.pusher {
 }
 
 .ui.secondary.segment {
-    background-color: rgb(240, 240, 242);
+    background-color: rgb(249, 249, 250);
 }
 
 .customblue {
@@ -107,7 +106,6 @@ body.pushable>.pusher {
 
 .ui.inverted.vertical.footer.segment {
     padding: 5em 0em;
-    margin-top: 3em;
 }
 
 .ui.inverted.segment {
@@ -135,7 +133,6 @@ body.pushable>.pusher {
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/static/img/rockefeller.jpg");
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     background-repeat: no-repeat;
 }
 
