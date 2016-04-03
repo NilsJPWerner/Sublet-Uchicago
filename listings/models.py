@@ -129,7 +129,17 @@ class Listing(models.Model):
         else:
             return None
 
-    # def get_user(self):
+    # I'm using a custom one for starred listings because you
+    # can't pass an argument to a function with template tags
+    def get_photos_starred(self):
+        photos = self.photo_set.filter()
+        if photos.count() > 0:
+            return photos[0:3]
+        else:
+            return None
+
+    def get_user_url(self):
+        return reverse("public_profile", self.user)
 
 
 class Photo(models.Model):

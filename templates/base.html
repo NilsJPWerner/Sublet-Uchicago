@@ -44,7 +44,7 @@
           Verifications
         </a>
         <a href="{% url 'accounts:edit_profile' %}" class="{% if request.resolver_match.url_name == "edit_profile" %}active{% endif %} item">
-          <i class="user icon"></i>
+          <i class="edit icon"></i>
           Edit Profile
         </a>
         <a href="{% url 'accounts:settings' %}" class="{% if request.resolver_match.url_name == "settings" %}active{% endif %} item">
@@ -85,11 +85,11 @@
           <div id="user" class="ui right dropdown browse item">
             <i class="ui home icon"></i>Home
             <div class="menu">
-              <a href="{% url 'accounts:home' %}" class="item">Dashboard</a>
-              <a href="{% url "accounts:listings" %}" class="item">Your Listings</a>
-              <a href="{% url "accounts:starred_listings" %}" class="item">Starred Listings</a>
-              <a href="{% url "accounts:edit_profile" %}" class="item">Edit Profile</a>
-              <a class="item" href="{% url 'account_logout' %}">Logout</a>
+              <a href="{% url 'accounts:home' %}" class="item"><i class="dashboard icon"></i> Dashboard</a>
+              <a href="{% url "accounts:listings" %}" class="item"><i class="home icon"></i> Your Listings</a>
+              <a href="{% url "accounts:starred_listings" %}" class="item"><i class="star icon"></i> Starred Listings</a>
+              <a href="{% url "accounts:edit_profile" %}" class="item"><i class="setting icon"></i> Edit Profile</a>
+              <a class="item" href="{% url 'account_logout' %}"><i class="rocket icon"></i> Logout</a>
             </div>
           </div>
           {% endif %}

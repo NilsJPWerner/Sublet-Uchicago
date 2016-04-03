@@ -37,7 +37,7 @@ def your_listings(request):
 @login_required
 def starred_listings(request):
     user = request.user
-    listings = Listing.objects.filter(user=user.id)
+    listings = request.user.extendeduser.starred.all()
     context = {'user': user, 'listings': listings}
     return render(request, 'account/starred_listings.html', context)
 

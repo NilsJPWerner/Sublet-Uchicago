@@ -29,18 +29,18 @@
         </a>
         <a href="{% url 'accounts:listings' %}" class="{% if request.resolver_match.url_name == "listings" %}active{% endif %} item">
           <i class="home icon"></i>
-          Your listings
+          Your Listings
         </a>
         <a href="{% url 'accounts:starred_listings' %}" class="{% if request.resolver_match.url_name == "starred_listings" %}active{% endif %} item">
           <i class="star icon"></i>
-          Starred listings
+          Starred Listings
         </a>
         <a href="{% url 'accounts:verification' %}" class="{% if request.resolver_match.url_name == "verification" %}active{% endif %} item">
           <i class="checkmark icon"></i>
           Verifications
         </a>
         <a href="{% url 'accounts:edit_profile' %}" class="{% if request.resolver_match.url_name == "edit_profile" %}active{% endif %} item">
-          <i class="user icon"></i>
+          <i class="edit icon"></i>
           Edit Profile
         </a>
         <a href="{% url 'accounts:settings' %}" class="{% if request.resolver_match.url_name == "settings" %}active{% endif %} item">

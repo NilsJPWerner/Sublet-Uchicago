@@ -77,8 +77,12 @@
         $('#confirm_delete').modal({
             onApprove : function() {
                 $.get(deleteLink);
-                divider.hide().remove();
-                row.hide().remove();
+                divider.hide("medium", function() {
+                    $(this).remove();
+                });
+                row.hide("medium", function() {
+                    $(this).remove();
+                });
             }
         })
         .modal('show');
