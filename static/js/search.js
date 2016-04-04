@@ -226,7 +226,7 @@ function search() {
             update_history(this.url);
         },
         error: function () {
-
+            search_error();
         }
     });
 }

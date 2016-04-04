@@ -15,10 +15,11 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="sublet/landing.html"), name="landing"),
     url(r'^search/$', views.search, name="search"),
     url(r'^user/(?P<user>[0-9A-Za-z]+)/$', views.public_profile, name="public_profile"),
-    url(r'^contact/$', views.contact, name="contact"),
 
     # ajax
     url(r'^star/$', views.ajax_star, name="star"),
+    url(r'^bug-report/$', views.ajax_bug_report, name="bug-report"),
+    url(r'^contact/$', views.ajax_contact, name="contact"),
 
 
     # Profile tools

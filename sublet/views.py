@@ -123,24 +123,38 @@ def public_profile(request, user):
     return render(request, 'sublet/public_profile.html', context)
 
 
-def contact(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender = form.cleaned_data['name']
-            cc_myself = form.cleaned_data['cc_myself']
+# I'm not doing server side validation on the fields because
+# I'm just sending an email. I don't really care if the user
+# screws with the front end validation and then messes up the
+# message or email address.
+def ajax_bug_report(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        report = request.POST.get("report")
+        contactme = request.POST.get("contactme")
 
-            recipients = ['nils.jp.werner@gmail.com', ]
-            if cc_myself:
-                recipients.append(sender)
-
-            header = subject + ' from:  ' + sender
-            email = EmailMessage(header, message, 'nils.jp.werner@gmail.com', recipients, headers={'From': email})
-            email.send()
-            return HttpResponseRedirect('/')
+        recipients = ['nils.jp.werner@gmail.com', ]
+        header = "Bug report | contact me: " + contactme
+        email = EmailMessage(header, report, 'nils.jp.werner@gmail.com',
+            recipients, headers={'From': email})
+        email.send()
+        return HttpResponse("Success!")
     else:
-        form = ContactForm()
-    return render(request, 'sublet/contact.html', {'form': form})
+        return HttpResponseBadRequest
+
+
+def ajax_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+
+        recipients = ['nils.jp.werner@gmail.com', ]
+        header = subject + ' from: ' + name
+        email = EmailMessage(header, message, 'nils.jp.werner@gmail.com',
+            recipients, headers={'From': email})
+        email.send()
+        return HttpResponse("Success!")
+    else:
+        return HttpResponseBadRequest

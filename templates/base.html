@@ -44,7 +44,7 @@
           Verifications
         </a>
         <a href="{% url 'accounts:edit_profile' %}" class="{% if request.resolver_match.url_name == "edit_profile" %}active{% endif %} item">
-          <i class="edit icon"></i>
+          <i class="user icon"></i>
           Edit Profile
         </a>
         <a href="{% url 'accounts:settings' %}" class="{% if request.resolver_match.url_name == "settings" %}active{% endif %} item">
@@ -88,7 +88,8 @@
               <a href="{% url 'accounts:home' %}" class="item"><i class="dashboard icon"></i> Dashboard</a>
               <a href="{% url "accounts:listings" %}" class="item"><i class="home icon"></i> Your Listings</a>
               <a href="{% url "accounts:starred_listings" %}" class="item"><i class="star icon"></i> Starred Listings</a>
-              <a href="{% url "accounts:edit_profile" %}" class="item"><i class="setting icon"></i> Edit Profile</a>
+              <a href="{% url "accounts:edit_profile" %}" class="item"><i class="user icon"></i> Edit Profile</a>
+              <a href="{% url "accounts:settings" %}" class="item"><i class="setting icon"></i> Settings</a>
               <a class="item" href="{% url 'account_logout' %}"><i class="rocket icon"></i> Logout</a>
             </div>
           </div>
@@ -111,8 +112,8 @@
               <div class="four wide column">
                 <h4 class="ui inverted header">Development</h4>
                 <div class="ui inverted link list">
-                  <a href="{% url "contact" %}" class="item">Contact</a>
-                  <a href="{% url "contact" %}" class="item">Report a bug</a>
+                  <a href="{% url "contact" %}" id="contact" class="item">Contact</a>
+                  <a href="" id="bug" class="item">Report a bug</a>
                   <a href="https://github.com/NilsJPWerner/Sublet-Uchicago" class="item">Source Code</a>
                   <a href="#" class="item">Blog</a>
                 </div>
@@ -146,6 +147,71 @@
         </div>
       </div>
     </div>
+
+
+    <div id="bug-modal" class="ui small modal">
+      <div class="header">
+        Submit a bug report
+      </div>
+      <div class="content">
+        <form id="bug-form" class="ui form" action="/bug-report/">
+          {% csrf_token %}
+          <div class="field">
+            <label>Email Address</label>
+            <input name="bug-email" type="email">
+          </div>
+          <div class="field">
+            <label>Include a description of what the bug is and how you got to it</label>
+            <textarea name="bug-report"></textarea>
+          </div>
+          <div class="field">
+            <div class="ui checkbox">
+              <input type="checkbox" checked="checked" name="bug-contactme" tabindex="0" class="hidden">
+              <label>It's okay to contact me.</label>
+            </div>
+          </div>
+          <div class="ui error message"></div>
+        </form>
+      </div>
+      <div class="actions">
+        <div class="ui cancel button">Cancel</div>
+        <button id="bug-report-send" class="ui green button" type="submit" form="bug-form">Send</button>
+      </div>
+    </div>
+
+
+    <div id="contact-modal" class="ui small modal">
+      <div class="header">
+        Contact me
+      </div>
+      <div class="content">
+        <form id="contact-form" class="ui form" action="/contact/">
+          {% csrf_token %}
+          <div class="field">
+            <label>Your Name</label>
+            <input name="contact-name" type="text">
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input name="contact-email" type="email">
+          </div>
+          <div class="field">
+            <label>Subject</label>
+            <input name="contact-subject" type="text">
+          </div>
+          <div class="field">
+            <label>Message</label>
+            <textarea name="contact-message"></textarea>
+          </div>
+          <div class="ui error message"></div>
+        </form>
+      </div>
+      <div class="actions">
+        <div class="ui cancel button">Cancel</div>
+        <button id="contact-send" class="ui green button" type="submit" form="contact-form">Send</button>
+      </div>
+    </div>
+
 
     {% block jquery %}
       {% comment %}

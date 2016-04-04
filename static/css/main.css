@@ -120,6 +120,10 @@ body.pushable>.pusher {
     background-color: #4e5665;
 }
 
+.footer a.item:focus {
+    outline:none;
+}
+
 
 /* -------------------- */
 /*       Landing        */
