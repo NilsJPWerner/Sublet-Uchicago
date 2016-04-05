@@ -135,6 +135,7 @@ body.pushable>.pusher {
 
 #top-menu.transparent {
     background-color: transparent;
+    position: absolute;
 }
 
 #top-menu.transparent .item:before {
