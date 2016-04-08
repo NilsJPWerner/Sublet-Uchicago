@@ -4,6 +4,7 @@
 
 #search .map-column {
     margin: inherit;
+    padding-right: 0;
 }
 
 #search .data-column {
@@ -80,6 +81,13 @@
     border-radius: 4px;
 }
 
+
+
+
+.ui.fluid.card {
+    transition: opacity .15s ease-in-out;
+}
+
 .slider-image {
     display: block;
     width: 100%;
@@ -145,4 +153,10 @@
 
 #search .star.icon:hover, #search .star.icon.true:hover {
     color: #ffb70a;
+}
+
+
+
+.ui.inverted.vertical.footer.segment {
+    display: none;
 }

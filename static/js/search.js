@@ -297,8 +297,7 @@ function search_success(response, url) {
 
             // Add a listener to the marker
             // I should really remove the event listener on marker delete but eh
-            // Also I want to have the marker highligh for the entire time the
-            // info window is open. Also velocity >>>> Jquery
+            // Also velocity >>>> Jquery
             marker.addListener("click", function() {
                 // infoWindow.setContent(this['data_name']);
                 // infoWindow.open(map, markers[this['data_id']]);
@@ -306,7 +305,7 @@ function search_success(response, url) {
                 $(card_id).velocity("scroll", {
                     container: $("#data-column"),
                     easing: "easeInOut",
-                    duration: 900 });
+                    duration: 500 });
             });
 
 
@@ -315,19 +314,21 @@ function search_success(response, url) {
             google.maps.event.addListener(markers[data.id], 'mouseover', function() {
                 this.setIcon(highlight_marker);
                 var card_id = "#listing-" + this['data_id'];
-                $(card_id).css({
-                    "box-shadow": '0 1px 3px 0 #bcbdbd,0 0 0 1px #d4d4d5',
-                    "transform": 'translateY(-3px)',
-                    "transition-duration": "0.3s",
-                });
+                $(".ui.fluid.card:not(" + card_id +")").css({"opacity" : "0.3"});
+                // $(card_id).css({
+                //     "box-shadow": '0 1px 3px 0 #bcbdbd,0 0 0 1px #d4d4d5',
+                //     "transform": 'translateY(-3px)',
+                //     "transition-duration": "0.3s",
+                // });
             });
             google.maps.event.addListener(markers[data.id], 'mouseout', function() {
                 this.setIcon(default_marker);
                 var card_id = "#listing-" + this['data_id'];
-                $(card_id).css({
-                    "box-shadow": '',
-                    "transform": ''
-                });
+                $(".ui.fluid.card:not(" + card_id +")").css({"opacity" : ""});
+                // $(card_id).css({
+                //     "box-shadow": '',
+                //     "transform": ''
+                // });
             });
 
 
