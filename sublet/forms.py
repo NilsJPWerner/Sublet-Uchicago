@@ -7,3 +7,8 @@ class ContactForm(forms.Form):
     subject = forms.CharField(label='Message Purpose', required=True)
     message = forms.CharField(label='Message', widget=forms.Textarea, max_length=2000, required=True)
     cc_myself = forms.BooleanField(required=False)
+
+
+class ListingForm(forms.Form):
+    email = forms.EmailField(label='Email Address', max_length=200, required=False)
+    message = forms.CharField(label='Message', max_length=400, required=True, widget=forms.Textarea)

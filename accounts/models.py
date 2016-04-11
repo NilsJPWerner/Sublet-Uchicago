@@ -54,6 +54,9 @@ class ExtendedUser(models.Model):
             return True
         return False
 
+    def get_primary_email(self):
+        return EmailAddress.objects.get(user=self.user, primary=True)
+
 
 def user_post_save(sender, instance, created, **kwargs):
     # Create a user profile when a new user account is created

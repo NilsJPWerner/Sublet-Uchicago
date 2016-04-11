@@ -8,8 +8,8 @@ from django.views.decorators.cache import never_cache
 from django.core.mail import EmailMessage
 
 from listings.models import Listing
+from forms import ListingForm
 from django.contrib.auth.models import User
-from forms import ContactForm
 
 
 @never_cache
@@ -61,9 +61,12 @@ def search(request):
             data["cover_photo"] = photos[0].image.url
             data["photos"] = photo_list
 
+            # get listing url
+            data["listing_url"] = i.get_absolute_url()
+
             # get username and url to profile
             data["username"] = i.user.extendeduser.first_name + " " + i.user.extendeduser.last_name
-            data["user_url"] = i.user.extendeduser.get_absolute_url()
+            data["user_url"] = i.get_user_url()
 
             # Check if listing is starred by user if user is logged in
             if request.user.is_authenticated():
@@ -123,20 +126,41 @@ def public_profile(request, user):
     return render(request, 'sublet/public_profile.html', context)
 
 
+def listing(request, listing):
+    l = get_object_or_404(Listing, pk=listing)
+    starred = ""
+    if l.extendeduser_set.filter(id=request.user.extendeduser.id).exists():
+        starred = "starred"
+    if request.method == "POST":
+        if request.user.is_authenticated():
+            address = request.user.extendeduser.get_primary_email()
+        else:
+            address = request.POST.get("email")
+        message = request.POST.get("message")
+        recipient = [l.user.extendeduser.get_primary_email(), ]
+        email = EmailMessage("Listing inquiry", message, address,
+            recipient, headers={'From': address})
+        email.send()
+    else:
+        form = ListingForm()
+        context = {"listing": l, "starred": starred, "form": form}
+    return render(request, 'sublet/listing.html', context)
+
+
 # I'm not doing server side validation on the fields because
 # I'm just sending an email. I don't really care if the user
 # screws with the front end validation and then messes up the
 # message or email address.
 def ajax_bug_report(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        address = request.POST.get("email")
         report = request.POST.get("report")
         contactme = request.POST.get("contactme")
 
         recipients = ['nils.jp.werner@gmail.com', ]
         header = "Bug report | contact me: " + contactme
         email = EmailMessage(header, report, 'nils.jp.werner@gmail.com',
-            recipients, headers={'From': email})
+            recipients, headers={'From': address})
         email.send()
         return HttpResponse("Success!")
     else:
@@ -146,14 +170,14 @@ def ajax_bug_report(request):
 def ajax_contact(request):
     if request.method == "POST":
         name = request.POST.get("name")
-        email = request.POST.get("email")
+        address = request.POST.get("email")
         subject = request.POST.get("subject")
         message = request.POST.get("message")
 
         recipients = ['nils.jp.werner@gmail.com', ]
         header = subject + ' from: ' + name
         email = EmailMessage(header, message, 'nils.jp.werner@gmail.com',
-            recipients, headers={'From': email})
+            recipients, headers={'From': address})
         email.send()
         return HttpResponse("Success!")
     else:

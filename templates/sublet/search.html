@@ -83,15 +83,20 @@
                 </div>
             </div>
         </div>
+        <div class="ui divider"></div>
         <div class="row">
-            {# <div id="spinner" class="ui inverted disabled dimmer"> #}
-                {# <div class="ui large text loader">Loading...</div> #}
-                <div id="results" class="ui two doubling cards"></div>
-            {# </div> #}
+             <div id="error-message" class="ui negative message hidden">
+                <div class="header">
+                    There was a problem contacting the servers
+                </div>
+                <p>Please try again later, or report <a href="" id="bug">report</a> the incident.</p>
+            </div>
+            <div id="results" class="ui two doubling cards">
+            </div>
         </div>
     </div>
     <div class="eight wide column map-column">
-        <div id="map" style="height: calc(100vh - 62px); width: 100%" ></div>
+        <div id="map"></div>
     </div>
 </div>
 {% endblock %}
@@ -106,8 +111,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
 
 {# Slider js includes #}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js"></script>
 <script src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js"></script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP5xmOaC6toBn_BrLSA_DZeLBMPl1lm3w&callback=initMap">
 </script>

@@ -27,7 +27,7 @@ class Listing(models.Model):
 
     # Descrition
     name = models.CharField(max_length=40, blank=True)
-    summary = models.TextField(max_length=400, blank=True)
+    summary = models.TextField(max_length=1600, blank=True)
     price = models.IntegerField(blank=True, null=True)
 
     # Location
@@ -122,6 +122,13 @@ class Listing(models.Model):
         else:
             return None
 
+    def get_remaining_photos(self):
+        photos = self.photo_set.filter()
+        if photos.count() > 1:
+            return photos[1:]
+        else:
+            return None
+
     def get_photos(self, num):
         photos = self.photo_set.filter()
         if photos.count() > 0:
@@ -129,17 +136,11 @@ class Listing(models.Model):
         else:
             return None
 
-    # I'm using a custom one for starred listings because you
-    # can't pass an argument to a function with template tags
-    def get_photos_starred(self):
-        photos = self.photo_set.filter()
-        if photos.count() > 0:
-            return photos[0:3]
-        else:
-            return None
-
     def get_user_url(self):
-        return reverse("public_profile", self.user)
+        return reverse("public_profile", kwargs={'user': self.user.id})
+
+    def get_absolute_url(self):
+        return reverse("listing", kwargs={'listing': self.id})
 
 
 class Photo(models.Model):

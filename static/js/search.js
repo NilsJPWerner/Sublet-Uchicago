@@ -15,7 +15,7 @@ function initMap() {
     var myCenter = new google.maps.LatLng(41.795113,-87.594300);
     map = new google.maps.Map(document.getElementById('map'), {
         center: myCenter,
-        zoom: 15,
+        zoom: 14,
         mapTypeControl: false,
         zoomControl: true,
     });
@@ -161,10 +161,14 @@ $(document).ready(function() {
 
 var template = [
     '<div id="listing-{{id}}"" class="ui fluid card" data-marker="{{id}}">',
-        '<a id="listingtop-{{id}}"></a>',
         '<div class="slider image">',
             '<ul>',
-                '<li><img class="slider-image" src="{{cover_photo}}"></li>',
+                '<li>',
+                    '<div class="slider-photo">',
+                        '<img class="slider-image" src="{{cover_photo}}">',
+                        '<a class="slider-link middle" href="{{listing_url}}" target="_blank"></a>',
+                    '</div>',
+                '</li>',
                 '{{#photos}}',
                     '<li>',
                         '<div class="loader-container">',
@@ -172,7 +176,10 @@ var template = [
                                 '<div class="ui active text loader">Loading Image</div>',
                             '</div>',
                         '<div>',
-                        '<img class="slider-image" data-src="{{.}}">',
+                        '<div class="slider-photo">',
+                            '<img class="slider-image" data-src="{{.}}">',
+                            '<a class="slider-link middle" href="{{listing_url}}" target="_blank"></a>',
+                        '</div>',
                     '</li>',
                 '{{/photos}}',
             '</ul>',
@@ -181,12 +188,12 @@ var template = [
             // Sneaky use of starred boolean as a css class to mark active state
             '<i class="ui right floated large {{starred}} star icon"',
                 'onclick="star(this, {{id}})" data-content="Star this listing"></i>',
-            '<a class="header">{{name}}</a>',
+            '<a href={{listing_url}} target="_blank" class="header">{{name}}</a>',
             '<div class="meta">',
                 '<span class="date"></span>',
             '</div>',
             '<div class="description">',
-                '{{summary}}',
+                'Insert a part of the summary here maybe',
             '</div>',
         '</div>',
         '<div class="extra content">',
@@ -315,20 +322,11 @@ function search_success(response, url) {
                 this.setIcon(highlight_marker);
                 var card_id = "#listing-" + this['data_id'];
                 $(".ui.fluid.card:not(" + card_id +")").css({"opacity" : "0.3"});
-                // $(card_id).css({
-                //     "box-shadow": '0 1px 3px 0 #bcbdbd,0 0 0 1px #d4d4d5',
-                //     "transform": 'translateY(-3px)',
-                //     "transition-duration": "0.3s",
-                // });
             });
             google.maps.event.addListener(markers[data.id], 'mouseout', function() {
                 this.setIcon(default_marker);
                 var card_id = "#listing-" + this['data_id'];
                 $(".ui.fluid.card:not(" + card_id +")").css({"opacity" : ""});
-                // $(card_id).css({
-                //     "box-shadow": '',
-                //     "transform": ''
-                // });
             });
 
 
@@ -403,7 +401,7 @@ function search_success(response, url) {
 //////////////////////////////
 
 function search_error() {
-    alert("error");
+    $("#error-message").removeClass("hidden");
 }
 
 

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load upto %}
+
+{% block head_title %}{{listing.name}}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css">
+<link rel="stylesheet" type="text/css" href="{% static "css/listing.css" %}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+{% endblock head %}
+
+{% block content %}
+<div class="ui centered one column grid stackable container">
+    <div class="row">
+        <div class="ui twelve wide column">
+            <div class="slider image">
+                <ul>
+                    <li>
+                        <div class="slider-photo">
+                            {% with cover_photo=listing.get_cover_photo %}
+                            <img src="{{cover_photo.image.url}}">
+                            <a class="slider-link middle lightbox" href="{{cover_photo.image.url}}"
+                                title="{{cover_photo.description}}"></a>
+                            {% endwith %}
+                        </div>
+
+                    </li>
+                    {% for photo in listing.get_remaining_photos %}
+                    <li>
+                        <div class="loader-container">
+                            <div class="ui disabled active dimmer">
+                                <div class="ui active text loader">Loading Image</div>
+                            </div>
+                        <div>
+                        <div class="slider-photo">
+                            <img data-src="{{photo.image.url}}">
+                             <a class="slider-link middle lightbox" href="{{photo.image.url}}"
+                                title="{{photo.description}}"></a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui row">
+        <div class="ui eight wide column">
+            <div class="icon-row">
+                <i class="ui large share alternate icon"></i>
+                <i class="ui large user icon"></i>
+                <i style="padding-top: 2px;" class="ui large {{starred}} star icon" onclick="star(this, {{listing.id}})" data-content="Star this listing"></i>
+            </div>
+            <span class="listing-header">{{listing.name}}</span>
+            <p>Posted: <strong>{{listing.created_at|timesince|upto:','}} ago</strong></p>
+
+            <div class="ui divider"></div>
+            <h4>About this listing</h4>
+            <p>{{listing.summary|linebreaks}}</p>
+
+            <div class="ui divider"></div>
+            <h4>Amenities</h4>
+            <p>{{listing.summary|linebreaks}}</p>
+        </div>
+        <div class="ui four wide column">
+            <form class="ui form" method="POST" action="">
+                 <div class="ui secondary top attached segment">
+                    <h4>Contact Renter</h4>
+                </div>
+                <div class="ui bottom attached padded segment">
+                    {% csrf_token %}
+                    {% if user.is_anonymous %}
+                        <div class="ui field">
+                            <label>Email</label>
+                            {{form.email}}
+                        </div>
+                    {% endif %}
+                     {% if user.is_authenticated %}
+                    {% endif %}
+                    <div class="ui field">
+                        <label>Message</label>
+                        {{form.message|attr:"rows:5"}}
+                    </div>
+                    <div class="ui divider"></div>
+                    <button class="ui fluid customblue button" type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
+<script type="text/javascript">
+    var CSRF_TOKEN = "{{ csrf_token }}";
+
+    $('.lightbox').magnificPopup({
+        type: 'image',
+        gallery: {
+            enabled: true
+        },
+        image: {
+            titleSrc: 'title'
+        }
+    });
+
+    // Ajax calls and stars a listing or redirects if not signed in
+    function star (element, id) {
+        var star = $(element);
+        $.post( "/star/", { "csrfmiddlewaretoken": CSRF_TOKEN, "listing": id})
+            .done(function (starred) {
+                if (starred === "True") {
+                    star.addClass('starred');
+                }
+                else if (starred === "False") {
+                    star.removeClass('starred');
+                }
+                else {
+                    // Redirect to login page if not signed in
+                    window.location = "/login"
+                }
+            });
+    };
+
+    var slider = $('.slider').unslider({
+        speed: 400,
+        animation: 'horizontal',
+        infinite: false,
+        nav: false,
+        arrows: {
+            prev: '<a class="unslider-arrow prev"><i class="chevron left icon"></i></a>',
+            next: '<a class="unslider-arrow next"><i class="chevron right icon"></i></a>',
+        }
+    });
+
+    $('.star.icon')
+        .popup({
+            position : 'bottom center',
+            transition: 'fade',
+            delay: {
+                show: 700,
+                hide: 100
+            }
+        })
+    ;
+
+    // Lazy loading images in slider
+    slider.on('unslider.change', function(event, index, slide) {
+        var img = slide.find("img");
+        if (img.attr("src") === undefined) {
+            var dimmer = slide.find("div.ui.active.disabled.dimmer");
+            dimmer.removeClass('disabled');
+            var src = img.attr("data-src");
+            img.attr("src", src).removeAttr('data-src');
+            img.on('load', function() {
+                // hide/remove the loading image
+                dimmer.fadeOut(400, function() {
+                    $(this).remove();
+                });
+            });
+        };
+    });
+</script>
+{% endblock scripts %}

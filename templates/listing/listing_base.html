@@ -125,18 +125,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script type="text/javascript">
-    $('.delete').click(function(){
-        event.preventDefault();
-        var deleteLink = $(this).attr("href");
-        $('#confirm_delete').modal({
-            onApprove : function() {
-                window.location.href = deleteLink;
-            }
-        })
-        .modal('show');
-    });
-  </script>
   {% block listing_scripts %}
   {% endblock %}
 {% endblock %}
