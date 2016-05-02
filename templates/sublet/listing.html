@@ -6,15 +6,17 @@
 {% block head_title %}{{listing.name}}{% endblock %}
 
 {% block head %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css">
 <link rel="stylesheet" type="text/css" href="{% static "css/listing.css" %}">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+
 {% endblock head %}
 
 {% block content %}
 <div class="ui centered one column grid stackable container">
     <div class="row">
-        <div class="ui twelve wide column">
+        <div class="ui thirteen wide column">
             <div class="slider image">
                 <ul>
                     <li>
@@ -50,26 +52,68 @@
         <div class="ui eight wide column">
             <div class="icon-row">
                 <i class="ui large share alternate icon"></i>
-                <i class="ui large user icon"></i>
+                <a style="color: #565a5c" href="{{ listing.user.extendeduser.get_absolute_url }}"><i class="ui large user icon"></i></a>
                 <i style="padding-top: 2px;" class="ui large {{starred}} star icon" onclick="star(this, {{listing.id}})" data-content="Star this listing"></i>
             </div>
             <span class="listing-header">{{listing.name}}</span>
-            <p>Posted: <strong>{{listing.created_at|timesince|upto:','}} ago</strong></p>
+            <p>Rent: &#36;<strong>{{listing.price}} per month</strong></p>
+
+
 
             <div class="ui divider"></div>
-            <h4>About this listing</h4>
+            <h4>Description</h4>
             <p>{{listing.summary|linebreaks}}</p>
 
             <div class="ui divider"></div>
             <h4>Amenities</h4>
-            <p>{{listing.summary|linebreaks}}</p>
+            <div class="ui two column grid">
+                <div class="ui eight wide column">
+                    <!-- Icons made by Freepik http://www.freepik.com" from http://www.flaticon.com is licensed by CC 3.0 -->
+                    <div id="ac" class="amenities {% if not listing.ac %}nope{% endif %}">
+                        <img src="{% static "img/amenities/ac.svg" %}">
+                        <div class="text">Air conditioning</div>
+                    </div>
+                    <div id="washer" class="amenities {% if not listing.in_unit_washer_dryer %}nope{% endif %}">
+                        <img src="{% static "img/amenities/washer.svg" %}">
+                        <div class="text">In unit washer/dryer</div>
+                    </div>
+                    <div id="tv" class="amenities {% if not listing.tv %}nope{% endif %}">
+                        <img src="{% static "img/amenities/tv.svg" %}">
+                        <div class="text">Television</div>
+                    </div>
+                    <div id="cable" class="amenities {% if not listing.cable_tv %}nope{% endif %}">
+                        <img src="{% static "img/amenities/cable.svg" %}">
+                        <div class="text">Cable TV</div>
+                    </div>
+                </div>
+                <div class="ui eight wide column">
+                    <div id="internet" class="amenities {% if not listing.internet %}nope{% endif %}">
+                        <img src="{% static "img/amenities/internet.svg" %}">
+                        <div class="text">Internet/WiFi</div>
+                    </div>
+                    <div id="wheelchair" class="amenities {% if not listing.wheel_chair_accessible %}nope{% endif %}">
+                        <img src="{% static "img/amenities/wheelchair.svg" %}">
+                        <div class="text">Wheelchair accessible</div>
+                    </div>
+                    <div id="pets" class="amenities {% if not listing.pets_live_here %}nope{% endif %}">
+                        <img src="{% static "img/amenities/pets.svg" %}">
+                        <div class="text">Pets live here</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui divider"></div>
+            <h4>Location</h4>
+            <div id="map" style="width:100%; height:350px;"></div>
+            <div id="latitude" style="display: none">{{listing.latitude}}</div>
+            <div id="longitude" style="display: none">{{listing.longitude}}</div>
         </div>
-        <div class="ui four wide column">
+        <div class="ui five wide column">
             <form class="ui form" method="POST" action="">
-                 <div class="ui secondary top attached segment">
+                <div class="ui secondary top attached segment">
                     <h4>Contact Renter</h4>
                 </div>
-                <div class="ui bottom attached padded segment">
+                <div style="padding-top: 12px;" class="ui bottom attached padded segment">
                     {% csrf_token %}
                     {% if user.is_anonymous %}
                         <div class="ui field">
@@ -83,6 +127,23 @@
                         <label>Message</label>
                         {{form.message|attr:"rows:5"}}
                     </div>
+                    <div class="ui field">
+                        {{form.captcha}}
+                    </div>
+                    {% if form.errors %}
+                    <div class="ui negative message">
+                        <ul class="list">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error|escape }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
                     <div class="ui divider"></div>
                     <button class="ui fluid customblue button" type="submit">Send</button>
                 </div>
@@ -96,75 +157,9 @@
 <script src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
-
 <script type="text/javascript">
     var CSRF_TOKEN = "{{ csrf_token }}";
-
-    $('.lightbox').magnificPopup({
-        type: 'image',
-        gallery: {
-            enabled: true
-        },
-        image: {
-            titleSrc: 'title'
-        }
-    });
-
-    // Ajax calls and stars a listing or redirects if not signed in
-    function star (element, id) {
-        var star = $(element);
-        $.post( "/star/", { "csrfmiddlewaretoken": CSRF_TOKEN, "listing": id})
-            .done(function (starred) {
-                if (starred === "True") {
-                    star.addClass('starred');
-                }
-                else if (starred === "False") {
-                    star.removeClass('starred');
-                }
-                else {
-                    // Redirect to login page if not signed in
-                    window.location = "/login"
-                }
-            });
-    };
-
-    var slider = $('.slider').unslider({
-        speed: 400,
-        animation: 'horizontal',
-        infinite: false,
-        nav: false,
-        arrows: {
-            prev: '<a class="unslider-arrow prev"><i class="chevron left icon"></i></a>',
-            next: '<a class="unslider-arrow next"><i class="chevron right icon"></i></a>',
-        }
-    });
-
-    $('.star.icon')
-        .popup({
-            position : 'bottom center',
-            transition: 'fade',
-            delay: {
-                show: 700,
-                hide: 100
-            }
-        })
-    ;
-
-    // Lazy loading images in slider
-    slider.on('unslider.change', function(event, index, slide) {
-        var img = slide.find("img");
-        if (img.attr("src") === undefined) {
-            var dimmer = slide.find("div.ui.active.disabled.dimmer");
-            dimmer.removeClass('disabled');
-            var src = img.attr("data-src");
-            img.attr("src", src).removeAttr('data-src');
-            img.on('load', function() {
-                // hide/remove the loading image
-                dimmer.fadeOut(400, function() {
-                    $(this).remove();
-                });
-            });
-        };
-    });
 </script>
+<script type="text/javascript" src="{% static "js/listing-page.js" %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP5xmOaC6toBn_BrLSA_DZeLBMPl1lm3w&libraries=places&callback=initMap" async defer></script>
 {% endblock scripts %}

@@ -20,6 +20,7 @@ PREREQ_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
+    'captcha',
 )
 
 PROJECT_APPS = (
@@ -104,7 +105,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-LOGIN_REDIRECT_URL = "/accounts/home"
+LOGIN_REDIRECT_URL = "/accounts/dashboard/"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 5
 ACCOUNT_EMAIL_REQUIRED = True
@@ -115,9 +116,12 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SESSION_REMEMBER = True  # set to True to always remember and remove "remember me"
 ACCOUNT_USERNAME_REQUIRED = True
 
+RECAPTCHA_PUBLIC_KEY = '6LeVLR0TAAAAABPHIbU8hVYYasfxFU6SLzUUAW_u'
+NOCAPTCHA = True
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'nils.jp.werner@gmail.com'
-EMAIL_HOST_PASSWORD = 'dhdghysoceydvgpz'
+EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_KEY")
 DEFAULT_FROM_EMAIL = 'nils.jp.werner@gmail.com'

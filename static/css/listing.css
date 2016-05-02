@@ -1,5 +1,5 @@
 .slider-photo {
-  padding-bottom: 60%; /* here the desired aspect ratio */
+  padding-bottom: 55%; /* here the desired aspect ratio */
 }
 
 .slider-photo img {
@@ -34,4 +34,41 @@
 .icon-row {
   margin-top: 0.2em;
   float: right;
+}
+
+
+/*------ amenities -------*/
+
+.amenities {
+  margin-bottom: 0.8em;
+}
+
+.amenities .text {
+  font-weight: 600;
+  margin-left: 0.8em;
+  display: inline-block;
+}
+
+.amenities img {
+  height: 30px;
+  vertical-align: middle;
+}
+
+.amenities.nope .text {
+  font-weight: 400;
+  text-decoration: line-through;
+  margin-left: 0;
+  opacity: 0.8;
+}
+
+.amenities.nope img {
+  display: none;
+}
+
+
+
+
+
+#recaptcha-anchor-label {
+  width: 130px!important;
 }

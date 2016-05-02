@@ -127,23 +127,27 @@ def public_profile(request, user):
 
 
 def listing(request, listing):
+    form = ListingForm(request.POST or None)
     l = get_object_or_404(Listing, pk=listing)
     starred = ""
-    if l.extendeduser_set.filter(id=request.user.extendeduser.id).exists():
+    if request.user.is_authenticated() and l.extendeduser_set.filter(
+            id=request.user.extendeduser.id).exists():
         starred = "starred"
     if request.method == "POST":
-        if request.user.is_authenticated():
-            address = request.user.extendeduser.get_primary_email()
+        if form.is_valid():
+            if request.user.is_authenticated():
+                address = request.user.extendeduser.get_primary_email()
+            else:
+                address = form.cleaned_data['email']
+            message = form.cleaned_data["message"]
+            recipient = [l.user.extendeduser.get_primary_email(), ]
+            email = EmailMessage("Listing inquiry", message, address,
+                recipient, headers={'From': address})
+            email.send()
         else:
-            address = request.POST.get("email")
-        message = request.POST.get("message")
-        recipient = [l.user.extendeduser.get_primary_email(), ]
-        email = EmailMessage("Listing inquiry", message, address,
-            recipient, headers={'From': address})
-        email.send()
-    else:
-        form = ListingForm()
-        context = {"listing": l, "starred": starred, "form": form}
+            print form.errors
+
+    context = {"listing": l, "starred": starred, "form": form}
     return render(request, 'sublet/listing.html', context)
 
 

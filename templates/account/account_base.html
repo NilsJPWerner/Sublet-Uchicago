@@ -17,7 +17,7 @@
             <p class="header">Welcome back {{ user.extendeduser.first_name }}</p>
           </div>
           <div class="extra content">
-            <a href=""><i class="eye icon"></i>
+            <a href={% url "public_profile" user.id %}><i class="eye icon"></i>
             View public profile</a>
           </div>
         </div>

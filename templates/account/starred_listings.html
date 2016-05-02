@@ -19,9 +19,8 @@
                     <div class="ui seven wide column">
                         <h3 style="margin: 5px 0px;">{{ listing.name }}</h3>
                         {{ listing.street_address }}<br>
-                        {{ listing.get_bed_size_display }} sized bed <br>
-                        <div class="seperator"></div>
-                        <a href="{{ listing.user.extendeduser.get_absolute_url }}">
+                        {{ listing.get_bed_size_display }} sized bed <br> <br>
+                        Listed by: <a href="{{ listing.user.extendeduser.get_absolute_url }}">
                             {{listing.user.extendeduser.first_name}} {{listing.user.extendeduser.last_name}}
                         </a>
                     </div>

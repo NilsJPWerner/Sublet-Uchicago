@@ -3,6 +3,9 @@ from defaults import *
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_USE_SSL = True
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 

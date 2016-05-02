@@ -51,7 +51,6 @@ class Listing(models.Model):
     internet = models.BooleanField(default=False)
     wheel_chair_accessible = models.BooleanField(default=False)
     pets_live_here = models.BooleanField(default=False)
-    pets_allowed = models.BooleanField(default=False)
 
     # Calendar
     fall_quarter = models.BooleanField(default=False)
