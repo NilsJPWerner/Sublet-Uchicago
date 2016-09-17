@@ -91,8 +91,8 @@ function deleteMarkers() {
 var price_slider;
 
 $(document).ready(function() {
-    var low = 300
-    var high = 700
+    var low = 500
+    var high = 1000
     // If there are prices in the url use them instead
     // This is to return to prev state if page is loaded anew
     if (getUrlParam('price_low') || getUrlParam('price_high')) {
@@ -110,7 +110,7 @@ $(document).ready(function() {
         margin: 100,
         range: {
             'min': 0,
-            'max': 1000
+            'max': 1500
         },
     });
 

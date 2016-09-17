@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="ui row">
+    <div class="ui content row">
         <div class="ui eight wide column">
             <div class="icon-row">
                 <i class="ui large share alternate icon"></i>
@@ -107,6 +107,21 @@
             <div id="map" style="width:100%; height:350px;"></div>
             <div id="latitude" style="display: none">{{listing.latitude}}</div>
             <div id="longitude" style="display: none">{{listing.longitude}}</div>
+
+            <div class="ui divider"></div>
+            <h4>Owner</h4>
+            <div class="ui two column grid">
+                <div class="four wide column">
+                    <img class="ui image" src="{{listing.user.extendeduser.profile_picture.url}}">
+                </div>
+                <div class="twelve wide column">
+                    <h5>{{listing.user.extendeduser.first_name}} {{listing.user.extendeduser.last_name}}</h5>
+                    <p>Division: <strong>{{listing.user.extendeduser.get_uni_division_display}}</strong><br>
+                    Hometown: <strong>{{listing.user.extendeduser.home_town}}</strong><br>
+                    <a href="{{listing.user.extendeduser.get_absolute_url}}">View profile</a>
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="ui five wide column">
             <form class="ui form" method="POST" action="">

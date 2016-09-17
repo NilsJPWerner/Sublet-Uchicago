@@ -8,7 +8,7 @@ from django.views.decorators.cache import never_cache
 from django.core.mail import EmailMessage
 
 from listings.models import Listing
-from forms import ListingForm
+from forms import ListingForm, ListingFormAuthenticated
 from django.contrib.auth.models import User
 
 
@@ -29,7 +29,10 @@ def search(request):
         price_high = int(request.GET.get('price_high'))
 
         # Price filtering
-        results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low, price__lte=price_high)
+        if price_high < 1500:
+            results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low, price__lte=price_high)
+        else:
+            results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low)
 
         # Filter by quarters
         if (not fall) and (not winter) and (not spring) and (not summer):
@@ -127,7 +130,10 @@ def public_profile(request, user):
 
 
 def listing(request, listing):
-    form = ListingForm(request.POST or None)
+    if request.user.is_authenticated():
+        form = ListingFormAuthenticated(request.POST or None)
+    else:
+        form = ListingForm(request.POST or None)
     l = get_object_or_404(Listing, pk=listing)
     starred = ""
     if request.user.is_authenticated() and l.extendeduser_set.filter(
@@ -144,8 +150,6 @@ def listing(request, listing):
             email = EmailMessage("Listing inquiry", message, address,
                 recipient, headers={'From': address})
             email.send()
-        else:
-            print form.errors
 
     context = {"listing": l, "starred": starred, "form": form}
     return render(request, 'sublet/listing.html', context)

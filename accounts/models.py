@@ -26,6 +26,7 @@ class ExtendedUser(models.Model):
         default="/static/img/accounts/empty-photo.png", blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
     uni_division = models.CharField(choices=UNI_DIV, max_length=50, blank=True)
+    home_town = models.CharField(max_length=50, blank=True)
     description = models.TextField(blank=True)
     starred = models.ManyToManyField(Listing)
 

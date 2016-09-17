@@ -11,6 +11,11 @@ class ContactForm(forms.Form):
 
 
 class ListingForm(forms.Form):
-    email = forms.EmailField(label='Email Address', max_length=200, required=False)
+    email = forms.EmailField(label='Email Address', max_length=200, required=True)
     message = forms.CharField(label='Message', max_length=400, required=True, widget=forms.Textarea)
     captcha = ReCaptchaField(label='Captcha')
+
+
+class ListingFormAuthenticated(forms.Form):
+    message = forms.CharField(label='Message', max_length=400, required=True, widget=forms.Textarea)
+    # captcha = ReCaptchaField(label='Captcha')

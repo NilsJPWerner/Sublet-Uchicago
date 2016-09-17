@@ -152,32 +152,32 @@ class Photo(models.Model):
 
     # # Maybe add something that renames the file to something standard
     # # Maybe also resize original image to something more sane
-    # def save(self):
-    #     if self.is_cover_photo:
-    #         other_cover_photos = Photo.objects.filter(album=self.album, is_cover_photo=True)
-    #         for photo in other_cover_photos:
-    #             photo.is_cover_photo = False
-    #             photo.save()
-    #     filename = self.filename
-    #     if filename != '':
-    #         image = Image.open(filename)
+    def save(self):
+        if self.is_cover_photo:
+            other_cover_photos = Photo.objects.filter(album=self.album, is_cover_photo=True)
+            for photo in other_cover_photos:
+                photo.is_cover_photo = False
+                photo.save()
+        filename = self.filename
+        if filename != '':
+            image = Image.open(filename)
 
-    #         # need to add PNG conversion
-    #         # if image.mode != 'RGB':
-    #         #     image = image.convert('RGB')
+            # need to add PNG conversion
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
 
-    #         size_large = (image[0]/image[1] * 800, 800)
-    #         image.thumbnail(size_large, Image.BICUBIC)
-    #         image.save(self.get_large_filename())
+            size_large = (image[0]/image[1] * 600, 600)
+            image.thumbnail(size_large, Image.BICUBIC)
+            image.save(self.get_large_filename(), format='JPEG', quality=70)
 
-    #         size_medium = (200, image[1]/image[0]*200)
-    #         image.thumbnail(size_medium, Image.BICUBIC)
-    #         image.save(self.get_medium_filename())
+            size_medium = (image[1]/image[0]*300, 300)
+            image.thumbnail(size_medium, Image.BICUBIC)
+            image.save(self.get_medium_filename(), format='JPEG', quality=70)
 
-    #         size_small = (image[0]/image[1] * 80, 80)
-    #         image.thumbnail(size_small, Image.BICUBIC)
-    #         image.save(self.get_small_filename())
-    #     super(Photo, self).save()
+            size_small = (image[0]/image[1] * 150, 150)
+            image.thumbnail(size_small, Image.BICUBIC)
+            image.save(self.get_small_filename(), format='JPEG', quality=70)
+        super(Photo, self).save()
 
     def get_large_filename(self):
         return 'l_' + self.filename
@@ -201,13 +201,13 @@ class Photo(models.Model):
     def get_delete_url(self):
         return reverse('listings:jfu_delete', kwargs={'pk': self.id})
 
-    # def delete(self):
-    #     try:
-    #         os.remove(self.get_medium_filename())
-    #         os.remove(self.get_small_filename())
-    #     except:
-    #         pass
-    #     super(Photo, self).delete()
+    def delete(self):
+        try:
+            os.remove(self.get_medium_filename())
+            os.remove(self.get_small_filename())
+        except:
+            pass
+        super(Photo, self).delete()
 
 
 def truncate(f, n):

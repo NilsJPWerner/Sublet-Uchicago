@@ -1,3 +1,11 @@
+h4 {
+  font-size: 1.2em;
+}
+
+h5 {
+  font-size: 1.1em;
+}
+
 .slider-photo {
   padding-bottom: 55%; /* here the desired aspect ratio */
 }
@@ -34,6 +42,10 @@
 .icon-row {
   margin-top: 0.2em;
   float: right;
+}
+
+.ui.content.row {
+  margin-bottom: 3em;
 }
 
 
