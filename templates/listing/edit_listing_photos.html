@@ -56,10 +56,10 @@
     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
         var inputs = data.context.find('.description');
         if (inputs.filter(function () {
-                return !this.value && $(this).prop('required');
-            }).first().focus().length) {
-            data.context.find('button').prop('disabled', false);
-            return false;
+              return !this.value && $(this).prop('required');
+          }).first().focus().length) {
+          data.context.find('button').prop('disabled', false);
+          return false;
         }
         data.formData = inputs.serializeArray();
         data.formData.push({ name: 'csrfmiddlewaretoken', value: "{{ csrf_token }}" });

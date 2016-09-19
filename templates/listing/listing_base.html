@@ -21,41 +21,41 @@
       <a href="{% url 'listings:edit_listing_description' listing_id=listing.id %}"  class=" {% if request.resolver_match.url_name == "edit_listing_description" %}active{% endif %} item">
         Description
         {% if listing.description_complete %}
-          <i class="ui green checkmark icon"></i>
+        <i class="ui green checkmark icon"></i>
         {% else %}
-          <i class="ui grey plus icon"></i>
+        <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
       <a href="{% url 'listings:edit_listing_location' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_location" %}active{% endif %} item">
         Location
         {% if listing.location_complete %}
-          <i class="ui green checkmark icon"></i>
+        <i class="ui green checkmark icon"></i>
         {% else %}
-          <i class="ui grey plus icon"></i>
+        <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
       <a href="{% url 'listings:edit_listing_details' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_details" %}active{% endif %} item">
         Details
         {% if listing.details_complete %}
-          <i class="ui green checkmark icon"></i>
+        <i class="ui green checkmark icon"></i>
         {% else %}
-          <i class="ui grey plus icon"></i>
+        <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
       <a href="{% url 'listings:edit_listing_photos' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_photos" %}active{% endif %} item">
         Photos
         {% if listing.photos_complete %}
-          <i class="ui green checkmark icon"></i>
+        <i class="ui green checkmark icon"></i>
         {% else %}
-          <i class="ui grey plus icon"></i>
+        <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
       <a href="{% url 'listings:edit_listing_calendar' listing_id=listing.id %}" class="{% if request.resolver_match.url_name == "edit_listing_calendar" %}active{% endif %} item">
         Calendar
         {% if listing.calendar_complete %}
-          <i class="ui green checkmark icon"></i>
+        <i class="ui green checkmark icon"></i>
         {% else %}
-          <i class="ui grey plus icon"></i>
+        <i class="ui grey plus icon"></i>
         {% endif %}
       </a>
     </div>
@@ -63,37 +63,37 @@
     <div class="ui card">
       <div class="content">
         {% if listing.listing_complete %}
-          <div class="ui center aligned header">
-            Ready to publish!
-          </div>
-          <div class="description">
-            You are ready to publish your listing. Don't worry you can come back and edit it later.
-          </div>
+        <div class="ui center aligned header">
+          Ready to publish!
+        </div>
+        <div class="description">
+          You are ready to publish your listing. Don't worry you can come back and edit it later.
+        </div>
         {% elif listing.published %}
-          <div class="ui center aligned header">
-            Currently published
-          </div>
-          <div class="description">
-            This listing is currently published and publicly accessible. You can temporarily unpublish the listing.
-          </div>
+        <div class="ui center aligned header">
+          Currently published
+        </div>
+        <div class="description">
+          This listing is currently published and publicly accessible. You can temporarily unpublish the listing.
+        </div>
         {% else %}
-          <div class="ui center aligned header">
-            Steps remaining: {{ listing.steps_remaining }}
-          </div>
-          <div class="description">
-            To publish your listing complete the steps above. You can always come back and finish it later.
-          </div>
+        <div class="ui center aligned header">
+          Steps remaining: {{ listing.steps_remaining }}
+        </div>
+        <div class="description">
+          To publish your listing complete the steps above. You can always come back and finish it later.
+        </div>
         {% endif %}
       </div>
       <div class="extra content">
-          {% if listing.published %}
-            <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui orange button">Unpublish</a>
-          {% elif listing.listing_complete %}
-            <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui green button">Publish</a>
-          {% else %}
-            <div class="ui disabled button">Publish</div>
-          {% endif %}
-          <a href="{% url "listings:delete_listing" listing_id=listing.id %}" class="ui red delete button">Delete</a>
+        {% if listing.published %}
+        <a href="{% url "listings:unpublish_listing" listing_id=listing.id %}" class="ui orange button">Unpublish</a>
+        {% elif listing.listing_complete %}
+        <a href="{% url "listings:publish_listing" listing_id=listing.id %}" class="ui green button">Publish</a>
+        {% else %}
+        <div class="ui disabled button">Publish</div>
+        {% endif %}
+        <a href="{% url "listings:delete_listing" listing_id=listing.id %}" class="ui red delete button">Delete</a>
       </div>
     </div>
   </div>
@@ -105,21 +105,21 @@
 </div>
 
 <div id="confirm_delete" class="ui small modal">
-    <div class="header">
-        Delete listing
+  <div class="header">
+    Delete listing
+  </div>
+  <div class="content">
+    <p>Are you sure you want to delete this listing? You will not be able to retrieve it if deleted.</p>
+  </div>
+  <div class="actions">
+    <div class="ui cancel button">
+      Cancel
     </div>
-    <div class="content">
-        <p>Are you sure you want to delete this listing? You will not be able to retrieve it if deleted.</p>
+    <div class="ui negative approve right labeled icon button">
+      Yes
+      <i class="remove icon"></i>
     </div>
-    <div class="actions">
-        <div class="ui cancel button">
-            Cancel
-        </div>
-        <div class="ui negative approve right labeled icon button">
-            Yes
-            <i class="remove icon"></i>
-        </div>
-    </div>
+  </div>
 </div>
 
 {% endblock %}
@@ -127,4 +127,25 @@
 {% block scripts %}
   {% block listing_scripts %}
   {% endblock %}
+
+  <script type="text/javascript">
+    $('.delete').click(function(){
+      event.preventDefault();
+      var deleteLink = $(this).attr("href");
+      var row = $(this).parents('.ui.row');
+      var divider = row.prev('.divider');
+      $('#confirm_delete').modal({
+        onApprove : function() {
+          $.get(deleteLink);
+          divider.hide("medium", function() {
+            $(this).remove();
+          });
+          row.hide("medium", function() {
+            $(this).remove();
+          });
+        }
+      })
+      .modal('show');
+    });
+  </script>
 {% endblock %}

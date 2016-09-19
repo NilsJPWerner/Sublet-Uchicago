@@ -21,6 +21,7 @@ PREREQ_APPS = (
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.linkedin',
     'captcha',
+    'imagekit'
 )
 
 PROJECT_APPS = (

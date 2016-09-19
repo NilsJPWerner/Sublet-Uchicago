@@ -17,3 +17,4 @@ gunicorn
 psycopg2
 django-storages==1.4
 boto
+django-recaptcha

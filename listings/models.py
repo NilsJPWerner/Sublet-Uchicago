@@ -2,6 +2,9 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
+from imagekit.models import ProcessedImageField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 from decimal import Decimal
 from PIL import Image
 import os
@@ -144,7 +147,19 @@ class Listing(models.Model):
 
 class Photo(models.Model):
     listing = models.ForeignKey(Listing, null=True)
-    image = models.ImageField(upload_to='listing_photos/%Y/%m/%d', null=True)
+    image = ProcessedImageField(
+        upload_to='listing_photos/%Y/%m/%d',
+        processors=[ResizeToFit(width=900, height=600)],
+        format='JPEG',
+        options={'quality': 90},
+        null = True
+    )
+    image_s = ImageSpecField(
+        source='image',
+        processors=[],
+        format='JPEG',
+        options={'quality': 70}
+    )
     description = models.CharField(max_length=100, blank=True, null=True)
     is_cover_photo = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -152,62 +167,62 @@ class Photo(models.Model):
 
     # # Maybe add something that renames the file to something standard
     # # Maybe also resize original image to something more sane
-    def save(self):
-        if self.is_cover_photo:
-            other_cover_photos = Photo.objects.filter(album=self.album, is_cover_photo=True)
-            for photo in other_cover_photos:
-                photo.is_cover_photo = False
-                photo.save()
-        filename = self.filename
-        if filename != '':
-            image = Image.open(filename)
+    # def save(self):
+    #     if self.is_cover_photo:
+    #         other_cover_photos = Photo.objects.filter(album=self.album, is_cover_photo=True)
+    #         for photo in other_cover_photos:
+    #             photo.is_cover_photo = False
+    #             photo.save()
+    #     filename = self.image.name
+    #     if filename != '':
+    #         image = Image.open(self.image)
 
-            # need to add PNG conversion
-            if image.mode != 'RGB':
-                image = image.convert('RGB')
+    #         # need to add PNG conversion
+    #         if image.mode != 'RGB':
+    #             image = image.convert('RGB')
 
-            size_large = (image[0]/image[1] * 600, 600)
-            image.thumbnail(size_large, Image.BICUBIC)
-            image.save(self.get_large_filename(), format='JPEG', quality=70)
+    #         size_large = (image[0]/image[1] * 600, 600)
+    #         image.thumbnail(size_large, Image.BICUBIC)
+    #         image.save(self.get_large_filename(), format='JPEG', quality=70)
 
-            size_medium = (image[1]/image[0]*300, 300)
-            image.thumbnail(size_medium, Image.BICUBIC)
-            image.save(self.get_medium_filename(), format='JPEG', quality=70)
+    #         size_medium = (image[1]/image[0]*300, 300)
+    #         image.thumbnail(size_medium, Image.BICUBIC)
+    #         image.save(self.get_medium_filename(), format='JPEG', quality=70)
 
-            size_small = (image[0]/image[1] * 150, 150)
-            image.thumbnail(size_small, Image.BICUBIC)
-            image.save(self.get_small_filename(), format='JPEG', quality=70)
-        super(Photo, self).save()
+    #         size_small = (image[0]/image[1] * 150, 150)
+    #         image.thumbnail(size_small, Image.BICUBIC)
+    #         image.save(self.get_small_filename(), format='JPEG', quality=70)
+    #     super(Photo, self).save(filename)
 
-    def get_large_filename(self):
-        return 'l_' + self.filename
+    # def get_large_filename(self):
+    #     return 'l_' + self.filename
 
-    def get_medium_filename(self):
-        return 'm_' + self.filename
+    # def get_medium_filename(self):
+    #     return 'm_' + self.filename
 
-    def get_small_filename(self):
-        return 's_' + self.filename
+    # def get_small_filename(self):
+    #     return 's_' + self.filename
 
-    def get_name(self):
-        return os.path.basename(self.image.path)
+    # def get_name(self):
+    #     return os.path.basename(self.image.path)
 
-    def get_size(self):
-        size = self.image.size
-        if size >= 1000000:
-            return str(truncate(size/1000000, 2)) + " MB"
-        else:
-            return str(truncate(size/1000, 2)) + " KB"
+    # def get_size(self):
+    #     size = self.image.size
+    #     if size >= 1000000:
+    #         return str(truncate(size/1000000, 2)) + " MB"
+    #     else:
+    #         return str(truncate(size/1000, 2)) + " KB"
 
     def get_delete_url(self):
         return reverse('listings:jfu_delete', kwargs={'pk': self.id})
 
-    def delete(self):
-        try:
-            os.remove(self.get_medium_filename())
-            os.remove(self.get_small_filename())
-        except:
-            pass
-        super(Photo, self).delete()
+    # def delete(self):
+    #     try:
+    #         os.remove(self.get_medium_filename())
+    #         os.remove(self.get_small_filename())
+    #     except:
+    #         pass
+    #     super(Photo, self).delete()
 
 
 def truncate(f, n):
