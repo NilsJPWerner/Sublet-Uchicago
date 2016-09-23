@@ -9,8 +9,8 @@ previewMaxWidth : 150,
 previewMaxHeight : 150,
 acceptFileTypes: /(\.|\/)(png|jpe?g)$/i,
 disableImageResize: true,
-//imageMaxWidth: 80,
-imageMaxHeight: 1000,
+imageMaxWidth: 1000,
+imageMaxHeight: 666,
 //imageCrop: true,
 previewCanvas: false
 {% endblock %}
@@ -94,7 +94,6 @@ previewCanvas: false
                         title="{{ photo.description }}">
                         {{ photo.description }}
                         </a>
-                        <p class="size">{{ photo.get_size }}</p>
                    </p>
                 </td>
                 <td>
@@ -136,7 +135,7 @@ previewCanvas: false
             <!-- <p class="name">{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</p> -->
             <div class="field">
                 <label>Description</label>
-                <textarea rows=3 class="description" name="description[]" required></textarea>
+                <textarea rows=3 class="description" name="description[]"></textarea>
               </div>
             <strong class="error text-danger"></strong>
         </td>
@@ -206,7 +205,6 @@ previewCanvas: false
                      download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}">
                      {{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}
                     </a>
-                    <p class="size">{{ JQ_OPEN }}=o.formatFileSize(file.size){{ JQ_CLOSE }}</p>
                 {{ JQ_OPEN }} } else { {{ JQ_CLOSE }}
                     <span>{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</span>
                 {{ JQ_OPEN }} } {{ JQ_CLOSE }}

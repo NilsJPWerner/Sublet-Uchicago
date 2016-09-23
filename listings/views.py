@@ -8,10 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from .utility import listing_ownership
-from .models import Listing, Photo
+from .models import Listing, Photo, MAX_PHOTOS
 from .forms import EditDescriptionForm, EditDetailsForm, EditLocationForm, EditCalendarForm
 from jfu.http import upload_receive, UploadResponse, JFUResponse
-
 
 @login_required
 def add_listing(request):
@@ -97,19 +96,19 @@ def edit_listing_photos(request, listing):
 def upload(request, listing_id):
     listing = get_object_or_404(Listing, pk=listing_id, user=request.user)
 
+    if Photo.objects.filter(listing=listing).count() > MAX_PHOTOS:
+        print 'success'
+
     image = upload_receive(request)
-    description = request.POST.get("description[]")
+    description = request.POST.get("description[]") or image.name
 
     instance = Photo(image=image, listing=listing, description=description)
     instance.save()
 
     file_dict = {
         'name': description,
-        'size': image.size,
-
         'url': instance.image.url,
-        'thumbnailUrl': instance.image.url,
-
+        'thumbnailUrl': instance.image_s.url,
         'deleteUrl': reverse('listings:jfu_delete', kwargs={'pk': instance.pk}),
         'deleteType': 'POST',
     }
@@ -144,7 +143,6 @@ def publish_listing(request, listing):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# Need to make the listing automatically unpublish if it is incomplete
 @login_required
 @listing_ownership
 def unpublish_listing(request, listing):

@@ -93,7 +93,7 @@
         {% else %}
         <div class="ui disabled button">Publish</div>
         {% endif %}
-        <a href="{% url "listings:delete_listing" listing_id=listing.id %}" class="ui red delete button">Delete</a>
+        <a href="{% url "listings:delete_listing" listing_id=listing.id %}" id="delete-listing" class="ui red delete button">Delete</a>
       </div>
     </div>
   </div>
@@ -129,7 +129,7 @@
   {% endblock %}
 
   <script type="text/javascript">
-    $('.delete').click(function(){
+    $('#delete-listing').click(function(){
       event.preventDefault();
       var deleteLink = $(this).attr("href");
       var row = $(this).parents('.ui.row');

@@ -61,7 +61,7 @@ def search(request):
             # all photos except cover photo can be set up to use lazy loading
             for p in photos[1:]:
                 photo_list.append(p.image.url)
-            data["cover_photo"] = photos[0].image.url
+            data["cover_photo"] = photos[0].image_s.url
             data["photos"] = photo_list
 
             # get listing url
