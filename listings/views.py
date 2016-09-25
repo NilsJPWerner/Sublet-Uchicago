@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 from .utility import listing_ownership
-from .models import Listing, Photo, MAX_PHOTOS
+from .models import Listing, Photo, MAX_PHOTOS, ACCEPTED_IMAGE_TYPES
 from .forms import EditDescriptionForm, EditDetailsForm, EditLocationForm, EditCalendarForm
 from jfu.http import upload_receive, UploadResponse, JFUResponse
 
@@ -89,24 +89,25 @@ def edit_listing_photos(request, listing):
     return render(request, 'listing/edit_listing_photos.html', context)
 
 
-# Need to restrict the number of photos allowed to be uploaded
-# Need to add listing ownership
 @login_required
 @require_POST
-def upload(request, listing_id):
-    listing = get_object_or_404(Listing, pk=listing_id, user=request.user)
-
-    if Photo.objects.filter(listing=listing).count() > MAX_PHOTOS:
-        print 'success'
+@listing_ownership
+def upload(request, listing):
+    if Photo.objects.filter(listing=listing).count() >= MAX_PHOTOS:
+        return UploadResponse(request, {'error': 'Max number of photos reached.'})
 
     image = upload_receive(request)
     description = request.POST.get("description[]") or image.name
+
+    if not image.name.endswith(ACCEPTED_IMAGE_TYPES):
+        return UploadResponse(request, {'error': 'Filetype not supported.'})
 
     instance = Photo(image=image, listing=listing, description=description)
     instance.save()
 
     file_dict = {
-        'name': description,
+        'name': image.name,
+        'description': description,
         'url': instance.image.url,
         'thumbnailUrl': instance.image_s.url,
         'deleteUrl': reverse('listings:jfu_delete', kwargs={'pk': instance.pk}),
@@ -115,17 +116,16 @@ def upload(request, listing_id):
     return UploadResponse(request, file_dict)
 
 
-# Need to add listing ownership
 @login_required
 @require_POST
 def upload_delete(request, pk):
-    success = True
     try:
-        instance = Photo.objects.get(pk=pk)
-        if instance.listing.user != request.user:
+        photo = Photo.objects.get(pk=pk)
+        if photo.listing.user != request.user:
             success = False
             return JFUResponse(request, success)
-        instance.delete()
+        photo.delete()
+        success = True
     except Photo.DoesNotExist:
         success = False
     return JFUResponse(request, success)

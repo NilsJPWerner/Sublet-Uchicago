@@ -45,7 +45,7 @@ previewCanvas: false
     {% comment %}
      The table listing the files available for upload/download
     {% endcomment %}
-    <table role="presentation" class="ui fixed single line celled table">
+    <table role="presentation" class="ui fixed celled table">
         <thead>
             <th colspan="3">
                 <div class="fileupload-buttonbar">
@@ -91,9 +91,10 @@ previewCanvas: false
                 <td>
                     <p class="name">
                         <a href="{{ photo.image.url }}"
-                        title="{{ photo.description }}">
-                        {{ photo.description }}
+                        title="{{ photo.image.name }}">
+                        Download Image
                         </a>
+                        <p>{{ photo.description }}</p>
                    </p>
                 </td>
                 <td>
@@ -201,10 +202,11 @@ previewCanvas: false
             <p class="name">
                 {{ JQ_OPEN }} if (file.url) { {{ JQ_CLOSE }}
                     <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
-                     title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     title="Download Image"
                      download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}">
-                     {{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}
+                     Download Image
                     </a>
+                    <p>{{ JQ_OPEN }}=file.description{{ JQ_CLOSE }}</p>
                 {{ JQ_OPEN }} } else { {{ JQ_CLOSE }}
                     <span>{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</span>
                 {{ JQ_OPEN }} } {{ JQ_CLOSE }}

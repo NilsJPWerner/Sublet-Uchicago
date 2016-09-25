@@ -24,8 +24,8 @@ BATHROOM = (('shared', 'Shared'),
 
 YESNO = (('yes', 'Yes'), ('no', 'No'))
 
-MAX_PHOTOS = 2
-
+MAX_PHOTOS = 10
+ACCEPTED_IMAGE_TYPES = ('.png', '.jpg', '.jpeg')
 
 class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -6,6 +6,8 @@ from .models import Listing
 
 # Custom decorator
 def listing_ownership(view):
+    """This decorator checks for ownership of the listing and
+    returns the actual listing object from the id provided"""
     @wraps(view)
     def inner(request, listing_id, *args, **kwargs):
         listing = get_object_or_404(Listing, id=listing_id)
