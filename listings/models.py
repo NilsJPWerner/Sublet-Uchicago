@@ -98,7 +98,9 @@ class Listing(models.Model):
         return False
 
     def listing_complete(self):
-        if self.description_complete() and self.location_complete() and self.photos_complete() and self.details_complete() and self.calendar_complete():
+        if (self.description_complete() and self.location_complete() and
+            self.photos_complete() and self.details_complete() and
+            self.calendar_complete()):
             return True
         self.published = False
         self.save()
@@ -119,6 +121,7 @@ class Listing(models.Model):
         return counter
 
     def get_cover_photo(self):
+        """TODO: This is not being used currently"""
         if self.photo_set.filter(is_cover_photo=True).count() > 0:
             return self.photo_set.filter(is_cover_photo=True)[0]
         elif self.photo_set.all().count() > 0:
@@ -127,6 +130,7 @@ class Listing(models.Model):
             return None
 
     def get_remaining_photos(self):
+        """Currently returns all but the first photo"""
         photos = self.photo_set.filter()
         if photos.count() > 1:
             return photos[1:]
@@ -176,13 +180,3 @@ class Photo(models.Model):
 
     def get_delete_url(self):
         return reverse('listings:jfu_delete', kwargs={'pk': self.id})
-
-
-def truncate(f, n):
-    '''Truncates/pads a float f to n decimal places without rounding'''
-    s = '{}'.format(f)
-    if 'e' in s or 'E' in s:
-        return '{0:.{1}f}'.format(f, n)
-    i, p, d = s.partition('.')
-    return '.'.join([i, (d+'0'*n)[:n]])
-

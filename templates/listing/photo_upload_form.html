@@ -91,7 +91,7 @@ previewCanvas: false
                 <td>
                     <p class="name">
                         <a href="{{ photo.image.url }}"
-                        title="{{ photo.image.name }}">
+                        title="{{ photo.image.description }}">
                         Download Image
                         </a>
                         <p>{{ photo.description }}</p>
@@ -133,7 +133,7 @@ previewCanvas: false
 
         {% block JS_UPLOAD_TEMPLATE_UPLOAD %}
         <td style="word-wrap: break-word">
-            <!-- <p class="name">{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</p> -->
+            <!-- <p class="name">{{ JQ_OPEN }}=file.description{{ JQ_CLOSE }}</p> -->
             <div class="field">
                 <label>Description</label>
                 <textarea rows=3 class="description" name="description[]"></textarea>
@@ -189,7 +189,7 @@ previewCanvas: false
             <span class="preview">
                 {{ JQ_OPEN }} if (file.thumbnailUrl) { {{ JQ_CLOSE }}
                     <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
-                     title="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}"
+                     title="{{ JQ_OPEN }}=file.description{{ JQ_CLOSE }}"
 
                      class="lightbox"><img src="{{ JQ_OPEN }}=file.thumbnailUrl{{ JQ_CLOSE }}"></a>
                 {{ JQ_OPEN }} } {{ JQ_CLOSE }}
@@ -203,12 +203,12 @@ previewCanvas: false
                 {{ JQ_OPEN }} if (file.url) { {{ JQ_CLOSE }}
                     <a href="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}"
                      title="Download Image"
-                     download="{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}">
+                     download="{{ JQ_OPEN }}=file.url{{ JQ_CLOSE }}">
                      Download Image
                     </a>
                     <p>{{ JQ_OPEN }}=file.description{{ JQ_CLOSE }}</p>
                 {{ JQ_OPEN }} } else { {{ JQ_CLOSE }}
-                    <span>{{ JQ_OPEN }}=file.name{{ JQ_CLOSE }}</span>
+                    <span>{{ JQ_OPEN }}=file.description{{ JQ_CLOSE }}</span>
                 {{ JQ_OPEN }} } {{ JQ_CLOSE }}
             </p>
 

@@ -20,35 +20,24 @@ function initMap() {
         zoomControl: true,
     });
 
-    // Create an info window to later be shared by the listing markers
-    infoWindow = new google.maps.InfoWindow({
-        content:"Poopie mcgoopie"
-    });
-
-    // Add an event to close the infowindow if you click outisde of it
-    google.maps.event.addListener(map, "click", function(event) {
-        infoWindow.close();
-    });
-
     // Build a default marker template with a blue marker
     default_marker = {
-        url: "/static/img/marker.png", // url
-        scaledSize: new google.maps.Size(40, 40), // scaled size
-        origin: new google.maps.Point(0,0), // origin
-        anchor: new google.maps.Point(20,40) // anchor
+        url: "/static/img/marker.png",
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(20,40)
     };
 
     // Build a highlight marker for hovers with a red marker
     highlight_marker = {
-        url: "/static/img/highlight_marker.png", // url
-        scaledSize: new google.maps.Size(40, 40), // scaled size
-        origin: new google.maps.Point(0,0), // origin
-        anchor: new google.maps.Point(20,40) // anchor
+        url: "/static/img/highlight_marker.png",
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(20,40)
     };
 
     // If the url contains a query from a previous ajax call, use that instead
-    // of the current form data. This is so that you can share or save the url
-    // of a search and come back to it later.
+    // of the current form data.
     if (window.location.search.length > 1) {
         search_with_url(window.location.pathname + window.location.search);
     }
@@ -70,11 +59,6 @@ function setMapOnAll(map) {
   }
 }
 
-// Shows any markers currently in the array.
-function showMarkers() {
-  setMapOnAll(map);
-}
-
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
   clearMarkers();
@@ -89,12 +73,12 @@ function deleteMarkers() {
 //////////////////////////////
 
 var price_slider;
+const max_price = 1500;
 
 $(document).ready(function() {
-    var low = 500
-    var high = 1000
+    var low = 0
+    var high = max_price
     // If there are prices in the url use them instead
-    // This is to return to prev state if page is loaded anew
     if (getUrlParam('price_low') || getUrlParam('price_high')) {
         low = getUrlParam('price_low')
         high = getUrlParam('price_high')
@@ -104,13 +88,12 @@ $(document).ready(function() {
     price_slider = document.getElementById('slider');
     noUiSlider.create(price_slider, {
         start: [low, high],
-        tooltips: [ true, true ],
         connect: true,
         step: 1,
-        margin: 100,
+        margin: 200,
         range: {
             'min': 0,
-            'max': 1500
+            'max': max_price
         },
     });
 
@@ -119,9 +102,9 @@ $(document).ready(function() {
         range_high = document.getElementById('slider_high');
     price_slider.noUiSlider.on('update', function( values, handle ) {
         if ( handle ) {
-            range_high.innerHTML = '$' + values[handle];
+            range_high.innerHTML = formatPrice(values[handle]);
         } else {
-            range_low.innerHTML = '$' + values[handle];
+            range_low.innerHTML = formatPrice(values[handle]);
         }
     });
 
@@ -151,13 +134,14 @@ $(document).ready(function() {
 ///////////////////////////////
 
 // Explanation/rant for this shit.
-// Fuck this thing. I needed to build the cards for the results
+// I needed to build the cards for the results
 // and I didn't want to do it server side as I needed to return
 // json data rather than html to get shit to work with the map.
 // So I used the javascript templating plugin mustache to build
 // the html. Javascript sucks at having multiline strings though
 // so in order for this to be legible I had to split it into a
 // list of strings to then be joined when used.
+// I need to learn react
 
 var template = [
     '<div id="listing-{{id}}"" class="ui fluid card" data-marker="{{id}}">',
@@ -385,7 +369,7 @@ function search_success(response, url) {
             position : 'bottom center',
             transition: 'fade',
             delay: {
-                show: 700,
+                show: 1000,
                 hide: 100
             }
         })
@@ -457,6 +441,16 @@ function update_history (url) {
     history.pushState('', 'Search', url);
 }
 
+// Remove decimal and then add comma and dollars sign
+function formatPrice(number) {
+    number = Math.floor(number)
+    price = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    price = '$' + price
+    if ( number == max_price ) {
+        price += '+'
+    }
+    return price
+}
 
 // $(document).ajaxStart( function() {
 //     $("#spinner").removeClass('disabled');

@@ -121,6 +121,7 @@
 </form>
 {% if form.errors %}
   <div class="ui bottom attached error message">
+    {{form.errors}}
     Your old password was entered incorrectly. Please enter it again. If you have forgotten your password <a href="{% url 'account_reset_password' %}">click here</a> to reset it.
   </div>
 {% endif %}

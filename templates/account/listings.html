@@ -12,11 +12,13 @@
                     <div class="ui row">
                         <div class="ui four wide column">
                             {% with listing.get_cover_photo as photo %}
+                                <a href="{% url 'listing' listing.id %}">
                                 {% if photo %}
-                                    <img src="{{ photo.image.url }}">
+                                    <img class="ui fluid image" src="{{ photo.image.url }}">
                                 {% else %}
-                                    <img src="{% static "/static/img/accounts/empty-photo.png" %}">
+                                    <img class="ui fluid image" src="{% static "/static/img/accounts/empty-photo.png" %}">
                                 {% endif %}
+                                </a>
                             {% endwith %}
                         </div>
                         <div class="ui eight wide column">
