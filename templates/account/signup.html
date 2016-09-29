@@ -17,13 +17,6 @@
 
         <div class="field">
           <div class="ui left icon input">
-            <i class="user icon"></i>
-            {{ form.username }}
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="ui left icon input">
             <i class="mail icon"></i>
             {{ form.email }}
           </div>
@@ -51,7 +44,7 @@
 
     {% if form.errors %}
       <div class="ui error message">
-        Sorry, A user is already registered with this e-mail address
+        Sorry, a user is already registered with this e-mail address
       </div>
     {% endif %}
 
