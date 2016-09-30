@@ -36,7 +36,7 @@
     padding: 0;
 }
 
-#search .ui.bordered.checkbox {
+.ui.bordered.checkbox {
     width: 100%;
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.08);
@@ -45,6 +45,10 @@
     border-color: rgb(212, 212, 213);
     border-width: 1px;
     border-style: solid;
+}
+
+.fluid.radio + .fluid.radio {
+    margin-left: 12px;
 }
 
 

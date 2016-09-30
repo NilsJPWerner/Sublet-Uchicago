@@ -16,15 +16,10 @@ from django.contrib.auth.models import User
 def search(request):
 
     if request.is_ajax():
-
+        quarter = request.GET.get('quarter')
         bedsize = request.GET.get('bedsize')
         bathroom = request.GET.get('bathroom')
-        # Javscript passes boolean in lowercase :( Sorry for the
-        # ugly code it is a workaround
-        fall = (request.GET.get('fall') == 'true')
-        winter = (request.GET.get('winter') == 'true')
-        spring = (request.GET.get('spring') == 'true')
-        summer = (request.GET.get('summer') == 'true')
+        roommates = request.GET.get('roommates')
         price_low = (request.GET.get('price_low'))
         price_high = int(request.GET.get('price_high'))
 
@@ -35,17 +30,25 @@ def search(request):
             results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low)
 
         # Filter by quarters
-        if (not fall) and (not winter) and (not spring) and (not summer):
-            results = results.filter(published=True)
+        if quarter == 'fall':
+             results = results.filter(published=True, fall_quarter=True)
+        elif quarter == 'winter':
+            results = results.filter(published=True, winter_quarter=True)
+        elif quarter == 'spring':
+            results = results.filter(published=True, spring_quarter=True)
+        elif quarter == 'summer':
+            results = results.filter(published=True, summer_quarter=True)
         else:
-            results = results.filter(published=True,
-                fall_quarter=fall, winter_quarter=winter,
-                spring_quarter=spring, summer_quarter=summer)
+            results = results.filter(published=True)
 
-        if bathroom != "none":
+        if bedsize and bedsize != 'any':
+            results = results.filter(bed_size__gte=bedsize)
+
+        if bathroom and bathroom != 'any':
             results = results.filter(bathroom=bathroom)
 
-        results = results.filter(bed_size__gte=bedsize)
+        if roommates and roommates != 'any':
+            results = results.filter(roommate_count=roommates)
 
         listings = []
         # Go through each lisitng in result and add photos and user

@@ -115,7 +115,6 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Sublet "
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # make this "mandatory" later and implement an smtp client
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 ACCOUNT_SESSION_REMEMBER = True  # set to True to always remember and remove "remember me"
 

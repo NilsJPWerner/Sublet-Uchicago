@@ -39,7 +39,8 @@ function initMap() {
     // If the url contains a query from a previous ajax call, use that instead
     // of the current form data.
     if (window.location.search.length > 1) {
-        search_with_url(window.location.pathname + window.location.search);
+        // search_with_url(window.location.pathname + window.location.search);
+        updateForm();
     }
     // Otherwise just search normally
     else {
@@ -111,14 +112,14 @@ $(document).ready(function() {
     // If browser goes back in history search with the url
     window.onpopstate =  function(event) {
         if (window.location.search.length > 1) {
-            search_with_url(window.location.pathname + window.location.search);
+            // search_with_url(window.location.pathname + window.location.search);
+            updateForm();
+            search();
         }
     };
 
     // if any of the fields are modified perform ajax search
-    $(".filter").change(function() {
-        search();
-    });
+    $(".filter").on('change', function() { search() });
 
     // if the price slider is touched perform ajax search
     price_slider.noUiSlider.on('change', function(){
@@ -133,7 +134,6 @@ $(document).ready(function() {
 ///// RESULT HTML TEMPLATE ////
 ///////////////////////////////
 
-// Explanation/rant for this shit.
 // I needed to build the cards for the results
 // and I didn't want to do it server side as I needed to return
 // json data rather than html to get shit to work with the map.
@@ -198,19 +198,23 @@ var template = [
 // Searches database for inputed requirements
 function search() {
     // Gets all the field data from the filters
-    q_bedsize = $("#bedsize").val();
-    q_bathroom = $("#bathroom").val();
-    q_fall = $("#fall").is(':checked');
-    q_winter = $("#winter").is(':checked');
-    q_spring = $("#spring").is(':checked');
-    q_summer = $("#summer").is(':checked');
+    console.log('Search');
+    quarter = $("input[name=quarter]:checked").val()
+    bedsize = $("#bedsize").val();
+    bathroom = $("#bathroom").val();
+    roommates = $("#roommates").val();
     slider_vals = slider.noUiSlider.get();
     $.ajax({
         url: '/search/',
         type: 'GET',
-        data: {bedsize: q_bedsize, bathroom: q_bathroom, fall: q_fall,
-            winter: q_winter, spring: q_spring, summer: q_summer,
-            price_low: Math.round(slider_vals[0]), price_high: Math.round(slider_vals[1]), ajax: 1} ,
+        data: {
+            quarter: quarter,
+            bedsize: bedsize,
+            bathroom: bathroom,
+            roommates: roommates,
+            price_low: Math.round(slider_vals[0]),
+            price_high: Math.round(slider_vals[1]), ajax: 1
+        },
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
@@ -230,7 +234,7 @@ function search_with_url(url) {
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             search_success(response, this.url);
-            update_form();
+            updateForm();
         },
         error: function () {
             search_error();
@@ -328,7 +332,6 @@ function search_success(response, url) {
                     markers[id].setIcon(default_marker);
                 },
             }, '#listing-' + data.id);
-
         };
     };
 
@@ -397,8 +400,8 @@ function search_error() {
 // function to get url parameter. Credit: http://stackoverflow.com/questions/901115
 function getUrlParam(name, url) {
     if (!url) url = window.location.href;
-    url = url.toLowerCase(); // This is just to avoid case sensitiveness
-    name = name.replace(/[\[\]]/g, "\\$&").toLowerCase();// This is just to avoid case sensitiveness for query parameter name
+    url = url.toLowerCase();
+    name = name.replace(/[\[\]]/g, "\\$&").toLowerCase();
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
@@ -426,13 +429,11 @@ function star (element, id) {
 };
 
 // updates form with data from url
-function update_form () {
-    price_slider.noUiSlider.set([getUrlParam('price_low'),
-            getUrlParam('price_high')]);
-    $('.bedsize')
-        .dropdown('set selected', getUrlParam('bedsize'))
-    ;
-
+function updateForm () {
+    price_slider.noUiSlider.set([getUrlParam('price_low'), getUrlParam('price_high')]);
+    $('#bedsize').dropdown('set selected', getUrlParam('bedsize'));
+    $('#bathroom').dropdown('set selected', getUrlParam('bathroom'));
+    $('#roommates').dropdown('set selected', getUrlParam('roommates'));
     // Need to set for other parts of form
 }
 

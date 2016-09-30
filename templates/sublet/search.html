@@ -18,33 +18,25 @@
                     <div class="three wide column">
                         <h4>Quarter</h4>
                     </div>
-                    <div class="thirteen wide column">
-                        <div class="ui grid">
-                            <div class="doubling four column row">
-                                <div class="column">
-                                    <div class="ui bordered checkbox">
-                                        <label>Fall</label>
-                                        <input id="fall" class="filter" type="checkbox" name="Fall" value="True">
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="ui bordered checkbox">
-                                        <label>Winter</label>
-                                        <input id="winter" class="filter" type="checkbox" name="Winter" value="True">
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="ui bordered checkbox">
-                                        <label>Spring</label>
-                                        <input id="spring" class="filter" type="checkbox" name="Spring" value="True">
-                                    </div>
-                                </div>
-                                <div class="column">
-                                    <div class="ui bordered checkbox">
-                                        <label>Summer</label>
-                                        <input id="summer" class="filter" type="checkbox" name="Summer" value="True">
-                                    </div>
-                                </div>
+                    <div class="thirteen wide column ui form">
+                        <div class="ui fields">
+                            <div class="ui fluid radio bordered checkbox">
+                                <label>Fall</label>
+                                <input id="fall" class="filter hidden" type="radio" name="quarter" value="fall">
+                            </div>
+                            <div class="ui fluid radio bordered checkbox">
+                                <label>Winter</label>
+                                <input id="winter" class="filter hidden" type="radio" name="quarter" value="winter">
+                            </div>
+
+                            <div class="ui fluid radio bordered checkbox">
+                                <label>Spring</label>
+                                <input id="spring" class="filter hidden" type="radio" name="quarter" value="spring">
+                            </div>
+
+                            <div class="ui fluid radio bordered checkbox">
+                                <label>Summer</label>
+                                <input id="summer" class="filter hidden" type="radio" name="quarter" value="summer">
                             </div>
                         </div>
                     </div>
@@ -58,25 +50,27 @@
                     </div>
                     <div class="thirteen wide column ui form">
                         <div class="ui fields">
-                            <select id="bedsize" class="ui fluid bedsize filter dropdown">
-                                <option value="0">Bed Size</option>
-                                <option value="2">Full or above</option>
-                                <option value="3">Queen or above</option>
-                                <option value="4">King only</option>
+                            <select id="bedsize" class="ui fluid filter dropdown">
+                                <option value="" disabled selected hidden>Bedsize</option>
+                                <option value="any">Any Bedsize</option>
+                                <option value="2">Full+ Bedsize</option>
+                                <option value="3">Queen+ Bedsize</option>
+                                <option value="4">King Bedsize only</option>
                             </select>
                             <select id="bathroom" class="ui fluid filter dropdown">
-                                <option value="none">Bathroom</option>
-                                <option value="shared">Shared</option>
-                                <option value="private">Private</option>
+                                <option value="" disabled selected>Bathroom</option>
+                                <option value="any">Any Bathroom</option>
+                                <option value="shared">Shared Bathroom</option>
+                                <option value="private">Private Bathroom</option>
                             </select>
                             <select id="roommates" class="ui fluid filter dropdown">
-                                <option value="">Roommates</option>
-                                <option value="0">None</option>
-                                <option value="1">1 or fewer</option>
-                                <option value="2">2 or fewer</option>
-                                <option value="3">3 or fewer</option>
-                                <option value="4">4 or fewer</option>
-                                <option value="5">Any</option>
+                                <option value="" disabled selected>Roommates</option>
+                                <option value="0">No Roommates</option>
+                                <option value="1">1 Roommate</option>
+                                <option value="2">2 Roommates</option>
+                                <option value="3">3 Roommates</option>
+                                <option value="4">4 Roommates</option>
+                                <option value="any">Any Roommates</option>
                             </select>
                         </div>
                     </div>
@@ -91,7 +85,7 @@
                     <div class="thirteen wide column">
                         <div class="ui grid">
                             <div class="sixteen wide column">
-                                <div id="slider" class="filter"></div>
+                                <div id="slider"></div>
                             </div>
                             <div class="eight wide price-column column">
                                 <div id="slider_low"></div>
