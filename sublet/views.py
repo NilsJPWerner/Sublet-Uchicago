@@ -106,29 +106,8 @@ def ajax_star(request):
 
 def public_profile(request, user):
     u = get_object_or_404(User, pk=user)
-    v = [("Email Address", "Verified")]
-    uv = []
-    if (u.extendeduser.uchicago_email()):
-        v.append(("UChicago Email", "Verified"))
-    else:
-        uv.append(("UChicago Email", "Not Verified"))
-
-    if (request.user.extendeduser.social_account('facebook')):
-        v.append(("Facebook", "Connected"))
-    else:
-        uv.append(("Facebook", "Not Connected"))
-
-    if (request.user.extendeduser.social_account('google')):
-        v.append(("Google", "Connected"))
-    else:
-        uv.append(("Google", "Not Connected"))
-
-    if (request.user.extendeduser.social_account('linkedin')):
-        v.append(("Linkedin", "Connected"))
-    else:
-        uv.append(("Linkedin", "Not Connected"))
-
-    context = {'user': u, 'verified': v, 'unverified': uv}
+    verified, unverified = u.extendeduser.get_verifications()
+    context = {'user': u, 'verified': verified, 'unverified': unverified}
     return render(request, 'sublet/public_profile.html', context)
 
 

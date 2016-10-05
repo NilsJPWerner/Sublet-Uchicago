@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^accounts/edit_profile/use_fb_photo/$', views.ajax_fb_photo, name='ajax_fb_photo'),
 
     # Account pages
-    url(r'^accounts/dashboard/$', views.home, name='home'),
+    url(r'^accounts/dashboard/$', views.dashboard, name='home'),
     url(r'^accounts/listings/$', views.your_listings, name='listings'),
     url(r'^accounts/starred_listings/$', views.starred_listings, name='starred_listings'),
     url(r'^accounts/edit_profile/$', views.edit_profile, name='edit_profile'),

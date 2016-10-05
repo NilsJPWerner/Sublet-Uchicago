@@ -58,6 +58,31 @@ class ExtendedUser(models.Model):
     def get_primary_email(self):
         return EmailAddress.objects.get(user=self.user, primary=True)
 
+    def get_verifications(self):
+        """Gets all verified/connected verifications and unconnected verifications"""
+        v = [("Email Address", "Verified")]
+        uv = []
+        if (self.uchicago_email()):
+            v.append(("UChicago Email", "Verified"))
+        else:
+            uv.append(("UChicago Email", "Not Verified"))
+
+        if (self.social_account('facebook')):
+            v.append(("Facebook", "Connected"))
+        else:
+            uv.append(("Facebook", "Not Connected"))
+
+        if (self.social_account('google')):
+            v.append(("Google", "Connected"))
+        else:
+            uv.append(("Google", "Not Connected"))
+
+        if (self.social_account('linkedin')):
+            v.append(("Linkedin", "Connected"))
+        else:
+            uv.append(("Linkedin", "Not Connected"))
+        return (v, uv)
+
 
 def user_post_save(sender, instance, created, **kwargs):
     # Create a user profile when a new user account is created

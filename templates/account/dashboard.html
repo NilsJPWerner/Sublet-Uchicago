@@ -1,0 +1,52 @@
+{% extends 'account/account_base.html' %}
+{% load staticfiles %}
+{% block account_head_title %}Dashboard{% endblock %}
+
+{% block account_content %}
+<div class="ui secondary top attached segment">
+	<h4>Verifications</h4>
+</div>
+<div class="ui attached padded segment">
+	<div class="ui equal width grid">
+		{% for header, text in verified %}
+		<div class="column">
+			<div class="ui list">
+				<div class="item">
+	                <i class="ui green checkmark icon"></i>
+	                <div class="content">
+	                    <div class="header">{{ header }}</div>
+	                    {{ text }}
+	                </div>
+	            </div>
+            </div>
+        </div>
+		{% endfor %}
+		{% for header, text in unverified %}
+		<div class="column">
+			<div class="ui list">
+				<div class="item greyed">
+	                <i class="ui grey minus icon"></i>
+	                <div class="content">
+	                    <div class="header">{{ header }}</div>
+	                    {{ text }}
+	                </div>
+	            </div>
+	        </div>
+		</div>
+		{% endfor %}
+	</div>
+	<!-- <div class="ui right aligned grid">
+		<div class="column">
+			<a href="{% url "accounts:verification" %}">Add Verifications</a>
+		</div>
+	</div> -->
+</div>
+<div class="ui bottom attached segment">
+    <div class="ui one column aligned grid">
+        <div class="ui sixteen wide column">
+            <a href="{% url "accounts:verification" %}"><i class="ui plus icon"></i>Add Verifications</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -20,10 +20,13 @@ from allauth.socialaccount.models import SocialAccount
 
 
 @login_required
-def home(request):
+def dashboard(request):
     user = request.user
-    context = {'user': user}
-    return render(request, 'account/home.html', context)
+    verified, unverified = user.extendeduser.get_verifications()
+    verified = verified[:3]
+    unverified = unverified[:3 - len(verified)]
+    context = {'user': user, 'verified': verified, 'unverified': unverified}
+    return render(request, 'account/dashboard.html', context)
 
 
 @login_required
