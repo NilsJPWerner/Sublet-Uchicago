@@ -37,3 +37,8 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Should get an email servers
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@subletuchicago.com'
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_KEY")
