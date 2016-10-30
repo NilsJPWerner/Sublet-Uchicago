@@ -114,15 +114,6 @@ span.regular {
     }
 }
 
-/*#top-menu .mini.circular {
-    width: 32px;
-    height: 32px;
-    margin-left: 8px;
-    border: solid 2px rgb(200, 200, 202);
-}
-*/
-
-
 /* -------------------- */
 /*        Footer        */
 /* -------------------- */
@@ -324,10 +315,14 @@ span.regular {
 }
 
 
+/* -------------------- */
+/*    Center Segment    */
+/* -------------------- */
+
 #center_segment {
    max-width: 500px;
-   margin-top: 80px;
-   margin-bottom: 50px;
+   margin-top: 45px;
+   margin-bottom: 60px;
 }
 
 #center_segment .ui.segment {
@@ -338,8 +333,6 @@ span.regular {
     margin-top: 30px;
     margin-bottom: 30px;
 }
-
-
 
 
 

@@ -82,13 +82,6 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 WSGI_APPLICATION = 'sublet.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -120,9 +113,3 @@ ACCOUNT_SESSION_REMEMBER = True  # set to True to always remember and remove "re
 
 RECAPTCHA_PUBLIC_KEY = '6LcjEgoUAAAAAMPdjA9wFpDRKW6nAL1V8lSRgoQV'
 NOCAPTCHA = True
-
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'nils.jp.werner@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_KEY")

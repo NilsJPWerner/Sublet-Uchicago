@@ -9,7 +9,6 @@
 <div id="account_page" class="ui middle aligned center aligned grid">
   <div id="center_segment" class="column">
     <form class="login ui large form" method="POST" action="">
-    {% csrf_token %}
       <div class="ui segment">
         <h1 class="ui image header">
           <!-- <img class="small image" src=""> -->
@@ -23,7 +22,7 @@
             {{ form.login }}
           </div>
         </div>
-
+        {% csrf_token %}
         <div class="field">
           <div class="ui left icon input">
             <i class="lock icon"></i>
