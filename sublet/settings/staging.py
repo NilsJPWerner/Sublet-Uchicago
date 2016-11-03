@@ -21,8 +21,9 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # Parse database configuration from $DATABASE_URL
-DATABASES['default'] = dj_database_url.config()
+DATABASES = { 'default': dj_database_url.config() }
 DATABASES['default']['CONN_MAX_AGE'] = 500
+
 
 # AWS S3 Stuff
 AWS_QUERYSTRING_AUTH = False
