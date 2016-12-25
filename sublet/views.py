@@ -1,45 +1,50 @@
 import json
-from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.forms.models import model_to_dict
-from django.core.serializers.json import DjangoJSONEncoder
-from django.views.decorators.cache import never_cache
+from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.urlresolvers import reverse
+from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import never_cache
 
 from listings.models import Listing
 from forms import ListingForm, ListingFormAuthenticated
-from django.contrib.auth.models import User
 
 
 @never_cache
 def search(request):
 
     if request.is_ajax():
-        quarter = request.GET.get('quarter')
-        bedsize = request.GET.get('bedsize')
-        bathroom = request.GET.get('bathroom')
-        roommates = request.GET.get('roommates')
-        price_low = (request.GET.get('price_low'))
-        price_high = int(request.GET.get('price_high'))
+        quarter     = request.GET.get('quarter')
+        bedsize     = request.GET.get('bedsize')
+        bathroom    = request.GET.get('bathroom')
+        roommates   = request.GET.get('roommates')
+        price_low   = request.GET.get('price_low')
+        price_high  = int(request.GET.get('price_high'))
+        page        = request.GET.get('page')
+        per_page    = 2  #request.GET.get('per_page')
 
         # Price filtering
+        results = Listing.objects.filter(price__gte=price_low)
         if price_high < 1500:
-            results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low, price__lte=price_high)
-        else:
-            results = Listing.objects.defer("summary", "street_address",).filter(price__gte=price_low)
+            results = Listing.objects.filter(price__lte=price_high)
+
+        # Only published listings
+        results = results.filter(published=True)
 
         # Filter by quarters
         if quarter == 'fall':
-             results = results.filter(published=True, fall_quarter=True)
+             results = results.filter(fall_quarter=True)
         elif quarter == 'winter':
-            results = results.filter(published=True, winter_quarter=True)
+            results = results.filter(winter_quarter=True)
         elif quarter == 'spring':
-            results = results.filter(published=True, spring_quarter=True)
+            results = results.filter(spring_quarter=True)
         elif quarter == 'summer':
-            results = results.filter(published=True, summer_quarter=True)
+            results = results.filter(summer_quarter=True)
         else:
-            results = results.filter(published=True)
+            pass  # if no quarter, select all
 
         if bedsize and bedsize != 'any':
             results = results.filter(bed_size__gte=bedsize)
@@ -50,36 +55,34 @@ def search(request):
         if roommates and roommates != 'any':
             results = results.filter(roommate_count=roommates)
 
-        listings = []
-        # Go through each lisitng in result and add photos and user
-        for i in results:
+        paginator = Paginator(results, per_page)
+        try:
+            listings = paginator.page(page)
+            current_page = page
+        except PageNotAnInteger:
+            listings = paginator.page(1)
+            current_page = 1
+        except EmptyPage:
+            listings = paginator.page(paginator.num_pages)
+            current_page = paginator.num_pages
+
+        response = {'listings': [], 'pages': paginator.num_pages, 'current_page': current_page}
+
+        for listing in listings:
             # Convert each instance into a dict including only needed fields
-            data = model_to_dict(i, fields=["name", "id", "latitude", "longitude", "summary", "price"])
-
-            # Should add a way to get small photos as an option
-            photos = i.get_photos(5)
-            photo_list = []
-
-            # I split up the photos into cover photo and photos so that
-            # all photos except cover photo can be set up to use lazy loading
-            for p in photos[1:]:
-                photo_list.append(p.image.url)
-            data["cover_photo"] = photos[0].image_s.url
-            data["photos"] = photo_list
-
-            # get listing url
-            data["listing_url"] = i.get_absolute_url()
-
-            # get username and url to profile
-            data["username"] = i.user.extendeduser.first_name + " " + i.user.extendeduser.last_name
-            data["user_url"] = i.get_user_url()
-
-            # Check if listing is starred by user if user is logged in
+            data = model_to_dict(listing, fields=["name", "id", "latitude", "longitude", "summary", "price"])
+            photos = listing.get_photos(5)
+            data["cover_photo"] = photos[0].image_s.url  # Split photos for lazy loading
+            data["photos"] = [p.image_s.url for p in photos[1:]]
+            data["listing_url"] = listing.get_absolute_url()
+            data["username"] = listing.user.extendeduser.first_name + " " + listing.user.extendeduser.last_name
+            data["user_url"] = listing.get_user_url()
             if request.user.is_authenticated():
-                data["starred"] = i.extendeduser_set.filter(id=request.user.extendeduser.id).exists()
-            listings.append(data)
+                data["starred"] = listing.extendeduser_set.filter(id=request.user.extendeduser.id).exists()
 
-        ret = json.dumps(listings, cls=DjangoJSONEncoder)
+            response['listings'].append(data)
+
+        ret = json.dumps(response, cls=DjangoJSONEncoder)
         return HttpResponse(ret, content_type='application/json')
 
     else:
@@ -137,10 +140,7 @@ def listing(request, listing):
     return render(request, 'sublet/listing.html', context)
 
 
-# I'm not doing server side validation on the fields because
-# I'm just sending an email. I don't really care if the user
-# screws with the front end validation and then messes up the
-# message or email address.
+# Should probably clean and validate this stuff
 def ajax_bug_report(request):
     if request.method == "POST":
         address = request.POST.get("email")

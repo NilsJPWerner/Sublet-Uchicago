@@ -26,17 +26,17 @@
                             </div>
                             <div class="ui fluid radio bordered checkbox">
                                 <label>Winter</label>
-                                <input id="winter" class="filter hidden" type="radio" name="quarter" value="winter">
+                                <input class="filter hidden" type="radio" name="quarter" value="winter">
                             </div>
 
                             <div class="ui fluid radio bordered checkbox">
                                 <label>Spring</label>
-                                <input id="spring" class="filter hidden" type="radio" name="quarter" value="spring">
+                                <input class="filter hidden" type="radio" name="quarter" value="spring">
                             </div>
 
                             <div class="ui fluid radio bordered checkbox">
                                 <label>Summer</label>
-                                <input id="summer" class="filter hidden" type="radio" name="quarter" value="summer">
+                                <input class="filter hidden" type="radio" name="quarter" value="summer">
                             </div>
                         </div>
                     </div>
@@ -102,14 +102,17 @@
         </div>
 
         <div class="row">
-             <div id="error-message" class="ui negative message hidden">
+            <div id="error-message" class="ui negative message hidden">
                 <div class="header">
                     There was a problem contacting the servers
                 </div>
                 <p>Please try again later, or report <a href="" id="bug">report</a> the incident.</p>
             </div>
-            <div id="results" class="ui two doubling cards">
-            </div>
+            <div id="results" class="ui two doubling cards"></div>
+        </div>
+        <div class="ui centered row">
+            <div class="ui divider"></div>
+            <div id="pagination"></div>
         </div>
     </div>
     <div class="eight wide column map-column">

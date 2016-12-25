@@ -80,9 +80,9 @@ $(document).ready(function() {
     var low = 0
     var high = max_price
     // If there are prices in the url use them instead
-    if (getUrlParam('price_low') || getUrlParam('price_high')) {
-        low = getUrlParam('price_low')
-        high = getUrlParam('price_high')
+    if (GetQueryString('price_low') || GetQueryString('price_high')) {
+        low = GetQueryString('price_low')
+        high = GetQueryString('price_high')
     }
 
     // Activate the price slider
@@ -109,6 +109,9 @@ $(document).ready(function() {
         }
     });
 
+    updateForm();
+    search();
+
     // If browser goes back in history search with the url
     window.onpopstate =  function(event) {
         if (window.location.search.length > 1) {
@@ -119,10 +122,14 @@ $(document).ready(function() {
     };
 
     // if any of the fields are modified perform ajax search
-    $(".filter").on('change', function() { search() });
+    $(".filter").on('change', function() {
+        UpdateQueryString('page', 1);
+        search();
+    });
 
     // if the price slider is touched perform ajax search
     price_slider.noUiSlider.on('change', function(){
+        UpdateQueryString('page', 1);
         search();
     });
 });
@@ -189,8 +196,6 @@ var template = [
     '</div>'
 ].join('\n');
 
-
-
 //////////////////////////////
 /////   SEARCH FUNCTIONS  ////
 //////////////////////////////
@@ -198,12 +203,12 @@ var template = [
 // Searches database for inputed requirements
 function search() {
     // Gets all the field data from the filters
-    console.log('Search');
     quarter = $("input[name=quarter]:checked").val()
     bedsize = $("#bedsize").val();
     bathroom = $("#bathroom").val();
     roommates = $("#roommates").val();
     slider_vals = slider.noUiSlider.get();
+    page = GetQueryString('page') || 1
     $.ajax({
         url: '/search/',
         type: 'GET',
@@ -213,7 +218,8 @@ function search() {
             bathroom: bathroom,
             roommates: roommates,
             price_low: Math.round(slider_vals[0]),
-            price_high: Math.round(slider_vals[1]), ajax: 1
+            price_high: Math.round(slider_vals[1]),
+            page: page,
         },
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
@@ -254,9 +260,9 @@ function search_success(response, url) {
 
     // Get the ids of the markers to keep
     var markers2keep = [];
-    for (var i = 0; i < response.length; i++) {
-        if (response[i].id in markers) {
-            markers2keep.push(response[i].id.toString());
+    for (var i = 0; i < response['listings'].length; i++) {
+        if (response['listings'][i].id in markers) {
+            markers2keep.push(response['listings'][i].id.toString());
         }
     };
 
@@ -269,8 +275,8 @@ function search_success(response, url) {
     };
 
 
-    for (var i = 0; i < response.length; i++) {
-        var data = response[i];
+    for (var i = 0; i < response['listings'].length; i++) {
+        var data = response['listings'][i];
 
         // Render the cards and add to html string
         var output = Mustache.render(template, data);
@@ -367,6 +373,20 @@ function search_success(response, url) {
         };
     });
 
+    console.log(window.location.pathname + window.location.search);
+
+    pagination = '<div class="ui pagination menu">\n'
+    for (i = 1; i <= response['pages']; i++) {
+        link = UpdateQueryString('page', i);
+        if (i == response['current_page']) {
+            pagination += ('<a href="'+ link +'" class="active item">' + i + '</a>\n');
+        } else {
+            pagination += ('<a href="'+ link +'" class="item">' + i + '</a>\n');
+        }
+    }
+    pagination += '</div>'
+    document.getElementById('pagination').innerHTML = pagination;
+
     $('.large.star.icon')
         .popup({
             position : 'bottom center',
@@ -397,8 +417,8 @@ function search_error() {
 //////////////////////////////
 
 
-// function to get url parameter. Credit: http://stackoverflow.com/questions/901115
-function getUrlParam(name, url) {
+// Credit: http://stackoverflow.com/questions/901115
+function GetQueryString(name, url) {
     if (!url) url = window.location.href;
     url = url.toLowerCase();
     name = name.replace(/[\[\]]/g, "\\$&").toLowerCase();
@@ -408,6 +428,38 @@ function getUrlParam(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+// credit: http://stackoverflow.com/questions/5999118/add-or-update-query-string-parameter
+function UpdateQueryString(key, value, url) {
+    if (!url) url = window.location.href;
+    var re = new RegExp("([?&])" + key + "=.*?(&|#|$)(.*)", "gi"),
+        hash;
+
+    if (re.test(url)) {
+        if (typeof value !== 'undefined' && value !== null)
+            return url.replace(re, '$1' + key + "=" + value + '$2$3');
+        else {
+            hash = url.split('#');
+            url = hash[0].replace(re, '$1$3').replace(/(&|\?)$/, '');
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+    }
+    else {
+        if (typeof value !== 'undefined' && value !== null) {
+            var separator = url.indexOf('?') !== -1 ? '&' : '?';
+            hash = url.split('#');
+            url = hash[0] + separator + key + '=' + value;
+            if (typeof hash[1] !== 'undefined' && hash[1] !== null)
+                url += '#' + hash[1];
+            return url;
+        }
+        else
+            return url;
+    }
+}
+
 
 
 // Ajax calls and stars a listing or redirects if not signed in
@@ -430,11 +482,11 @@ function star (element, id) {
 
 // updates form with data from url
 function updateForm () {
-    price_slider.noUiSlider.set([getUrlParam('price_low'), getUrlParam('price_high')]);
-    $('#bedsize').dropdown('set selected', getUrlParam('bedsize'));
-    $('#bathroom').dropdown('set selected', getUrlParam('bathroom'));
-    $('#roommates').dropdown('set selected', getUrlParam('roommates'));
-    // Need to set for other parts of form
+    GetQueryString('quarter')
+    price_slider.noUiSlider.set([GetQueryString('price_low'), GetQueryString('price_high')]);
+    $('#bedsize').dropdown('set selected', GetQueryString('bedsize'));
+    $('#bathroom').dropdown('set selected', GetQueryString('bathroom'));
+    $('#roommates').dropdown('set selected', GetQueryString('roommates'));
 }
 
 
